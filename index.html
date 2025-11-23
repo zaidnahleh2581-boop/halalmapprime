@@ -2,533 +2,602 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>Halal Map Prime – Halal Restaurants, Mosques & Markets in NY & NJ</title>
+    <title>Halal Map Prime – Find Halal Places in NY & NJ</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <!-- Basic SEO -->
     <meta name="description"
-          content="Halal Map Prime helps Muslims in New York & New Jersey find trusted halal restaurants, mosques and markets in just a few taps – with prayer tools and a Ramadan calendar coming soon." />
-    <meta name="keywords"
-          content="Halal, Restaurants, Mosques, Markets, NYC, New Jersey, Muslim, Prayer, Ramadan, Map" />
-
-    <!-- Open Graph -->
-    <meta property="og:title" content="Halal Map Prime – Find Halal Near You" />
-    <meta property="og:description"
-          content="Discover halal restaurants, mosques & markets across New York & New Jersey. Simple map-first experience. Coming soon to the App Store." />
-    <meta property="og:url" content="https://halalmapprime.com" />
-    <meta property="og:type" content="website" />
-    <!-- لو عندك صورة شعار باسم halal-map-prime-og.png ارفعها على نفس الريبو واستخدمها هنا -->
-    <meta property="og:image" content="halal-map-prime-og.png" />
-
-    <!-- Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" />
+          content="Halal Map Prime – a modern mobile app to find halal restaurants, mosques, markets and halal butchers across New York & New Jersey." />
 
     <style>
         :root {
-            --bg-dark: #020812;
-            --bg-panel: #041323;
-            --accent-gold: #d9a441;
-            --accent-teal: #0b7a7a;
-            --accent-red: #c0543b;
-            --text-main: #f7f7f7;
-            --text-muted: #c7c7c7;
-            --card-radius: 18px;
-            --shadow-soft: 0 22px 45px rgba(0, 0, 0, 0.5);
+            --bg: #f4f5f9;
+            --bg-soft: #ffffff;
+            --bg-soft-alt: #f0f2f8;
+            --text-main: #111827;
+            --text-muted: #6b7280;
+            --accent-gold: #f59e0b;
+            --accent-green: #16a34a;
+            --accent-primary: #2563eb;
+            --border-soft: rgba(15,23,42,0.08);
+            --shadow-soft: 0 24px 60px rgba(15,23,42,0.12);
+            --radius-lg: 24px;
         }
 
-        * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+            "Segoe UI", sans-serif;
+        }
 
         body {
             margin: 0;
-            font-family: "Montserrat", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            background: radial-gradient(circle at top, #051731 0, #020812 45%, #000000 100%);
+            background: radial-gradient(circle at top, #e0f2fe 0, #f4f5f9 45%, #eef2ff 100%);
             color: var(--text-main);
         }
 
-        a { color: inherit; text-decoration: none; }
-
-        .page {
-            max-width: 1120px;
-            margin: 0 auto;
-            padding: 18px 16px 64px;
+        a {
+            color: inherit;
+            text-decoration: none;
         }
 
-        /* NAVBAR */
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        /* Layout */
+        .page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            backdrop-filter: blur(14px);
+            background: linear-gradient(
+                to bottom,
+                rgba(244,245,249,0.96),
+                rgba(244,245,249,0.85),
+                transparent
+            );
+        }
 
         .nav {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 12px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            padding: 6px 14px;
-            border-radius: 999px;
-            background: rgba(2, 10, 24, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            box-shadow: 0 18px 38px rgba(0,0,0,0.55);
-            position: sticky;
-            top: 12px;
-            z-index: 20;
-            backdrop-filter: blur(14px);
         }
 
-        .nav-left {
+        .brand {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .nav-logo {
-            width: 40px;
-            height: 40px;
-            border-radius: 999px;
-            background: radial-gradient(circle at 30% 20%, #ffd27a, #d68b32);
+        .brand-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            background: radial-gradient(circle at 20% 0%, #22c55e, #0f766e 35%, #020617 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            box-shadow: 0 14px 35px rgba(15,23,42,0.45);
         }
 
-        .nav-logo img {
-            width: 40px;
-            height: 40px;
-            object-fit: cover;
-        }
-
-        .nav-title-main {
-            font-size: 14px;
+        .brand-logo span {
+            color: #fefce8;
+            font-size: 18px;
             font-weight: 700;
-            letter-spacing: 0.18em;
         }
 
-        .nav-title-sub {
-            font-size: 10px;
-            text-transform: uppercase;
+        .brand-text-title {
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: 0.02em;
+        }
+
+        .brand-text-sub {
+            font-size: 11px;
             color: var(--text-muted);
         }
 
         .nav-links {
             display: flex;
-            gap: 18px;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.16em;
+            gap: 14px;
+            align-items: center;
+            font-size: 13px;
         }
 
         .nav-links a {
             color: var(--text-muted);
-            padding-bottom: 2px;
-            border-bottom: 1px solid transparent;
         }
 
         .nav-links a:hover {
-            color: var(--accent-gold);
-            border-color: rgba(217, 164, 65, 0.7);
+            color: var(--accent-primary);
         }
 
         .nav-cta {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn {
-            border-radius: 999px;
             padding: 8px 14px;
-            font-size: 11px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #f9fafb;
+            font-size: 13px;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.16em;
-            border: 1px solid transparent;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
+            box-shadow: 0 12px 32px rgba(22,163,74,0.55);
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #f1b35a, #d98b27);
-            color: #120a02;
-            border-color: rgba(0,0,0,0.1);
+        .nav-cta span {
+            margin-left: 4px;
         }
 
-        .btn-outline {
-            background: transparent;
-            color: var(--accent-gold);
-            border-color: rgba(217, 164, 65, 0.6);
+        main {
+            flex: 1;
         }
 
-        .btn-primary:hover {
-            filter: brightness(1.07);
+        .section {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 20px 16px 40px;
         }
 
-        .btn-outline:hover {
-            background: rgba(217, 164, 65, 0.08);
-        }
-
-        /* HERO */
-
+        /* Hero */
         .hero {
-            margin-top: 32px;
             display: grid;
-            grid-template-columns: minmax(0, 3fr) minmax(260px, 2.4fr);
-            gap: 26px;
-        }
-
-        .hero-main {
-            background: radial-gradient(circle at top left, rgba(15, 120, 120, 0.32), transparent 52%),
-                        radial-gradient(circle at bottom, rgba(192, 84, 59, 0.26), transparent 50%),
-                        linear-gradient(135deg, #050f20, #020812);
-            border-radius: 24px;
-            padding: 26px 26px 22px;
-            box-shadow: var(--shadow-soft);
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.06);
+            grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+            gap: 32px;
+            padding-top: 20px;
+            padding-bottom: 32px;
         }
 
         .hero-badge {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            border-radius: 999px;
-            border: 1px solid rgba(111, 207, 151, 0.4);
-            background: rgba(1, 34, 14, 0.9);
+            gap: 6px;
             padding: 4px 10px;
-            font-size: 11px;
-            color: #d5ffe7;
-            text-transform: uppercase;
-            letter-spacing: 0.16em;
-        }
-
-        .hero-badge span {
-            padding: 2px 8px;
             border-radius: 999px;
-            background: linear-gradient(135deg, #6fdf96, #2fb471);
-            color: #021109;
-            font-weight: 700;
+            background: rgba(22,163,74,0.06);
+            color: var(--accent-green);
+            font-size: 11px;
+            border: 1px solid rgba(22,163,74,0.16);
         }
 
         .hero-title {
-            margin-top: 18px;
-            font-size: 32px;
-            line-height: 1.2;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
+            margin: 14px 0 10px;
+            font-size: clamp(28px, 4vw, 36px);
+            line-height: 1.15;
         }
 
-        .hero-title span {
-            color: var(--accent-gold);
+        .hero-title span.highlight {
+            background: linear-gradient(120deg, #f97316, #facc15, #22c55e);
+            -webkit-background-clip: text;
+            color: transparent;
         }
 
-        .hero-sub {
-            margin-top: 12px;
+        .hero-subtitle {
             font-size: 14px;
             color: var(--text-muted);
-            max-width: 420px;
+            max-width: 460px;
         }
 
-        .hero-sub-ar {
-            margin-top: 8px;
-            font-size: 13px;
-            color: var(--accent-gold);
-            direction: rtl;
-            text-align: right;
+        .hero-subtitle strong {
+            color: var(--accent-primary);
         }
 
-        .hero-actions {
-            margin-top: 22px;
+        .hero-cta-row {
+            margin-top: 18px;
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .btn-primary {
+            padding: 11px 18px;
+            border-radius: 999px;
+            border: none;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #f9fafb;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            box-shadow: 0 14px 36px rgba(37,99,235,0.55);
+        }
+
+        .btn-secondary {
+            padding: 10px 16px;
+            border-radius: 999px;
+            background: rgba(15,23,42,0.02);
+            border: 1px solid rgba(15,23,42,0.08);
+            font-size: 13px;
+            color: var(--text-main);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
         }
 
         .hero-meta {
-            margin-top: 18px;
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+            display: flex;
+            flex-wrap: wrap;
             gap: 12px;
+            margin-top: 18px;
             font-size: 11px;
             color: var(--text-muted);
         }
 
-        .hero-meta span {
-            display: block;
+        .hero-meta span.dot {
+            width: 3px;
+            height: 3px;
+            border-radius: 999px;
+            background: rgba(148,163,184,0.8);
         }
 
-        .hero-meta strong {
-            display: block;
-            font-size: 13px;
-            color: #ffffff;
-            margin-bottom: 2px;
+        /* Hero mockup */
+        .hero-mockup-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .hero-qr-panel {
-            border-radius: 22px;
-            background: radial-gradient(circle at top, #132845 0, #050f20 55%, #020812 100%);
-            padding: 20px 18px 18px;
+        .hero-mockup-card {
+            width: 100%;
+            max-width: 360px;
+            border-radius: var(--radius-lg);
+            background: var(--bg-soft);
             box-shadow: var(--shadow-soft);
-            border: 1px solid rgba(255,255,255,0.06);
+            padding: 16px 16px 18px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-mockup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .hero-mockup-title {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .hero-mockup-pill {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: rgba(37,99,235,0.06);
+            color: #1d4ed8;
+        }
+
+        .hero-mockup-body {
+            border-radius: 18px;
+            background: radial-gradient(circle at top, #0f172a 0, #020617 35%, #020617 100%);
+            overflow: hidden;
+            position: relative;
+            padding: 0;
+        }
+
+        .hero-phone-frame {
+            padding: 10px 12px 14px;
+        }
+
+        .phone-top {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+
+        .phone-notch {
+            width: 40%;
+            height: 5px;
+            border-radius: 999px;
+            background: rgba(15,23,42,0.85);
+        }
+
+        .phone-screen {
+            border-radius: 18px;
+            background: radial-gradient(circle at top, #1e293b 0, #020617 55%, #020617 100%);
+            border: 1px solid rgba(148,163,184,0.35);
+            padding: 10px 10px 12px;
+            color: #e5e7eb;
+            font-size: 10px;
+        }
+
+        .phone-tab-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 9px;
+        }
+
+        .phone-tab {
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: rgba(15,23,42,0.9);
+            color: #9ca3af;
+        }
+
+        .phone-tab.active {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #0b1120;
+            font-weight: 600;
+        }
+
+        .phone-map-block {
+            border-radius: 12px;
+            overflow: hidden;
+            background: radial-gradient(circle at 10% 0%, #22c55e 0, #0ea5e9 35%, #020617 100%);
+            height: 140px;
+            position: relative;
+        }
+
+        .phone-map-overlay {
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(248,250,252,0.5) 0, transparent 60%),
+                radial-gradient(circle at 70% 80%, rgba(56,189,248,0.7) 0, transparent 65%);
+            mix-blend-mode: screen;
+        }
+
+        .phone-map-caption {
+            position: absolute;
+            left: 10px;
+            bottom: 10px;
+            font-size: 9px;
+            background: rgba(15,23,42,0.78);
+            padding: 4px 7px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .phone-list {
+            margin-top: 8px;
+            display: grid;
+            grid-template-columns: minmax(0,1fr);
+            gap: 6px;
+        }
+
+        .phone-place {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 7px;
+            border-radius: 9px;
+            background: rgba(15,23,42,0.76);
+        }
+
+        .phone-place-left {
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 2px;
         }
 
-        .hero-qr-title {
-            font-size: 14px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.16em;
+        .phone-place-name {
+            font-size: 10px;
+            font-weight: 500;
         }
 
-        .hero-qr-sub {
-            font-size: 12px;
-            color: var(--text-muted);
+        .phone-place-meta {
+            font-size: 9px;
+            color: #9ca3af;
         }
 
-        .qr-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 10px;
-            margin-top: 6px;
+        .phone-place-badge {
+            padding: 2px 6px;
+            border-radius: 999px;
+            background: rgba(22,163,74,0.15);
+            color: #bbf7d0;
+            font-size: 9px;
         }
 
-        .qr-card {
-            background: rgba(2, 9, 22, 0.95);
-            border-radius: 14px;
-            padding: 10px 8px 8px;
-            border: 1px solid rgba(255,255,255,0.07);
-            text-align: center;
-        }
-
-        .qr-card img {
-            width: 100%;
-            max-width: 120px;
-            height: auto;
-            border-radius: 10px;
-            display: block;
-            margin: 0 auto 6px;
-        }
-
-        .qr-label {
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-
-        /* AD PLACEHOLDER – للدخل المستقبلي */
-        .ad-banner {
-            margin-top: 14px;
-            border-radius: 12px;
-            border: 1px dashed rgba(255,255,255,0.18);
-            padding: 8px 10px;
-            font-size: 11px;
-            color: rgba(255,255,255,0.55);
-            text-align: center;
-            background: rgba(0,0,0,0.2);
-        }
-
-        /* SECTIONS */
-
-        section {
-            margin-top: 40px;
-        }
-
+        /* Sections */
         .section-title {
-            font-size: 18px;
-            text-transform: uppercase;
-            letter-spacing: 0.24em;
-            margin-bottom: 6px;
+            font-size: 20px;
+            margin-bottom: 4px;
         }
 
         .section-subtitle {
             font-size: 13px;
             color: var(--text-muted);
-            max-width: 620px;
+            max-width: 540px;
         }
 
         .pill {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 4px 10px;
+            gap: 5px;
+            padding: 3px 10px;
             border-radius: 999px;
-            font-size: 10px;
-            letter-spacing: 0.16em;
-            text-transform: uppercase;
-            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(15,23,42,0.03);
+            font-size: 11px;
             color: var(--text-muted);
+            border: 1px solid rgba(148,163,184,0.35);
         }
 
         .pill-dot {
             width: 7px;
             height: 7px;
             border-radius: 999px;
-            background: var(--accent-teal);
+            background: #22c55e;
         }
 
-        .features-grid {
-            margin-top: 18px;
+        .cards-grid {
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-columns: repeat(3, minmax(0,1fr));
             gap: 14px;
+            margin-top: 18px;
         }
 
-        .feature-card {
-            background: linear-gradient(145deg, #071426, #020812);
-            border-radius: var(--card-radius);
+        .card {
+            background: var(--bg-soft);
+            border-radius: 18px;
             padding: 14px 14px 16px;
-            border: 1px solid rgba(255,255,255,0.06);
-            box-shadow: 0 18px 32px rgba(0,0,0,0.48);
+            border: 1px solid var(--border-soft);
+            box-shadow: 0 10px 30px rgba(15,23,42,0.06);
         }
 
-        .feature-tag {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.18em;
-            color: var(--accent-gold);
-            margin-bottom: 6px;
-        }
-
-        .feature-title {
+        .card h3 {
+            margin: 0 0 6px;
             font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 6px;
         }
 
-        .feature-text {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .two-col {
-            margin-top: 22px;
-            display: grid;
-            grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-            gap: 20px;
-        }
-
-        .panel {
-            background: linear-gradient(150deg, #071425, #020812);
-            border-radius: var(--card-radius);
-            padding: 16px 16px 18px;
-            border: 1px solid rgba(255,255,255,0.06);
-            box-shadow: 0 18px 32px rgba(0,0,0,0.45);
-        }
-
-        .panel h3 {
-            margin: 0 0 8px;
-            font-size: 15px;
-        }
-
-        .panel p {
-            margin: 0 0 10px;
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .panel-list {
-            list-style: none;
-            padding: 0;
+        .card p {
             margin: 0;
             font-size: 12px;
             color: var(--text-muted);
         }
 
-        .panel-list li {
-            margin-bottom: 6px;
-            display: flex;
-            gap: 8px;
-        }
-
-        .panel-list li::before {
-            content: "•";
-            color: var(--accent-gold);
-        }
-
-        .screens-grid {
-            margin-top: 16px;
+        /* Map + Prayer */
+        .two-col {
             display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 12px;
-        }
-
-        .screen-card {
-            background: radial-gradient(circle at top, #132845, #050f20);
-            border-radius: 18px;
-            padding: 10px;
-            border: 1px solid rgba(255,255,255,0.08);
-            box-shadow: 0 16px 30px rgba(0,0,0,0.6);
-            text-align: center;
-            font-size: 11px;
-        }
-
-        .screen-phone {
-            border-radius: 13px;
-            border: 1px solid rgba(255,255,255,0.12);
-            padding: 10px;
-            background: linear-gradient(160deg, #020812, #06172b);
-            height: 140px;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            font-size: 11px;
-        }
-
-        .badge-coming {
-            display: inline-flex;
-            align-items: center;
-            padding: 3px 9px;
-            border-radius: 999px;
-            background: rgba(255,255,255,0.06);
-            font-size: 10px;
-            letter-spacing: 0.16em;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-
-        .faq-grid {
+            grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+            gap: 18px;
             margin-top: 18px;
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 14px;
         }
 
-        .faq-card {
-            background: linear-gradient(140deg, #050f20, #020812);
-            border-radius: 16px;
-            padding: 12px 14px;
-            border: 1px solid rgba(255,255,255,0.06);
+        .panel {
+            background: var(--bg-soft);
+            border-radius: 18px;
+            padding: 14px 14px 16px;
+            border: 1px solid var(--border-soft);
+            box-shadow: 0 12px 32px rgba(15,23,42,0.06);
         }
 
-        .faq-q {
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 4px;
+        .panel h3 {
+            margin: 0 0 6px;
+            font-size: 14px;
         }
 
-        .faq-a {
+        .panel p {
+            margin: 0;
             font-size: 12px;
             color: var(--text-muted);
         }
 
-        footer {
-            margin-top: 42px;
-            border-top: 1px solid rgba(255,255,255,0.08);
-            padding-top: 18px;
+        .map-frame {
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(15,23,42,0.08);
+            box-shadow: 0 18px 45px rgba(15,23,42,0.18);
+            margin-top: 10px;
+        }
+
+        iframe {
+            display: block;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        /* QR section */
+        .qr-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+            margin-top: 18px;
+            align-items: stretch;
+        }
+
+        .qr-card {
+            background: var(--bg-soft);
+            border-radius: 18px;
+            padding: 14px 14px 16px;
+            border: 1px solid var(--border-soft);
+            box-shadow: 0 12px 32px rgba(15,23,42,0.06);
+            text-align: center;
+        }
+
+        .qr-label {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .qr-handle {
             font-size: 11px;
             color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .qr-img-wrap {
+            margin: 0 auto 8px;
+            width: 160px;
+            height: 160px;
+            padding: 8px;
+            border-radius: 16px;
+            background: #ffffff;
+            border: 1px dashed rgba(148,163,184,0.6);
+        }
+
+        .qr-note {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        /* FAQ */
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0,1fr));
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .faq-item {
+            background: var(--bg-soft);
+            border-radius: 18px;
+            padding: 12px 14px 14px;
+            border: 1px solid var(--border-soft);
+        }
+
+        .faq-item h3 {
+            margin: 0 0 4px;
+            font-size: 13px;
+        }
+
+        .faq-item p {
+            margin: 0;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(148,163,184,0.4);
+            background: rgba(15,23,42,0.03);
+        }
+
+        .footer-inner {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 14px 16px 18px;
             display: flex;
             flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
             justify-content: space-between;
-            gap: 12px;
+            font-size: 11px;
+            color: var(--text-muted);
         }
 
         .footer-links {
             display: flex;
-            gap: 14px;
+            gap: 10px;
             flex-wrap: wrap;
         }
 
@@ -537,390 +606,450 @@
         }
 
         .footer-links a:hover {
-            color: var(--accent-gold);
+            color: var(--accent-primary);
         }
 
-        @media (max-width: 880px) {
+        /* Responsive */
+        @media (max-width: 900px) {
             .hero {
                 grid-template-columns: minmax(0, 1fr);
             }
-            .hero-main {
-                order: 1;
+            .two-col {
+                grid-template-columns: minmax(0,1fr);
             }
-            .hero-qr-panel {
-                order: 2;
+            .cards-grid {
+                grid-template-columns: repeat(2, minmax(0,1fr));
             }
-            .features-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
+            .qr-grid {
+                grid-template-columns: repeat(2, minmax(0,1fr));
             }
-            .screens-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
+            .faq-grid {
+                grid-template-columns: minmax(0,1fr);
             }
         }
 
         @media (max-width: 640px) {
-            .nav {
-                flex-wrap: wrap;
-                align-items: flex-start;
-                gap: 8px;
-            }
             .nav-links {
                 display: none;
             }
-            .hero-main {
-                padding: 20px 16px 18px;
+            .cards-grid {
+                grid-template-columns: minmax(0,1fr);
             }
-            .hero-title {
-                font-size: 26px;
+            .qr-grid {
+                grid-template-columns: minmax(0,1fr);
             }
-            .hero-meta {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
+            .hero {
+                padding-top: 8px;
             }
-            .features-grid {
-                grid-template-columns: minmax(0, 1fr);
-            }
-            .two-col {
-                grid-template-columns: minmax(0, 1fr);
-            }
-            .faq-grid {
-                grid-template-columns: minmax(0, 1fr);
+            .hero-mockup-card {
+                max-width: 100%;
             }
         }
     </style>
 </head>
 <body>
 <div class="page">
-
     <!-- NAVBAR -->
-    <header class="nav">
-        <div class="nav-left">
-            <div class="nav-logo">
-                <!-- ارفع ملف الشعار باسم: logo-halal-map-prime.png -->
-                <img src="logo-halal-map-prime.png" alt="Halal Map Prime logo" />
+    <header>
+        <nav class="nav">
+            <div class="brand">
+                <div class="brand-logo">
+                    <span>ح</span>
+                </div>
+                <div>
+                    <div class="brand-text-title">Halal Map Prime</div>
+                    <div class="brand-text-sub">Halal food • Mosques • Markets • Butchers</div>
+                </div>
             </div>
-            <div>
-                <div class="nav-title-main">HALAL MAP PRIME</div>
-                <div class="nav-title-sub">HALAL MAP • MOSQUES • MARKETS</div>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#map">Map</a>
+                <a href="#prayer-times">Prayer times</a>
+                <a href="#social">Community</a>
+                <a href="#faq">FAQ</a>
+                <a class="nav-cta" href="https://www.facebook.com/profile.php?id=61583835974171" target="_blank" rel="noopener">
+                    Follow updates<span>↗</span>
+                </a>
             </div>
-        </div>
-
-        <nav class="nav-links">
-            <a href="#features">Features</a>
-            <a href="#screens">App Preview</a>
-            <a href="#for-business">For Businesses</a>
-            <a href="#faq">FAQ</a>
-            <a href="#contact">Contact</a>
         </nav>
-
-        <div class="nav-cta">
-            <a class="btn btn-outline" href="https://www.instagram.com/halalmapprime" target="_blank" rel="noopener">
-                Instagram
-            </a>
-            <a class="btn btn-primary" href="https://www.facebook.com/profile.php?id=61583835974171" target="_blank" rel="noopener">
-                Facebook Page
-            </a>
-        </div>
     </header>
 
-    <!-- HERO -->
-    <main class="hero">
-        <section class="hero-main">
-            <div class="hero-badge">
-                <span>Beta</span>
-                #1 Halal Map for NY &amp; NJ
+    <main>
+        <!-- HERO -->
+        <section class="section hero" id="top">
+            <div>
+                <div class="hero-badge">
+                    <span>🕌 Coming soon</span> • Halal Map for NY & NJ
+                </div>
+                <h1 class="hero-title">
+                    Find <span class="highlight">real halal places</span> in New York & New Jersey.
+                </h1>
+                <p class="hero-subtitle">
+                    <strong>Halal Map Prime</strong> helps you discover halal restaurants, mosques,
+                    markets and halal butchers around you – with ratings, delivery info and a
+                    clean Muslim-friendly experience.
+                </p>
+
+                <div class="hero-cta-row">
+                    <a class="btn-primary" href="https://www.facebook.com/profile.php?id=61583835974171" target="_blank" rel="noopener">
+                        Join the launch community
+                        <span>↗</span>
+                    </a>
+                    <a class="btn-secondary" href="https://www.instagram.com/halalmapprime" target="_blank" rel="noopener">
+                        Follow on Instagram
+                    </a>
+                </div>
+
+                <div class="hero-meta">
+                    <span>• iPhone app (Apple App Store – in review soon)</span>
+                    <span class="dot"></span>
+                    <span>• Focus: NY & NJ communities</span>
+                    <span class="dot"></span>
+                    <span>• Built with love for Muslims & halal lifestyle</span>
+                </div>
             </div>
 
-            <h1 class="hero-title">
-                Find <span>Halal Spots</span> Around You in a Few Taps.
-            </h1>
+            <div class="hero-mockup-wrap">
+                <div class="hero-mockup-card">
+                    <div class="hero-mockup-header">
+                        <div>
+                            <div class="hero-mockup-title">Halal Map Prime</div>
+                            <div style="font-size:11px; color:var(--text-muted);">
+                                NY & NJ • Demo preview
+                            </div>
+                        </div>
+                        <div class="hero-mockup-pill">Map + Prayer</div>
+                    </div>
+                    <div class="hero-mockup-body">
+                        <div class="hero-phone-frame">
+                            <div class="phone-top">
+                                <div class="phone-notch"></div>
+                            </div>
+                            <div class="phone-screen">
+                                <div class="phone-tab-row">
+                                    <div class="phone-tab active">Map</div>
+                                    <div class="phone-tab">Prayer</div>
+                                    <div class="phone-tab">Delivery</div>
+                                </div>
 
-            <p class="hero-sub">
-                Halal Map Prime helps you discover verified halal restaurants, mosques, markets and butchers
-                across New York &amp; New Jersey – with clear categories, prayer tools and a Ramadan calendar
-                (coming soon).
-            </p>
+                                <div class="phone-map-block">
+                                    <div class="phone-map-overlay"></div>
+                                    <div class="phone-map-caption">
+                                        <span style="font-size:11px;">🟢</span>
+                                        <span>Halal spots around you</span>
+                                    </div>
+                                </div>
 
-            <p class="hero-sub-ar">
-                خريطة حلال متكاملة للمطاعم والمساجد والأسواق في نيويورك ونيوجيرسي – ببساطة ووضوح.
-            </p>
+                                <div class="phone-list">
+                                    <div class="phone-place">
+                                        <div class="phone-place-left">
+                                            <div class="phone-place-name">The Halal Guys – Manhattan</div>
+                                            <div class="phone-place-meta">Restaurant • 4.6 ★ • Delivery</div>
+                                        </div>
+                                        <div class="phone-place-badge">Open</div>
+                                    </div>
+                                    <div class="phone-place">
+                                        <div class="phone-place-left">
+                                            <div class="phone-place-name">Masjid At-Taqwa</div>
+                                            <div class="phone-place-meta">Mosque • Brooklyn, NY</div>
+                                        </div>
+                                        <div class="phone-place-badge">Jumu'ah</div>
+                                    </div>
+                                    <div class="phone-place">
+                                        <div class="phone-place-left">
+                                            <div class="phone-place-name">Bay Ridge Halal Meat</div>
+                                            <div class="phone-place-meta">Butcher • Certified halal</div>
+                                        </div>
+                                        <div class="phone-place-badge">Halal</div>
+                                    </div>
+                                </div>
 
-            <div class="hero-actions">
-                <a class="btn btn-primary"
-                   href="mailto:halalmapprime@outlook.com?subject=Notify%20me%20when%20Halal%20Map%20Prime%20launches&body=Salam%2C%0D%0A%0D%0APlease%20notify%20me%20when%20the%20Halal%20Map%20Prime%20app%20is%20available.%0D%0A%0D%0AJazakum%20Allah%20khairan.">
-                    Get launch update
-                </a>
-                <a class="btn btn-outline"
-                   href="#for-business">
-                    List my restaurant / masjid
-                </a>
-            </div>
-
-            <div class="hero-meta">
-                <div>
-                    <strong>NY &amp; NJ Focus</strong>
-                    <span>Built for Muslims living, working and visiting the New York &amp; New Jersey area.</span>
-                </div>
-                <div>
-                    <strong>Verified Halal Places</strong>
-                    <span>We prioritize trusted halal restaurants, mosques and markets first.</span>
-                </div>
-                <div>
-                    <strong>Prayer &amp; Ramadan Tools</strong>
-                    <span>Hijri calendar, adhkar &amp; Ramadan planner planned for upcoming releases.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--text-muted);">
+                        <span>Preview only – full experience inside the mobile app.</span>
+                        <span>🕓 Live soon in shaa’ Allah</span>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <aside class="hero-qr-panel" aria-label="QR codes and social accounts">
-            <div>
-                <div class="hero-qr-title">Download &amp; Follow Us</div>
-                <div class="hero-qr-sub">
-                    Scan to follow us on Instagram &amp; Facebook and get notified when the app goes live.
-                </div>
-
-                <div class="qr-grid">
-                    <div class="qr-card">
-                        <!-- ارفع صورة QR إنستغرام باسم: qr-instagram.png -->
-                        <img src="qr-instagram.png" alt="Scan to follow Halal Map Prime on Instagram" />
-                        <div class="qr-label">@halalmapprime</div>
-                    </div>
-                    <div class="qr-card">
-                        <!-- ارفع صورة QR فيسبوك باسم: qr-facebook.png -->
-                        <img src="qr-facebook.png" alt="Scan to open Halal Map Prime Facebook page" />
-                        <div class="qr-label">Halal Map Prime Page</div>
-                    </div>
-                </div>
+        <!-- FEATURES -->
+        <section class="section" id="features">
+            <div class="pill">
+                <span class="pill-dot"></span> Core features
             </div>
-
-            <!-- مساحة إعلانات مستقبلية – جاهزة لوضع كود AdSense أو أي شبكة إعلانية -->
-            <div id="ad-banner-placeholder" class="ad-banner">
-                Future ad space – once your AdSense / ads account is approved, paste the ad code here.
-            </div>
-        </aside>
-    </main>
-
-    <!-- FEATURES -->
-    <section id="features">
-        <div class="pill"><span class="pill-dot"></span> Why Halal Map Prime?</div>
-        <h2 class="section-title">Designed for Muslims on the go</h2>
-        <p class="section-subtitle">
-            We focus on what matters most: finding trusted halal food and prayer spaces quickly, with a clean,
-            map-first experience and tools that support your everyday worship.
-        </p>
-
-        <div class="features-grid">
-            <article class="feature-card">
-                <div class="feature-tag">Map-first experience</div>
-                <div class="feature-title">See halal spots around you instantly</div>
-                <div class="feature-text">
-                    Open the app and land straight on the map. Filter by restaurants, mosques, markets or butchers
-                    and discover what’s closest in a single glance.
-                </div>
-            </article>
-
-            <article class="feature-card">
-                <div class="feature-tag">Smart search</div>
-                <div class="feature-title">Search by area, cuisine or name</div>
-                <div class="feature-text">
-                    Type a neighborhood, street, cuisine or restaurant name and quickly jump to relevant halal
-                    locations with clear labels and details.
-                </div>
-            </article>
-
-            <article class="feature-card">
-                <div class="feature-tag">Verified information</div>
-                <div class="feature-title">Built on community &amp; owner input</div>
-                <div class="feature-text">
-                    We combine public information with input from Muslim owners and local community members to keep
-                    listings accurate and trusted.
-                </div>
-            </article>
-
-            <article class="feature-card">
-                <div class="feature-tag">Prayer tools</div>
-                <div class="feature-title">Masjid finder &amp; prayer info</div>
-                <div class="feature-text">
-                    Masjid locations, basic info and tools that help you locate the nearest place to pray when
-                    you’re away from home. More features are in progress.
-                </div>
-            </article>
-
-            <article class="feature-card">
-                <div class="feature-tag">Ramadan mode</div>
-                <div class="feature-title">Ramadan calendar &amp; tools</div>
-                <div class="feature-text">
-                    Planned features include iftar/suhoor friendly timings, a Ramadan calendar and quick access to
-                    dua and adhkar – all in one place.
-                </div>
-            </article>
-
-            <article class="feature-card">
-                <div class="feature-tag">For locals &amp; visitors</div>
-                <div class="feature-title">Perfect for NY / NJ travel</div>
-                <div class="feature-text">
-                    Whether you live in the tri-state area or you’re visiting for a few days, Halal Map Prime becomes
-                    your companion for halal spots and mosques.
-                </div>
-            </article>
-        </div>
-    </section>
-
-    <!-- HOW IT WORKS / APP PREVIEW -->
-    <section id="screens">
-        <div class="two-col">
-            <div class="panel">
-                <h3>How the app will work</h3>
-                <p>
-                    Halal Map Prime is designed to stay simple, fast and focused on halal locations. Here’s the basic
-                    flow when you open the app:
-                </p>
-                <ol class="panel-list">
-                    <li>Open the app and land on the map with your approximate location (with your permission).</li>
-                    <li>Choose a category: halal restaurants, mosques, markets or butchers.</li>
-                    <li>Tap a pin to see essential details: name, address, phone, basic halal/owner notes.</li>
-                    <li>Use search to jump to a different area or look for a specific place by name or cuisine.</li>
-                    <li>In Ramadan mode (coming soon), quickly see iftar-friendly places and useful daily tools.</li>
-                </ol>
-                <p>
-                    Our goal is not to overwhelm you with social features. We want a clean utility app that
-                    simply answers one question: <strong>“Where is the nearest halal place I can trust?”</strong>
-                </p>
-            </div>
-
-            <div class="panel" id="for-business">
-                <h3>For restaurant &amp; masjid owners</h3>
-                <p>
-                    If you manage a halal restaurant, café, butcher shop, market or masjid in NY or NJ, we’d love to
-                    include you in our early listings.
-                </p>
-                <ul class="panel-list">
-                    <li>Free basic listing during the launch phase.</li>
-                    <li>Highlight if you are officially certified or community-verified halal.</li>
-                    <li>Future options for promoted placements and special campaigns during Ramadan &amp; Eid.</li>
-                </ul>
-                <p>
-                    To request a listing or update your information, please email:
-                    <br />
-                    <strong><a href="mailto:halalmapprime@outlook.com">halalmapprime@outlook.com</a></strong>
-                </p>
-            </div>
-        </div>
-
-        <div style="margin-top: 26px;">
-            <div class="pill"><span class="pill-dot"></span> App preview</div>
-            <h2 class="section-title">A simple, focused interface</h2>
+            <h2 class="section-title">What Halal Map Prime is built to do</h2>
             <p class="section-subtitle">
-                Below is a preview of the main screens we are designing. The final app may evolve, but the core
-                experience will stay lightweight and fast.
+                A focused tool to help Muslims in New York & New Jersey find halal options
+                quickly – without the noise, confusion or guesswork.
             </p>
 
-            <div class="screens-grid">
-                <div class="screen-card">
-                    <div class="screen-phone">Map view with halal pins around your current area.</div>
-                    <div>Map View – Nearby Halal</div>
-                    <div class="badge-coming">Design in progress</div>
+            <div class="cards-grid">
+                <div class="card">
+                    <h3>Halal map for NY & NJ</h3>
+                    <p>
+                        Explore restaurants, mosques, markets and halal butchers across New York
+                        and New Jersey, with a clean dark map inside the app and smart filters.
+                    </p>
                 </div>
-                <div class="screen-card">
-                    <div class="screen-phone">List of halal restaurants with filters and quick details.</div>
-                    <div>Restaurant List</div>
-                    <div class="badge-coming">Design in progress</div>
+                <div class="card">
+                    <h3>Prayer & Ramadan tools</h3>
+                    <p>
+                        Inside the app: prayer times, a simple Hijri / Ramadan calendar,
+                        reminders for Fajr & Maghrib, and helpful basics like wudu steps
+                        and daily adhkar.
+                    </p>
                 </div>
-                <div class="screen-card">
-                    <div class="screen-phone">Mosques near you with basic info and directions.</div>
-                    <div>Mosques &amp; Prayer</div>
-                    <div class="badge-coming">Design in progress</div>
-                </div>
-                <div class="screen-card">
-                    <div class="screen-phone">Ramadan calendar, iftar/suhoor notes and quick duas.</div>
-                    <div>Ramadan Tools</div>
-                    <div class="badge-coming">Coming soon</div>
+                <div class="card">
+                    <h3>Community-friendly design</h3>
+                    <p>
+                        No random content, no distractions. Just focused features for
+                        Muslim families, students and workers in the NY/NJ area.
+                    </p>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- FAQ -->
-    <section id="faq">
-        <div class="pill"><span class="pill-dot"></span> Questions</div>
-        <h2 class="section-title">Frequently asked questions</h2>
-
-        <div class="faq-grid">
-            <article class="faq-card">
-                <div class="faq-q">Is the app already available to download?</div>
-                <div class="faq-a">
-                    Not yet. We are finalizing the first release and preparing the App Store submission.
-                    In the meantime, you can follow us on Instagram and Facebook or send us an email to be notified
-                    as soon as it goes live.
-                </div>
-            </article>
-
-            <article class="faq-card">
-                <div class="faq-q">Which areas does Halal Map Prime cover?</div>
-                <div class="faq-a">
-                    Our first focus is New York and New Jersey. Once the experience is stable and verified in these
-                    areas, we plan to expand to other cities in the United States, in shaa’ Allah.
-                </div>
-            </article>
-
-            <article class="faq-card">
-                <div class="faq-q">How do you make sure places are really halal?</div>
-                <div class="faq-a">
-                    We combine public information, input from owners and feedback from local Muslims. Official
-                    certifications will be clearly marked when available, and we will always welcome community
-                    correction if something is wrong.
-                </div>
-            </article>
-
-            <article class="faq-card">
-                <div class="faq-q">Can my business advertise on Halal Map Prime?</div>
-                <div class="faq-a">
-                    Yes, in the future we plan to offer promotion options inside the app and on this website,
-                    especially during Ramadan and weekends. For early partnership discussions, email us at
-                    <strong><a href="mailto:halalmapprime@outlook.com">halalmapprime@outlook.com</a></strong>.
-                </div>
-            </article>
-        </div>
-    </section>
-
-    <!-- CONTACT -->
-    <section id="contact">
-        <div class="two-col" style="margin-top: 28px;">
-            <div class="panel">
-                <h3>Stay connected</h3>
-                <p>
-                    We’d love your feedback, ideas and support from the Muslim community – especially in New York
-                    and New Jersey.
-                </p>
-                <ul class="panel-list">
-                    <li>Are you an imam, community leader or masjid admin? Reach out and let’s collaborate.</li>
-                    <li>Are you a halal business owner? Send us your details to be part of the launch map.</li>
-                    <li>Are you just excited about the project? Share our social media and make dua for us.</li>
-                </ul>
+        <!-- MAP + PRAYER -->
+        <section class="section" id="map">
+            <div class="pill">
+                <span class="pill-dot"></span> Map & prayer preview
             </div>
+            <h2 class="section-title">See the area before you even open the app</h2>
+            <p class="section-subtitle">
+                The live app will include an interactive map with categories and filters.
+                Here on the website, you can still get a quick preview of the region and
+                a sample of prayer times.
+            </p>
 
-            <div class="panel">
-                <h3>Contact &amp; social links</h3>
-                <p>Email: <strong><a href="mailto:halalmapprime@outlook.com">halalmapprime@outlook.com</a></strong></p>
-                <p>Instagram: <strong><a href="https://www.instagram.com/halalmapprime" target="_blank" rel="noopener">@halalmapprime</a></strong></p>
-                <p>Facebook: <strong><a href="https://www.facebook.com/profile.php?id=61583835974171" target="_blank" rel="noopener">Halal Map Prime Page</a></strong></p>
-                <p>Official website: <strong><a href="https://halalmapprime.com" target="_blank" rel="noopener">halalmapprime.com</a></strong></p>
+            <div class="two-col">
+                <!-- Map panel -->
+                <div class="panel">
+                    <h3>Halal Map area preview</h3>
+                    <p>
+                        Focused on New York & New Jersey. Zoom and drag the map below to get
+                        a feel for the core region Halal Map Prime serves.
+                    </p>
+
+                    <div class="map-frame">
+                        <!-- Using OpenStreetMap embed: no API key needed -->
+                        <iframe
+                            width="100%"
+                            height="320"
+                            frameborder="0"
+                            scrolling="no"
+                            marginheight="0"
+                            marginwidth="0"
+                            src="https://www.openstreetmap.org/export/embed.html?bbox=-74.27,40.48,-73.68,40.92&amp;layer=mapnik&amp;marker=40.71,-74.00">
+                        </iframe>
+                    </div>
+
+                    <p style="font-size:11px; margin-top:8px;">
+                        Map preview for NYC region. The mobile app focuses on verified halal
+                        places and clear categories (restaurants, mosques, markets, butchers).
+                    </p>
+                </div>
+
+                <!-- Prayer panel -->
+                <section class="panel" id="prayer-times">
+                    <h3>Sample prayer times – New York City</h3>
+                    <p>
+                        Below is an example schedule. In the app we plan to integrate
+                        accurate daily timings based on your exact location (in shaa’ Allah).
+                    </p>
+
+                    <table style="width:100%; border-collapse:collapse; margin-top:10px; font-size:12px;">
+                        <thead>
+                        <tr style="text-align:left; color:var(--accent-gold); border-bottom:1px solid rgba(15,23,42,0.08);">
+                            <th style="padding:6px 4px;">Prayer</th>
+                            <th style="padding:6px 4px;">Time (example)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr style="border-bottom:1px solid rgba(15,23,42,0.05);">
+                            <td style="padding:6px 4px;">Fajr</td>
+                            <td style="padding:6px 4px;">05:40 AM</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid rgba(15,23,42,0.05);">
+                            <td style="padding:6px 4px;">Dhuhr</td>
+                            <td style="padding:6px 4px;">12:05 PM</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid rgba(15,23,42,0.05);">
+                            <td style="padding:6px 4px;">Asr</td>
+                            <td style="padding:6px 4px;">03:10 PM</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid rgba(15,23,42,0.05);">
+                            <td style="padding:6px 4px;">Maghrib</td>
+                            <td style="padding:6px 4px;">04:35 PM</td>
+                        </tr>
+                        <tr>
+                            <td style="padding:6px 4px;">Isha</td>
+                            <td style="padding:6px 4px;">06:00 PM</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <div style="margin-top:12px; border-radius:14px; border:1px solid rgba(148,163,184,0.4); padding:8px 10px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <span style="font-size:12px; font-weight:600;">Hijri / Ramadan preview</span>
+                            <span style="font-size:11px; color:var(--text-muted);">Sample month</span>
+                        </div>
+                        <table style="width:100%; font-size:11px; text-align:center;">
+                            <thead>
+                            <tr style="color:var(--accent-primary);">
+                                <th>Su</th><th>Mo</th><th>Tu</th><th>We</th><th>Th</th><th>Fr</th><th>Sa</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr><td></td><td></td><td>1</td><td>2</td><td>3</td><td style="color:#16a34a;">4</td><td>5</td></tr>
+                            <tr><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td style="color:#16a34a;">11</td><td>12</td></tr>
+                            <tr><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td style="color:#16a34a;">18</td><td>19</td></tr>
+                            <tr><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td style="color:#16a34a;">25</td><td>26</td></tr>
+                            <tr><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td></td><td></td></tr>
+                            </tbody>
+                        </table>
+                        <p style="font-size:11px; margin-top:6px;">
+                            Fridays highlighted – later we can mark Ramadan nights, Eid days and
+                            community events inside the app.
+                        </p>
+                    </div>
+                </section>
             </div>
-        </div>
-    </section>
+        </section>
+
+        <!-- SOCIAL & QR -->
+        <section class="section" id="social">
+            <div class="pill">
+                <span class="pill-dot"></span> Community & social
+            </div>
+            <h2 class="section-title">Connect with Halal Map Prime online</h2>
+            <p class="section-subtitle">
+                Scan the QR codes below to follow the official pages for updates, sneak
+                peeks and the final launch of the app on Apple&nbsp;App&nbsp;Store.
+            </p>
+
+            <div class="qr-grid">
+                <!-- Instagram QR -->
+                <div class="qr-card">
+                    <div class="qr-label">Instagram</div>
+                    <div class="qr-handle">@halalmapprime</div>
+                    <div class="qr-img-wrap">
+                        <img
+                            src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https%3A%2F%2Fwww.instagram.com%2Fhalalmapprime"
+                            alt="Instagram QR Code – Halal Map Prime" />
+                    </div>
+                    <div class="qr-note">
+                        Open your camera, point it at the QR,
+                        then tap the Instagram link that appears.
+                    </div>
+                </div>
+
+                <!-- Facebook QR -->
+                <div class="qr-card">
+                    <div class="qr-label">Facebook</div>
+                    <div class="qr-handle">Halal Map Prime</div>
+                    <div class="qr-img-wrap">
+                        <img
+                            src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https%3A%2F%2Fwww.facebook.com%2Fprofile.php%3Fid%3D61583835974171"
+                            alt="Facebook QR Code – Halal Map Prime" />
+                    </div>
+                    <div class="qr-note">
+                        Scan to open the official Facebook page and stay updated.
+                    </div>
+                </div>
+
+                <!-- App coming soon -->
+                <div class="qr-card">
+                    <div class="qr-label">App launch (coming soon)</div>
+                    <div class="qr-handle">Apple App Store • In review soon</div>
+                    <div class="qr-img-wrap">
+                        <div style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;">
+                            <div style="font-size:32px;">📱</div>
+                            <div style="font-size:11px; font-weight:600;">Halal Map Prime</div>
+                            <div style="font-size:10px; color:var(--text-muted);">iPhone app • NY &amp; NJ</div>
+                        </div>
+                    </div>
+                    <div class="qr-note">
+                        Once the app is live, we can generate a dedicated QR code for
+                        direct download from the App Store.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="section" id="faq">
+            <div class="pill">
+                <span class="pill-dot"></span> FAQ
+            </div>
+            <h2 class="section-title">Questions about Halal Map Prime</h2>
+            <p class="section-subtitle">
+                Here are a few quick answers. More details will be available on the
+                App Store page once the app is live, in shaa’ Allah.
+            </p>
+
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h3>Which areas does the app focus on?</h3>
+                    <p>
+                        The first version focuses on New York City and New Jersey:
+                        halal restaurants, mosques, markets and halal butchers in
+                        areas with active Muslim communities.
+                    </p>
+                </div>
+                <div class="faq-item">
+                    <h3>Is everything inside the app halal-verified?</h3>
+                    <p>
+                        We aim to prioritize clearly halal places and community-trusted
+                        locations. Over time, we plan to add clearer labels, certifications
+                        and owner-submitted details with manual review.
+                    </p>
+                </div>
+                <div class="faq-item">
+                    <h3>Will there be ads or paid plans?</h3>
+                    <p>
+                        For users, the app experience aims to stay clean and focused.
+                        For businesses, we may offer halal-friendly promotional options
+                        (like premium listings) that respect the community and local laws.
+                    </p>
+                </div>
+                <div class="faq-item">
+                    <h3>Does it support Android?</h3>
+                    <p>
+                        The first public launch targets iPhone (Apple App Store).
+                        Depending on community demand and resources, an Android version
+                        can follow in a later phase in shaa’ Allah.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <!-- FOOTER -->
     <footer>
-        <div>© <span id="year"></span> Halal Map Prime. All rights reserved.</div>
-        <div class="footer-links">
-            <span>Made for the Muslim community in NY &amp; NJ.</span>
+        <div class="footer-inner">
+            <div>
+                © <span id="year"></span> Halal Map Prime. Built with care for
+                the Muslim community in NY &amp; NJ.
+            </div>
+            <div class="footer-links">
+                <a href="#top">Back to top</a>
+                <span>•</span>
+                <a href="https://www.instagram.com/halalmapprime" target="_blank" rel="noopener">Instagram</a>
+                <span>•</span>
+                <a href="https://www.facebook.com/profile.php?id=61583835974171" target="_blank" rel="noopener">Facebook</a>
+                <span>•</span>
+                <a href="mailto:halalmapprime@outlook.com">Contact</a>
+            </div>
         </div>
     </footer>
 </div>
 
 <script>
-    // set year automatically
+    // Simple year in footer
     document.getElementById("year").textContent = new Date().getFullYear();
 </script>
-
 </body>
 </html>
