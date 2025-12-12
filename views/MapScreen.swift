@@ -1,43 +1,31 @@
 import SwiftUI
 import MapKit
-
+import Combine
 struct MapScreen: View {
-    // MARK: - State / Environment
 
     @EnvironmentObject var lang: LanguageManager
     @StateObject private var viewModel = MapScreenViewModel()
-
-    // 🔹 ViewModel للبنرات المدفوعة (paidAdOrders → MapPaidAdsViewModel)
     @StateObject private var paidBannerVM = MapPaidAdsViewModel()
 
     @State private var selectedCategory: PlaceCategory? = nil
     @State private var searchText: String = ""
     @State private var showResults: Bool = true
     @State private var selectedPlace: Place? = nil
-
-    @State private var showCategoriesRow: Bool = false // إظهار / إخفاء صف الكاتيجوري
+    @State private var showCategoriesRow: Bool = false
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 12) {
 
-                    // HEADER + SEARCH + CATEGORIES
                     header
                     searchBar
                     categoryFilters
-
-                    // 🔺 إعلان Prime / Paid أعلى الصفحة
                     topAdsSection
-
-                    // 🗺 الخريطة (أكبر عشان تبان أكثر)
                     mapView
-
-                    // 🔻 شريط متحرّك صغير لــ Prime Highlights (مطاعم/مساجد/تموين)
                     primeHighlightsCarousel
                         .padding(.horizontal)
 
-                    // قائمة النتائج
                     if showResults {
                         resultsList
                     }
@@ -52,18 +40,12 @@ struct MapScreen: View {
     }
 }
 
-// MARK: - Helper for localization
 private extension MapScreen {
-    func L(_ ar: String, _ en: String) -> String {
-        lang.isArabic ? ar : en
-    }
+    func L(_ ar: String, _ en: String) -> String { lang.isArabic ? ar : en }
 }
 
-// MARK: - Header / Search / Categories / Map / Results
-
 private extension MapScreen {
 
-    // هيدر بهوية إسلامية بسيطة (هلال + سطر تعريفي)
     var header: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
@@ -76,16 +58,10 @@ private extension MapScreen {
                         .font(.title3.bold())
                 }
 
-                Text(
-                    L(
-                        "دليلك إلى كل ما هو حلال في مدينتك",
-                        "Your guide to everything halal in your city"
-                    )
-                )
-                .font(.footnote)
-                .foregroundColor(.secondary)
+                Text(L("دليلك إلى كل ما هو حلال في مدينتك", "Your guide to everything halal in your city"))
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
             }
-
             Spacer()
         }
         .padding(.horizontal)
@@ -96,15 +72,12 @@ private extension MapScreen {
             Image(systemName: "magnifyingglass")
                 .foregroundColor(.secondary)
 
-            TextField(
-                L("ابحث عن مكان حلال…", "Search for a halal place…"),
-                text: $searchText
-            )
-            .textInputAutocapitalization(.never)
-            .disableAutocorrection(true)
-            .onChange(of: searchText) { newValue in
-                viewModel.filterBySearch(text: newValue)
-            }
+            TextField(L("ابحث عن مكان حلال…", "Search for a halal place…"), text: $searchText)
+                .textInputAutocapitalization(.never)
+                .disableAutocorrection(true)
+                .onChange(of: searchText) { newValue in
+                    viewModel.filterBySearch(text: newValue)
+                }
 
             if !searchText.isEmpty {
                 Button {
@@ -122,11 +95,9 @@ private extension MapScreen {
         .padding(.horizontal)
     }
 
-    // ✅ زر "التصنيفات" + صف الكاتيجوري تحتها
     var categoryFilters: some View {
         VStack(spacing: 6) {
 
-            // زر واحد للتصنيفات
             Button {
                 withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
                     showCategoriesRow.toggle()
@@ -146,23 +117,16 @@ private extension MapScreen {
                 }
                 .padding(.vertical, 8)
                 .padding(.horizontal, 12)
-                .background(
-                    Capsule()
-                        .fill(Color(.systemGray6))
-                )
-                .overlay(
-                    Capsule()
-                        .stroke(Color(.systemGray3), lineWidth: 1)
-                )
+                .background(Capsule().fill(Color(.systemGray6)))
+                .overlay(Capsule().stroke(Color(.systemGray3), lineWidth: 1))
             }
             .buttonStyle(.plain)
             .padding(.horizontal)
 
-            // صف الكاتيجوري يظهر فقط عند الفتح
             if showCategoriesRow {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 10) {
-                        ForEach(PlaceCategory.allCases) { category in
+                        ForEach(PlaceCategory.allCases, id: \.id) { category in
                             Button {
                                 if selectedCategory == category {
                                     selectedCategory = nil
@@ -184,13 +148,10 @@ private extension MapScreen {
                                     ? category.mapColor.opacity(0.25)
                                     : Color(.systemGray6)
                                 )
-                                .foregroundColor(
-                                    (selectedCategory == category)
-                                    ? .primary
-                                    : .secondary
-                                )
+                                .foregroundColor((selectedCategory == category) ? .primary : .secondary)
                                 .cornerRadius(10)
                             }
+                            .buttonStyle(.plain)
                         }
                     }
                     .padding(.horizontal)
@@ -220,12 +181,11 @@ private extension MapScreen {
                 }
             }
         }
-        .frame(height: 280) // أكبر من قبل عشان الماب تبان أكثر
+        .frame(height: 280)
         .cornerRadius(16)
         .padding(.horizontal)
     }
 
-    /// قائمة النتائج بدون List عشان ما يصير تعارض Scroll
     var resultsList: some View {
         VStack(spacing: 0) {
             ForEach(viewModel.filteredPlaces) { place in
@@ -235,6 +195,7 @@ private extension MapScreen {
                 } label: {
                     PlaceRowView(place: place)
                 }
+                .buttonStyle(.plain)
 
                 Divider()
                     .padding(.leading, 16)
@@ -244,20 +205,16 @@ private extension MapScreen {
     }
 }
 
-// MARK: - ADS / PRIME SECTIONS
+// MARK: - ADS / PRIME (كما عندك)
 
 private extension MapScreen {
 
-    /// 🔺 أعلى الصفحة: لو في إعلانات مدفوعة → نعرض البنر المدفوع
-    /// لو مافي → نرجع للبنر الإسلامي الثابت
     var topAdsSection: some View {
         Group {
             if !paidBannerVM.activeAds.isEmpty {
-                // بنر الإعلانات المدفوعة (Paid) – جاي من MapPaidBannerView
                 MapPaidBannerView(viewModel: paidBannerVM)
                     .environmentObject(lang)
             } else {
-                // البنر القديم الثابت (Prime Banner) كـ Fallback
                 bigPrimeBanner(
                     titleEN: "Featured halal prime ad",
                     titleAR: "إعلان حلال مميز",
@@ -272,7 +229,6 @@ private extension MapScreen {
         }
     }
 
-    // 🔻 شريط متحرك صغير أسفل الخريطة (Prime Highlights)
     var primeHighlightsCarousel: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 10) {
@@ -296,7 +252,6 @@ private extension MapScreen {
         }
     }
 
-    // مكوّن إعلان Prime كبير – بألوان إسلامية
     func bigPrimeBanner(
         titleEN: String,
         titleAR: String,
@@ -311,7 +266,6 @@ private extension MapScreen {
         let tagText = L(tagTextAR, tagTextEN)
 
         return ZStack {
-            // Gradient إسلامي: أخضر غامق → تركواز
             LinearGradient(
                 colors: [
                     Color(red: 0.02, green: 0.30, blue: 0.23),
@@ -373,14 +327,11 @@ private extension MapScreen {
         .shadow(color: Color.black.opacity(0.18), radius: 8, x: 0, y: 4)
     }
 
-    // مكوّن البانر الصغير (Prime box) لشريط الكاروسيل
     func smallPrimeBanner(icon: String, title: String, subtitle: String) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 6) {
-                Image(systemName: icon)
-                    .font(.caption)
-                Text(title)
-                    .font(.subheadline.bold())
+                Image(systemName: icon).font(.caption)
+                Text(title).font(.subheadline.bold())
             }
             .foregroundColor(.primary)
 
@@ -394,11 +345,8 @@ private extension MapScreen {
                 .foregroundColor(Color(red: 0.0, green: 0.55, blue: 0.45))
         }
         .padding(10)
-        .frame(width: 180, alignment: .leading) // عرض ثابت عشان يتحرك بالشريط
-        .background(
-            RoundedRectangle(cornerRadius: 14)
-                .fill(Color(.systemGray6))
-        )
+        .frame(width: 180, alignment: .leading)
+        .background(RoundedRectangle(cornerRadius: 14).fill(Color(.systemGray6)))
         .shadow(color: Color.black.opacity(0.05), radius: 3, x: 0, y: 2)
     }
 }

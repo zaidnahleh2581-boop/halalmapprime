@@ -1,11 +1,9 @@
 import Foundation
 import MapKit
-import Combine
 import SwiftUI
-
+import Combine
 final class MapScreenViewModel: ObservableObject {
 
-    // MARK: - Published Properties
     @Published var region = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060),
         span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
@@ -18,7 +16,6 @@ final class MapScreenViewModel: ObservableObject {
         loadInitialData()
     }
 
-    // MARK: - Load initial Google data
     func loadInitialData() {
         GooglePlacesService.shared.searchNearbyHalal(
             coordinate: region.center,
@@ -37,7 +34,6 @@ final class MapScreenViewModel: ObservableObject {
         }
     }
 
-    // MARK: - Search by Category
     func searchNearby(category: PlaceCategory?) {
         GooglePlacesService.shared.searchNearbyHalal(
             coordinate: region.center,
@@ -55,20 +51,20 @@ final class MapScreenViewModel: ObservableObject {
         }
     }
 
-    // MARK: - Filter by Search Text
     func filterBySearch(text: String) {
-        if text.isEmpty {
+        let q = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !q.isEmpty else {
             filteredPlaces = places
-        } else {
-            filteredPlaces = places.filter {
-                $0.name.lowercased().contains(text.lowercased())
-            }
+            return
+        }
+
+        filteredPlaces = places.filter {
+            $0.name.localizedCaseInsensitiveContains(q)
         }
     }
 
-    // MARK: - Focus map on selected place
     func focus(on place: Place) {
-        withAnimation {
+        withAnimation(.easeInOut(duration: 0.25)) {
             region = MKCoordinateRegion(
                 center: place.coordinate,
                 span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)

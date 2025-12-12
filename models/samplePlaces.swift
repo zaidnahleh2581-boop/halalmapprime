@@ -1,8 +1,6 @@
 import Foundation
 import CoreLocation
 
-// MARK: - Sample Places (For Testing Only)
-
 let samplePlaces: [Place] = [
     Place(
         id: "1",

@@ -17,6 +17,7 @@
 		151BD9F32EE597800065F10C /* MyAdsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151BD9F22EE597800065F10C /* MyAdsView.swift */; };
 		15683DDF2EE701270011A09F /* JobAdComposerViewswift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15683DDE2EE701270011A09F /* JobAdComposerViewswift.swift */; };
 		1578D8862EE33C8C0053A7CE /* JobAdsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1578D8852EE33C8C0053A7CE /* JobAdsScreen.swift */; };
+		158F24862EECAF0A00FE2256 /* PlaceCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 158F24852EECAF0A00FE2256 /* PlaceCategory.swift */; };
 		15A0D7882EE05AF00063ED79 /* MapScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A0D7872EE05AF00063ED79 /* MapScreen.swift */; };
 		15A0D7922EE05E4C0063ED79 /* PrayerTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A0D7912EE05E4C0063ED79 /* PrayerTime.swift */; };
 		15A0D79A2EE0605D0063ED79 /* PlaceRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A0D7992EE0605D0063ED79 /* PlaceRowView.swift */; };
@@ -63,6 +64,7 @@
 		151BD9F22EE597800065F10C /* MyAdsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAdsView.swift; sourceTree = "<group>"; };
 		15683DDE2EE701270011A09F /* JobAdComposerViewswift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobAdComposerViewswift.swift; sourceTree = "<group>"; };
 		1578D8852EE33C8C0053A7CE /* JobAdsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobAdsScreen.swift; sourceTree = "<group>"; };
+		158F24852EECAF0A00FE2256 /* PlaceCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceCategory.swift; sourceTree = "<group>"; };
 		15A0D7732EE055040063ED79 /* HalalMapPrime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HalalMapPrime.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		15A0D7872EE05AF00063ED79 /* MapScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapScreen.swift; sourceTree = "<group>"; };
 		15A0D7912EE05E4C0063ED79 /* PrayerTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTime.swift; sourceTree = "<group>"; };
@@ -213,6 +215,7 @@
 				15E1626E2EE121DC00A5C42C /* Place.swift */,
 				151BD9E02EE520AA0065F10C /* language */,
 				15B9F2022EEA36FE000BABC7 /* EventAdsModels.swift */,
+				158F24852EECAF0A00FE2256 /* PlaceCategory.swift */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -327,6 +330,7 @@
 				15A0D7A02EE068740063ED79 /* BannerAd.swift in Sources */,
 				15E162482EE0D50500A5C42C /* GooglePlacesService.swift in Sources */,
 				151BD9ED2EE596EC0065F10C /* AdsHomeView.swift in Sources */,
+				158F24862EECAF0A00FE2256 /* PlaceCategory.swift in Sources */,
 				15B48CF32EE1E50300A88AB7 /* GooglePlacesModelsswift.swift in Sources */,
 				15A0D7A22EE07FE90063ED79 /* samplePlaces.swift in Sources */,
 				15E1626F2EE121DC00A5C42C /* Place.swift in Sources */,
