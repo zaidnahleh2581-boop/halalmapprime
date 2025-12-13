@@ -3,8 +3,6 @@
 //  HalalMapPrime
 //
 //  Created by Zaid Nahleh on 12/12/25.
-//  Copyright © 2025 Zaid Nahleh.
-//  All rights reserved.
 //
 
 import SwiftUI
@@ -13,18 +11,14 @@ import UIKit
 
 struct PlaceDetailView: View {
 
-    @EnvironmentObject var lang: LanguageManager
     let place: Place
 
-    // ✅ عدّل رقمك هنا (E.164) مثال: +1718XXXXXXX
-    private let whatsAppNumberE164: String = "+10000000000"
+    // ✅ ضع رقمك هنا (مع كود الدولة بدون +)
+    // مثال أمريكا: 1718xxxxxxx
+    private let whatsappPhoneE164NoPlus: String = "6319475782"
 
-    private func L(_ ar: String, _ en: String) -> String {
-        lang.isArabic ? ar : en
-    }
-
-    // ✅ فقط هذه الأنواع تحتاج توثيق (أكل / لحوم)
-    private var needsVerification: Bool {
+    // ✅ قواعد التوثيق: فقط الأكل/اللحوم
+    private var placeNeedsVerification: Bool {
         switch place.category {
         case .restaurant, .foodTruck, .grocery, .market:
             return true
@@ -33,157 +27,129 @@ struct PlaceDetailView: View {
         }
     }
 
-    // ✅ لون/نوع الشارة حسب الفئة
-    private var badge: (title: String, color: Color, icon: String) {
-        // فئات “الأكل” (توثيق)
-        if needsVerification {
-            if place.isCertified {
-                return (L("حلال موثّق", "Halal Verified"), .green, "checkmark.seal.fill")
-            } else {
-                return (L("غير موثّق", "Unverified"), .gray, "exclamationmark.triangle.fill")
-            }
-        }
+    // ✅ لون البادج: Food = Green / Non-food = Orange
+    private var placeBadgeColor: Color {
+        placeNeedsVerification ? .green : .orange
+    }
 
-        // مساجد/مدارس/مراكز (بدون توثيق)
-        if place.category == .mosque || place.category == .school || place.category == .center {
-            return (L("مجتمع", "Community"), .orange, "person.3.fill")
-        }
+    private var statusText: String {
+        place.isCertified ? "Verified" : "Unverified"
+    }
 
-        // باقي الأنواع (بدون توثيق)
-        return (L("عمل / خدمة", "Business / Service"), .blue, "briefcase.fill")
+    private var statusIcon: String {
+        place.isCertified ? "checkmark.seal.fill" : "exclamationmark.triangle.fill"
+    }
+
+    private var statusColor: Color {
+        place.isCertified ? .green : .orange
     }
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 14) {
 
-                // عنوان + إيموجي + شارة
-                HStack(alignment: .top, spacing: 10) {
+                Text(place.name)
+                    .font(.title2.bold())
+
+                // Category badge
+                HStack(spacing: 8) {
                     Text(place.category.emoji)
-                        .font(.system(size: 34))
+                    Text(place.category.displayName)
+                        .font(.subheadline.weight(.semibold))
+                }
+                .padding(.vertical, 6)
+                .padding(.horizontal, 10)
+                .background(placeBadgeColor.opacity(0.18))
+                .foregroundColor(placeBadgeColor)
+                .cornerRadius(10)
 
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text(place.name)
-                            .font(.title2.bold())
-
-                        HStack(spacing: 8) {
-                            Label(badge.title, systemImage: badge.icon)
-                                .font(.caption.weight(.semibold))
-                                .padding(.vertical, 6)
-                                .padding(.horizontal, 10)
-                                .background(badge.color.opacity(0.18))
-                                .foregroundColor(badge.color)
-                                .clipShape(Capsule())
-
-                            Text(place.category.rawValue)
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-
-                    Spacer()
+                // Address
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Address").font(.headline)
+                    Text("\(place.address), \(place.cityState)")
+                        .foregroundColor(.secondary)
                 }
 
-                // معلومات المكان
-                VStack(alignment: .leading, spacing: 8) {
-                    Label(place.address, systemImage: "mappin.and.ellipse")
-                        .foregroundColor(.primary)
-                    Text(place.cityState)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-
-                    // تقييم (إذا موجود)
-                    HStack(spacing: 10) {
-                        Label(String(format: "%.1f", place.rating), systemImage: "star.fill")
-                            .foregroundColor(.yellow)
-                        Text("(\(place.reviewCount))")
+                // Rating
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Rating").font(.headline)
+                    HStack(spacing: 8) {
+                        Image(systemName: "star.fill").foregroundColor(.yellow)
+                        Text(String(format: "%.1f", place.rating))
+                        Text("(\(place.reviewCount) reviews)")
                             .foregroundColor(.secondary)
                     }
-                    .font(.subheadline)
                 }
-                .padding(.top, 4)
 
-                // خريطة صغيرة
-                Map(
-                    initialPosition: .region(
-                        MKCoordinateRegion(
-                            center: place.coordinate,
-                            span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
-                        )
-                    )
-                ) {
-                    Annotation(place.name, coordinate: place.coordinate) {
-                        VStack(spacing: 2) {
-                            Text(place.category.emoji).font(.system(size: 18))
-                            Circle()
-                                .fill(place.category.mapColor)
-                                .frame(width: 10, height: 10)
-                        }
-                    }
-                }
-                .frame(height: 220)
-                .clipShape(RoundedRectangle(cornerRadius: 16))
+                // ✅ فقط للأكل/اللحوم يظهر Status + زر الواتساب
+                if placeNeedsVerification {
 
-                // ✅ زر واتساب يظهر فقط لو (أكل) و (غير موثّق)
-                if needsVerification && !place.isCertified {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text(L("للحصول على علامة التوثيق:", "To get the verification badge:"))
-                            .font(.subheadline.weight(.semibold))
+                        Text("Status").font(.headline)
 
-                        Text(L(
-                            "أرسل وثيقة/فاتورة/صورة تثبت الحلال عبر واتساب وسيتم مراجعتها.",
-                            "Send an invoice/certificate/photo via WhatsApp and it will be reviewed."
-                        ))
-                        .font(.footnote)
-                        .foregroundColor(.secondary)
+                        HStack(spacing: 8) {
+                            Image(systemName: statusIcon).foregroundColor(statusColor)
+                            Text(statusText).foregroundColor(.secondary)
+                        }
 
                         Button {
                             openWhatsAppVerification()
                         } label: {
                             HStack {
-                                Image(systemName: "message.fill")
-                                Text(L("توثيق عبر WhatsApp", "Verify via WhatsApp"))
-                                    .font(.headline)
                                 Spacer()
-                                Image(systemName: "arrow.up.right")
-                                    .font(.subheadline)
+                                Image(systemName: "message.fill")
+                                Text("Verify via WhatsApp").font(.headline)
+                                Spacer()
                             }
-                            .padding()
-                            .background(Color.green.opacity(0.18))
-                            .foregroundColor(.green)
-                            .clipShape(RoundedRectangle(cornerRadius: 14))
+                            .padding(.vertical, 12)
+                            .background(Color.green)
+                            .foregroundColor(.white)
+                            .cornerRadius(14)
                         }
+                        .padding(.top, 6)
+
+                        Text("Send a photo/invoice to verify halal meat/food.")
+                            .font(.footnote)
+                            .foregroundColor(.secondary)
                     }
-                    .padding(.top, 6)
-                } else if needsVerification && place.isCertified {
-                    Text(L(
-                        "✅ هذا المكان موثّق (حلال).",
-                        "✅ This place is verified (Halal)."
-                    ))
-                    .font(.footnote.weight(.semibold))
-                    .foregroundColor(.green)
-                    .padding(.top, 6)
+
+                } else {
+                    // ✅ مسجد/مدرسة/خدمات… بدون توثيق وبدون زر
+                    Text("No halal meat verification is required for this category.")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
                 }
 
-                Spacer(minLength: 18)
+                Spacer(minLength: 10)
             }
             .padding()
         }
-        .navigationTitle(L("تفاصيل المكان", "Place Details"))
+        .navigationTitle("Details")
         .navigationBarTitleDisplayMode(.inline)
     }
 
     // MARK: - WhatsApp
+
     private func openWhatsAppVerification() {
-        let msgAR = "مرحباً، أريد توثيق مكان في Halal Map Prime.\nالاسم: \(place.name)\nالعنوان: \(place.address), \(place.cityState)\nالنوع: \(place.category.rawValue)\n(أرفق الوثيقة/الفاتورة هنا)"
-        let msgEN = "Hi, I want to verify a place on Halal Map Prime.\nName: \(place.name)\nAddress: \(place.address), \(place.cityState)\nCategory: \(place.category.rawValue)\n(Please attach the proof here)"
+        let msg = """
+        Hi, I want to verify a place on Halal Map Prime.
+        Name: \(place.name)
+        Category: \(place.category.rawValue)
+        Address: \(place.address), \(place.cityState)
+        """
 
-        let message = L(msgAR, msgEN)
-        let encoded = message.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        let encoded = msg.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
 
-        // WhatsApp URL (يفتح الدردشة مباشرة)
-        if let url = URL(string: "https://wa.me/\(whatsAppNumberE164.replacingOccurrences(of: "+", with: ""))?text=\(encoded)") {
-            UIApplication.shared.open(url)
+        // 1) WhatsApp app
+        if let appURL = URL(string: "whatsapp://send?phone=\(whatsappPhoneE164NoPlus)&text=\(encoded)"),
+           UIApplication.shared.canOpenURL(appURL) {
+            UIApplication.shared.open(appURL)
+            return
+        }
+
+        // 2) wa.me fallback
+        if let webURL = URL(string: "https://wa.me/\(whatsappPhoneE164NoPlus)?text=\(encoded)") {
+            UIApplication.shared.open(webURL)
         }
     }
 }
