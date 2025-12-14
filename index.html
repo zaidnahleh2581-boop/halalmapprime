@@ -1,172 +1,276 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" dir="ltr">
 <head>
-  <meta charset="UTF-8">
-  <title>Halal Map Prime</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0b1220" />
+  <title>Halal Map Prime — Global Halal Infrastructure</title>
+  <meta name="description" content="Halal Map Prime: The global halal trust layer for food, places, community, and ethical visibility." />
 
-  <style>
-    :root {
-      --gold: #d4af37;
-      --dark: #020617;
-      --gray: #94a3b8;
-    }
+  <!-- Open Graph -->
+  <meta property="og:title" content="Halal Map Prime — Global Halal Infrastructure" />
+  <meta property="og:description" content="Not just an app. An ecosystem." />
+  <meta property="og:type" content="website" />
 
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: var(--dark);
-      color: white;
-      scroll-behavior: smooth;
-    }
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Arabic + Latin -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
 
-    section {
-      padding: 100px 20px;
-      max-width: 1100px;
-      margin: auto;
-    }
-
-    h1 {
-      font-size: 3.5rem;
-      margin-bottom: 20px;
-    }
-
-    h2 {
-      color: var(--gold);
-      font-size: 2.2rem;
-      margin-bottom: 20px;
-    }
-
-    p {
-      color: var(--gray);
-      font-size: 1.2rem;
-      max-width: 850px;
-    }
-
-    .hero {
-      text-align: center;
-      padding: 140px 20px;
-      background: radial-gradient(circle at top, #0f172a, #020617);
-    }
-
-    .hero span {
-      color: var(--gold);
-    }
-
-    .divider {
-      height: 1px;
-      background: linear-gradient(to right, transparent, var(--gold), transparent);
-      margin: 80px 0;
-    }
-
-    footer {
-      text-align: center;
-      padding: 60px 20px;
-      border-top: 1px solid #1e293b;
-    }
-
-    footer a {
-      color: var(--gold);
-      text-decoration: none;
-      margin: 0 12px;
-      font-size: 1.1rem;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
-    }
-  </style>
+  <link rel="stylesheet" href="./style.css" />
 </head>
 
 <body>
+  <!-- Background FX -->
+  <div class="bg">
+    <div class="bg-orb orb-a"></div>
+    <div class="bg-orb orb-b"></div>
+    <div class="bg-grid"></div>
+    <div class="bg-noise"></div>
+  </div>
 
-<!-- HERO -->
-<div class="hero">
-  <h1>Halal Map <span>Prime</span></h1>
-  <p>
-    A global movement connecting Halal businesses, Muslim communities  
-    and ethical opportunities — starting from New York to the world.
-  </p>
-</div>
+  <!-- Top Bar -->
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="brand">
+        <div class="logo">
+          <span class="logo-moon">☾</span>
+          <span class="logo-star">✦</span>
+        </div>
+        <div class="brand-text">
+          <div class="brand-title">Halal Map Prime</div>
+          <div class="brand-sub" data-i18n="tagline">Global Halal Infrastructure</div>
+        </div>
+      </div>
 
-<!-- ENGLISH -->
-<section>
-  <h2>English — Vision</h2>
-  <p>
-    Halal Map Prime is not just an app — it is a global digital infrastructure
-    built for Muslims living in modern cities.
-    We connect verified Halal restaurants, businesses, services, jobs,
-    and community opportunities into one trusted ecosystem.
-  </p>
+      <nav class="top-actions">
+        <div class="lang">
+          <button class="lang-btn is-active" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="ar">AR</button>
+          <button class="lang-btn" data-lang="fa">FA</button>
+          <button class="lang-btn" data-lang="tr">TR</button>
+          <button class="lang-btn" data-lang="ur">UR</button>
+        </div>
 
-  <p>
-    Built in New York. Designed for the world.
-    Transparency, verification, and community trust are our foundation.
-  </p>
-</section>
+        <a class="pill" href="mailto:Info@Halalmapprime.com" aria-label="Email">
+          <span>✉</span> <span data-i18n="email">Email</span>
+        </a>
+      </nav>
+    </div>
+  </header>
 
-<div class="divider"></div>
+  <!-- HERO -->
+  <main>
+    <section class="hero">
+      <div class="container hero-inner">
+        <div class="hero-copy">
+          <div class="kicker" data-i18n="kicker">Built in New York • Designed for the World</div>
 
-<!-- ARABIC -->
-<section dir="rtl">
-  <h2>العربية — الرؤية</h2>
-  <p>
-    حلال ماب برايم ليس مجرد تطبيق، بل مشروع عالمي يربط
-    المسلمين وأصحاب الأعمال الحلال في منظومة واحدة موثوقة.
-  </p>
+          <h1 class="title">
+            <span data-i18n="heroTitleA">Not just an app.</span>
+            <span class="grad" data-i18n="heroTitleB">An ecosystem.</span>
+          </h1>
 
-  <p>
-    نهدف إلى تسهيل حياة المسلم في المدن الحديثة من خلال
-    الوصول السريع إلى المطاعم الحلال، الخدمات، الوظائف،
-    والعروض الموثوقة.
-  </p>
+          <p class="lead" data-i18n="heroLead">
+            Halal Map Prime is the trust layer on top of the city — halal food, masjids, schools, services,
+            community ads, and ethical visibility — all in one premium experience.
+          </p>
 
-  <p>
-    المشروع انطلق من نيويورك، لكنه صُمم ليخدم العالم كله.
-  </p>
-</section>
+          <div class="cta-row">
+            <a class="btn primary" href="#contact" data-i18n="ctaPrimary">Get Listed / Add Your Location</a>
+            <a class="btn ghost" href="#vision" data-i18n="ctaSecondary">See the Vision</a>
+          </div>
 
-<div class="divider"></div>
+          <div class="mini-proof">
+            <div class="proof-card">
+              <div class="proof-num">NYC</div>
+              <div class="proof-txt" data-i18n="proof1">Launch city</div>
+            </div>
+            <div class="proof-card">
+              <div class="proof-num">Prime</div>
+              <div class="proof-txt" data-i18n="proof2">Paid visibility</div>
+            </div>
+            <div class="proof-card">
+              <div class="proof-num">Trust</div>
+              <div class="proof-txt" data-i18n="proof3">Verified halal layer</div>
+            </div>
+          </div>
+        </div>
 
-<!-- FEATURES -->
-<section>
-  <h2>What Makes Halal Map Prime Different</h2>
-  <p>✔ Verified Halal businesses</p>
-  <p>✔ Community-driven trust system</p>
-  <p>✔ Job opportunities & announcements</p>
-  <p>✔ Ethical advertising</p>
-  <p>✔ Built with modern Apple-level technology</p>
-</section>
+        <div class="hero-panel">
+          <div class="panel">
+            <div class="panel-top">
+              <div class="chip" data-i18n="chipA">Halal • Verified • Premium</div>
+              <div class="chip alt" data-i18n="chipB">Community • Jobs • Events</div>
+            </div>
 
-<div class="divider"></div>
+            <div class="panel-body">
+              <div class="panel-title" data-i18n="panelTitle">The Halal Trust Layer</div>
+              <div class="panel-line" data-i18n="panelLine1">• Show halal places instantly.</div>
+              <div class="panel-line" data-i18n="panelLine2">• Verify food sellers via proof (invoice/photo).</div>
+              <div class="panel-line" data-i18n="panelLine3">• Promote businesses with Prime ads.</div>
+              <div class="panel-line" data-i18n="panelLine4">• One map. One community. One standard.</div>
 
-<!-- COMMUNITY -->
-<section dir="rtl">
-  <h2>مجتمع حلال عالمي</h2>
-  <p>
-    نحن لا نبني موقعاً فقط، بل نبني مجتمعاً رقمياً
-    يحترم القيم الإسلامية ويواكب العصر.
-  </p>
+              <div class="panel-glow"></div>
+            </div>
 
-  <p>
-    حلال ماب برايم مساحة آمنة للتجار، المستخدمين،
-    ورواد الأعمال المسلمين حول العالم.
-  </p>
-</section>
+            <div class="panel-bottom">
+              <a class="social" href="https://www.facebook.com/profile.php?id=61583835974171" target="_blank" rel="noopener">Facebook</a>
+              <span class="dot">•</span>
+              <a class="social" href="https://www.instagram.com/halalmapprime" target="_blank" rel="noopener">Instagram</a>
+              <span class="dot">•</span>
+              <a class="social" href="https://www.tiktok.com/@halalmapprime" target="_blank" rel="noopener">TikTok</a>
+            </div>
+          </div>
+        </div>
+      </div>
 
-<!-- FOOTER -->
-<footer>
-  <p style="color:#94a3b8;">Connect with Halal Map Prime</p>
+      <div class="scroll-hint">
+        <span data-i18n="scroll">Scroll</span>
+        <span class="arrow">↓</span>
+      </div>
+    </section>
 
-  <a href="mailto:info@halalmapprime.com">Email</a>
-  <a href="https://www.instagram.com/halalmapprime" target="_blank">Instagram</a>
-  <a href="https://www.tiktok.com/@halalmapprime" target="_blank">TikTok</a>
-  <a href="https://www.facebook.com/profile.php?id=61583835974171" target="_blank">Facebook</a>
+    <!-- FEATURES -->
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-head">
+          <h2 data-i18n="featuresTitle">What makes it powerful</h2>
+          <p data-i18n="featuresLead">Luxury experience + community utility + halal verification where it matters.</p>
+        </div>
 
-  <p style="margin-top:30px; color:#475569;">
-    © 2025 Halal Map Prime — New York
-  </p>
-</footer>
+        <div class="grid">
+          <article class="card">
+            <div class="icon">🗺️</div>
+            <h3 data-i18n="f1Title">Halal map that feels premium</h3>
+            <p data-i18n="f1Body">Fast discovery of masjids, schools, services and halal places around you.</p>
+          </article>
 
+          <article class="card">
+            <div class="icon">✅</div>
+            <h3 data-i18n="f2Title">Verification where it matters</h3>
+            <p data-i18n="f2Body">Only food/meat sellers require verification. Masjids, schools & services appear directly.</p>
+          </article>
+
+          <article class="card">
+            <div class="icon">📣</div>
+            <h3 data-i18n="f3Title">Prime Ads & paid visibility</h3>
+            <p data-i18n="f3Body">Paid banners and boosted listings for halal businesses that want real growth.</p>
+          </article>
+
+          <article class="card">
+            <div class="icon">👥</div>
+            <h3 data-i18n="f4Title">Community hub</h3>
+            <p data-i18n="f4Body">Jobs, hiring, events, notices — a clean system that supports the Muslim community.</p>
+          </article>
+
+          <article class="card">
+            <div class="icon">⚡</div>
+            <h3 data-i18n="f5Title">Built for scale</h3>
+            <p data-i18n="f5Body">New York first, then NJ, then global cities with the same halal trust standard.</p>
+          </article>
+
+          <article class="card special">
+            <div class="icon">🕌</div>
+            <h3 data-i18n="f6Title">Islamic identity, modern execution</h3>
+            <p data-i18n="f6Body">A world-class product that reflects who we are — strong, clean, and future-ready.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- VISION -->
+    <section class="section dark" id="vision">
+      <div class="container">
+        <div class="section-head">
+          <h2 data-i18n="visionTitle">Global vision</h2>
+          <p data-i18n="visionLead">A halal infrastructure layer across the world’s biggest cities.</p>
+        </div>
+
+        <div class="timeline">
+          <div class="step">
+            <div class="badge">01</div>
+            <div>
+              <h3 data-i18n="v1Title">New York City</h3>
+              <p data-i18n="v1Body">The strongest launch: diverse, fast, and the world is watching.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="badge">02</div>
+            <div>
+              <h3 data-i18n="v2Title">New Jersey</h3>
+              <p data-i18n="v2Body">Expand coverage, strengthen trust, and lock in the ecosystem.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="badge">03</div>
+            <div>
+              <h3 data-i18n="v3Title">London • Toronto • Dubai • Istanbul</h3>
+              <p data-i18n="v3Body">Scale to global hubs with the same premium standard and verification model.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="quote">
+          <div class="quote-mark">“</div>
+          <p data-i18n="quote">
+            Google shows places. Halal Map Prime shows TRUST.
+          </p>
+          <div class="quote-by" data-i18n="quoteBy">— Halal Map Prime</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="section-head">
+          <h2 data-i18n="contactTitle">Get listed / Contact</h2>
+          <p data-i18n="contactLead">Business? Masjid? School? Service? Want Prime Ads? Contact us now.</p>
+        </div>
+
+        <div class="contact-grid">
+          <div class="contact-card">
+            <div class="contact-title" data-i18n="contactEmailTitle">Email</div>
+            <a class="contact-link" href="mailto:Info@Halalmapprime.com">Info@Halalmapprime.com</a>
+            <div class="contact-hint" data-i18n="contactEmailHint">Best for detailed requests & documents.</div>
+          </div>
+
+          <div class="contact-card">
+            <div class="contact-title" data-i18n="contactWaTitle">WhatsApp</div>
+            <button class="contact-link as-btn" id="waBtn">Open WhatsApp</button>
+            <div class="contact-hint" data-i18n="contactWaHint">Fast for verification (invoice/photo) & quick support.</div>
+          </div>
+
+          <div class="contact-card">
+            <div class="contact-title" data-i18n="contactSocialTitle">Social</div>
+            <div class="social-row">
+              <a class="chiplink" href="https://www.instagram.com/halalmapprime" target="_blank" rel="noopener">Instagram</a>
+              <a class="chiplink" href="https://www.tiktok.com/@halalmapprime" target="_blank" rel="noopener">TikTok</a>
+              <a class="chiplink" href="https://www.facebook.com/profile.php?id=61583835974171" target="_blank" rel="noopener">Facebook</a>
+            </div>
+            <div class="contact-hint" data-i18n="contactSocialHint">Follow us & share the movement.</div>
+          </div>
+        </div>
+
+        <footer class="footer">
+          <div class="footer-left">
+            <div class="footer-brand">Halal Map Prime</div>
+            <div class="footer-sub" data-i18n="footerSub">Not just an app. An ecosystem.</div>
+          </div>
+          <div class="footer-right">
+            <span>© <span id="year"></span></span>
+            <span class="dot">•</span>
+            <span data-i18n="footerBuilt">Built in New York</span>
+          </div>
+        </footer>
+      </div>
+    </section>
+  </main>
+
+  <script src="./app.js"></script>
 </body>
 </html>
