@@ -2,6 +2,8 @@
 //  MapScreen.swift
 //  Halal Map Prime
 //
+//  Created by Zaid Nahleh
+//
 //  Home = Yelp-style Ads Feed (NO MAP)
 //  Search only (optional) + Categories row + Ads cards with images
 //
@@ -12,7 +14,6 @@ struct MapScreen: View {
 
     @EnvironmentObject var lang: LanguageManager
     @StateObject private var viewModel = MapScreenViewModel()
-
     @ObservedObject private var adsStore = AdsStore.shared
 
     @State private var searchText: String = ""
@@ -69,6 +70,7 @@ struct MapScreen: View {
 
 // MARK: - Helpers
 private extension MapScreen {
+
     func L(_ ar: String, _ en: String) -> String { lang.isArabic ? ar : en }
 
     func localizedCategoryName(_ category: PlaceCategory) -> String {
@@ -152,7 +154,6 @@ private extension MapScreen {
 
                     ForEach(topCategories) { category in
                         Button {
-                            // optional: load places for the category
                             viewModel.searchNearby(category: category)
                             pushCategory = category
                         } label: {
@@ -278,7 +279,9 @@ private extension MapScreen {
 
     func adButtonCard(_ ad: Ad) -> some View {
         Button {
-            if let place = viewModel.places.first(where: { $0.id == ad.placeId }) {
+            // ✅ FIX: placeId is optional
+            if let pid = ad.placeId,
+               let place = viewModel.places.first(where: { $0.id == pid }) {
                 selectedPlace = place
             }
         } label: {
@@ -296,7 +299,11 @@ private extension MapScreen {
 
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 4) {
-                    if let place = viewModel.places.first(where: { $0.id == ad.placeId }) {
+
+                    // ✅ FIX: placeId optional + fallback text
+                    if let pid = ad.placeId,
+                       let place = viewModel.places.first(where: { $0.id == pid }) {
+
                         Text(place.name)
                             .font(.subheadline.bold())
                             .lineLimit(1)
@@ -305,10 +312,12 @@ private extension MapScreen {
                             .font(.caption)
                             .foregroundColor(.secondary)
                             .lineLimit(1)
+
                     } else {
                         Text(L("إعلان", "Ad"))
                             .font(.subheadline.bold())
-                        Text(ad.placeId)
+
+                        Text(ad.placeId ?? "—")
                             .font(.caption2)
                             .foregroundColor(.secondary)
                             .lineLimit(1)
