@@ -1,18 +1,25 @@
+//
+//  CommunityHubScreen.swift
+//  HalalMapPrime
+//
+//  Created by Zaid Nahleh on 12/16/25.
+//
+
 import SwiftUI
 
 /// مركز المجتمع في Halal Map Prime:
 /// - إعلانات مجانية (وظائف + فعاليات + لوحة عامة)
-/// - إضافة مسجد / محل
+/// - توثيق موقعك على الخريطة (Verified Your Location)
 /// - ميزات قادمة
 struct CommunityHubScreen: View {
 
     @EnvironmentObject var lang: LanguageManager
 
     // شيتات
-    @State private var showJobsBoard: Bool = false        // شاشة إعلانات الوظائف
-    @State private var showEventsBoard: Bool = false      // شاشة إعلانات الفعاليات
-    @State private var showNoticeBoard: Bool = false      // شاشة لوحة الإعلانات العامة
-    @State private var showAddPlace: Bool = false         // شاشة إضافة مسجد / محل
+    @State private var showJobsBoard: Bool = false
+    @State private var showEventsBoard: Bool = false
+    @State private var showNoticeBoard: Bool = false
+    @State private var showAddPlace: Bool = false
 
     private func L(_ ar: String, _ en: String) -> String {
         lang.isArabic ? ar : en
@@ -26,15 +33,13 @@ struct CommunityHubScreen: View {
                     headerSection
                         .padding(.horizontal)
 
-                    // قسم الإعلانات المجانية
                     freeAdsSection
                         .padding(.horizontal)
 
-                    // ✅ قسم إضافة مسجد / محل
-                    addPlaceSection
+                    // ✅ بدل AddMasjid/AddRestaurant... نخليها توثيق
+                    verifyLocationSection
                         .padding(.horizontal)
 
-                    // قسم الميزات القادمة
                     comingSoonSection
                         .padding(.horizontal)
 
@@ -46,7 +51,6 @@ struct CommunityHubScreen: View {
             .navigationTitle(L("مركز المجتمع", "Community hub"))
             .navigationBarTitleDisplayMode(.inline)
 
-            // ✅ الشاشات المرتبطة
             .sheet(isPresented: $showJobsBoard) {
                 JobAdsBoardView()
                     .environmentObject(lang)
@@ -60,6 +64,7 @@ struct CommunityHubScreen: View {
                     .environmentObject(lang)
             }
             .sheet(isPresented: $showAddPlace) {
+                // نفس الشاشة الحالية، لكن الفكرة “Verify”
                 AddStoreScreen()
                     .environmentObject(lang)
             }
@@ -71,7 +76,6 @@ struct CommunityHubScreen: View {
 
 private extension CommunityHubScreen {
 
-    /// هيدر بهوية مجتمع إسلامي
     var headerSection: some View {
         HStack(alignment: .top, spacing: 10) {
             ZStack {
@@ -110,7 +114,6 @@ private extension CommunityHubScreen {
         }
     }
 
-    /// قسم الإعلانات المجانية (وظائف + فعاليات + لوحة عامة)
     var freeAdsSection: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text(L("إعلانات المجتمع المجانية", "Free community ads"))
@@ -127,50 +130,40 @@ private extension CommunityHubScreen {
 
             VStack(spacing: 10) {
 
-                // وظائف
                 FreeAdCard(
                     title: L("إعلانات الوظائف", "Job ads"),
                     subtitle: L("أبحث عن عمل أو أبحث عن موظف", "Looking for a job or hiring"),
                     icon: "briefcase.fill",
                     accent: .green
-                ) {
-                    showJobsBoard = true
-                }
+                ) { showJobsBoard = true }
 
-                // فعاليات
                 FreeAdCard(
                     title: L("إعلانات الفعاليات", "Events ads"),
                     subtitle: L("إفطارات، دروس، لقاءات، نشاطات للمجتمع", "Iftars, lectures, meetups and community activities"),
                     icon: "calendar.badge.plus",
                     accent: .blue
-                ) {
-                    showEventsBoard = true
-                }
+                ) { showEventsBoard = true }
 
-                // لوحة عامة
                 FreeAdCard(
                     title: L("لوحة الإعلانات العامة", "Community notice board"),
                     subtitle: L("إعلانات عامة، تنبيهات، أشياء مفقودة، وغير ذلك", "General announcements, alerts, lost & found and more"),
                     icon: "text.bubble.fill",
                     accent: .teal
-                ) {
-                    showNoticeBoard = true
-                }
+                ) { showNoticeBoard = true }
             }
         }
     }
 
-    /// قسم توثيق موقع/نشاط (Verified)
-    var addPlaceSection: some View {
+    /// ✅ القسم الجديد: Verify Your Location
+    var verifyLocationSection: some View {
         VStack(alignment: .leading, spacing: 10) {
-
-            Text(L("وثّق موقعك الحلال", "Verify your halal location"))
+            Text(L("وثّق موقعك على الخريطة", "Verify your location on the map"))
                 .font(.subheadline.bold())
 
             Text(
                 L(
-                    "وثّق مطعمك أو محلك ليظهر كـ (Verified) على خريطة Halal Map Prime ويصل للمجتمع المسلم.",
-                    "Verify your restaurant or store to appear as (Verified) on Halal Map Prime map and reach the Muslim community."
+                    "إذا عندك مطعم أو محل حلال: قدّم طلب توثيق لموقعك ليظهر بشكل رسمي داخل Halal Map Prime.",
+                    "If you own a halal restaurant or store: submit a verification request so your place appears officially on Halal Map Prime."
                 )
             )
             .font(.caption)
@@ -180,7 +173,6 @@ private extension CommunityHubScreen {
                 showAddPlace = true
             } label: {
                 HStack(spacing: 10) {
-
                     Image(systemName: "checkmark.seal.fill")
                         .font(.title3)
                         .foregroundColor(.white)
@@ -191,14 +183,13 @@ private extension CommunityHubScreen {
                         )
 
                     VStack(alignment: .leading, spacing: 2) {
-
-                        Text(L("وثّق مطعمك أو محلك كحلال", "Verify your restaurant or store"))
+                        Text(L("وثّق مطعمك / محلك (Halal Verified)", "Verify your restaurant / store (Halal Verified)"))
                             .font(.subheadline.bold())
 
                         Text(
                             L(
-                                "تقديم طلب توثيق (Verified) — مراجعة بسيطة قبل النشر.",
-                                "Submit a verification request (Verified) — quick review before publishing."
+                                "ارسل معلومات موقعك وسيتم مراجعته وإضافته بشكل موثّق.",
+                                "Submit your place details and it will be reviewed and added as verified."
                             )
                         )
                         .font(.caption)
@@ -217,7 +208,7 @@ private extension CommunityHubScreen {
             .buttonStyle(.plain)
         }
     }
-    /// قسم الميزات القادمة للمجتمع
+
     var comingSoonSection: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text(L("ميزات قادمة للمجتمع", "Coming soon for the community"))
@@ -251,7 +242,7 @@ private extension CommunityHubScreen {
         }
     }
 
-    private func comingSoonRow(icon: String, title: String, message: String) -> some View {
+    func comingSoonRow(icon: String, title: String, message: String) -> some View {
         HStack(spacing: 10) {
             Image(systemName: icon)
                 .foregroundColor(.secondary)
@@ -267,7 +258,7 @@ private extension CommunityHubScreen {
     }
 }
 
-// MARK: - Free Ad Card Component
+// MARK: - Free Ad Card
 
 private struct FreeAdCard: View {
 

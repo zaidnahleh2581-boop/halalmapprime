@@ -11,7 +11,6 @@
 		151BD9E42EE5223D0065F10C /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151BD9E32EE5223D0065F10C /* LanguageManager.swift */; };
 		151BD9E62EE522760065F10C /* LanguageSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151BD9E52EE522760065F10C /* LanguageSelectionView.swift */; };
 		151BD9EA2EE528050065F10C /* AdsHomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151BD9E92EE528050065F10C /* AdsHomeScreen.swift */; };
-		151BD9ED2EE596EC0065F10C /* AdsHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151BD9EC2EE596EC0065F10C /* AdsHomeView.swift */; };
 		151BD9EF2EE597260065F10C /* SelectAdPlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151BD9EE2EE597260065F10C /* SelectAdPlanView.swift */; };
 		151BD9F32EE597800065F10C /* MyAdsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151BD9F22EE597800065F10C /* MyAdsView.swift */; };
 		15683DDF2EE701270011A09F /* JobAdComposerViewswift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15683DDE2EE701270011A09F /* JobAdComposerViewswift.swift */; };
@@ -26,6 +25,7 @@
 		15A0D7A02EE068740063ED79 /* BannerAd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A0D79F2EE068740063ED79 /* BannerAd.swift */; };
 		15A0D7A22EE07FE90063ED79 /* samplePlaces.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A0D7A12EE07FE90063ED79 /* samplePlaces.swift */; };
 		15A0D7A42EE0BBD90063ED79 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 15A0D7A32EE0BBD90063ED79 /* GoogleService-Info.plist */; };
+		15A8E3322EF17D1A00B770F4 /* AdsHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A8E3312EF17D1A00B770F4 /* AdsHomeView.swift */; };
 		15B48CDC2EE1A70C00A88AB7 /* AddStoreViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B48CDB2EE1A70C00A88AB7 /* AddStoreViewModel.swift */; };
 		15B48CDF2EE1B2A600A88AB7 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 15B48CDE2EE1B2A600A88AB7 /* FirebaseAnalytics */; };
 		15B48CE12EE1B2A600A88AB7 /* FirebaseAnalyticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 15B48CE02EE1B2A600A88AB7 /* FirebaseAnalyticsCore */; };
@@ -50,7 +50,6 @@
 		151BD9E32EE5223D0065F10C /* LanguageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageManager.swift; sourceTree = "<group>"; };
 		151BD9E52EE522760065F10C /* LanguageSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageSelectionView.swift; sourceTree = "<group>"; };
 		151BD9E92EE528050065F10C /* AdsHomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdsHomeScreen.swift; sourceTree = "<group>"; };
-		151BD9EC2EE596EC0065F10C /* AdsHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdsHomeView.swift; sourceTree = "<group>"; };
 		151BD9EE2EE597260065F10C /* SelectAdPlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectAdPlanView.swift; sourceTree = "<group>"; };
 		151BD9F22EE597800065F10C /* MyAdsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAdsView.swift; sourceTree = "<group>"; };
 		15683DDE2EE701270011A09F /* JobAdComposerViewswift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobAdComposerViewswift.swift; sourceTree = "<group>"; };
@@ -66,6 +65,7 @@
 		15A0D79F2EE068740063ED79 /* BannerAd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerAd.swift; sourceTree = "<group>"; };
 		15A0D7A12EE07FE90063ED79 /* samplePlaces.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = samplePlaces.swift; sourceTree = "<group>"; };
 		15A0D7A32EE0BBD90063ED79 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		15A8E3312EF17D1A00B770F4 /* AdsHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdsHomeView.swift; sourceTree = "<group>"; };
 		15B48CDB2EE1A70C00A88AB7 /* AddStoreViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddStoreViewModel.swift; sourceTree = "<group>"; };
 		15B48CF22EE1E50300A88AB7 /* GooglePlacesModelsswift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GooglePlacesModelsswift.swift; sourceTree = SOURCE_ROOT; };
 		15CEB1F52EE78A810035A83D /* EventAdsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventAdsService.swift; sourceTree = "<group>"; };
@@ -118,12 +118,12 @@
 		151BD9EB2EE596C00065F10C /* ADS */ = {
 			isa = PBXGroup;
 			children = (
-				151BD9EC2EE596EC0065F10C /* AdsHomeView.swift */,
 				151BD9EE2EE597260065F10C /* SelectAdPlanView.swift */,
 				151BD9F22EE597800065F10C /* MyAdsView.swift */,
 				15683DDE2EE701270011A09F /* JobAdComposerViewswift.swift */,
 				15CEB1F52EE78A810035A83D /* EventAdsService.swift */,
 				15CEB1F72EE78AB00035A83D /* EventAdComposerView.swift */,
+				15A8E3312EF17D1A00B770F4 /* AdsHomeView.swift */,
 			);
 			path = ADS;
 			sourceTree = "<group>";
@@ -301,7 +301,7 @@
 				151BD9F32EE597800065F10C /* MyAdsView.swift in Sources */,
 				15A0D7A02EE068740063ED79 /* BannerAd.swift in Sources */,
 				15E162482EE0D50500A5C42C /* GooglePlacesService.swift in Sources */,
-				151BD9ED2EE596EC0065F10C /* AdsHomeView.swift in Sources */,
+				15A8E3322EF17D1A00B770F4 /* AdsHomeView.swift in Sources */,
 				15B48CF32EE1E50300A88AB7 /* GooglePlacesModelsswift.swift in Sources */,
 				15A0D7A22EE07FE90063ED79 /* samplePlaces.swift in Sources */,
 				15E1626F2EE121DC00A5C42C /* Place.swift in Sources */,

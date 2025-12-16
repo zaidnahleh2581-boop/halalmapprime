@@ -1,3 +1,10 @@
+//
+//  AddStoreScreen.swift
+//  HalalMapPrime
+//
+//  Created by Zaid Nahleh on 12/16/25.
+//
+
 import SwiftUI
 
 struct AddStoreScreen: View {
@@ -7,22 +14,22 @@ struct AddStoreScreen: View {
 
     @State private var requestHalalVerification = false
 
-    // MARK: - Static Strings (compiler-safe)
+    // MARK: - Copy (compiler-safe)
 
-    private let titleAR = "أضف عنوانك"
-    private let titleEN = "Add Location"
+    private let titleAR = "وثّق موقعك"
+    private let titleEN = "Verify your location"
 
-    private let subtitleAR = "املأ المعلومات بالأسفل. سنراجع الإضافة قبل ظهورها على الخريطة."
-    private let subtitleEN = "Please fill in the details below. We'll review the submission before it appears on the map."
+    private let subtitleAR = "املأ المعلومات بالأسفل. سنراجع الطلب قبل ظهور الموقع على الخريطة."
+    private let subtitleEN = "Fill in the details below. We review submissions before they appear on the map."
 
-    private let submitAR = "إرسال"
-    private let submitEN = "Submit"
+    private let submitAR = "إرسال الطلب"
+    private let submitEN = "Submit request"
 
     private let successBaseAR = "تم استلام طلبك. سنراجعه ثم نضيفه على الخريطة إن شاء الله."
     private let successBaseEN = "Your submission has been received. We'll review it and add it to the map."
 
-    private let verifyHintAR = "للحصول على (Verified Halal)، يرجى إرسال إثبات (فاتورة أو صورة للمحل) على واتساب:"
-    private let verifyHintEN = "To get “Verified Halal”, please send proof (receipt or store photo) to WhatsApp:"
+    private let verifyHintAR = "للحصول على (Halal Verified)، يرجى إرسال إثبات (فاتورة أو صورة للمحل) على واتساب:"
+    private let verifyHintEN = "To get “Halal Verified”, please send proof (receipt or store photo) to WhatsApp:"
 
     private let whatsappNumber = "+1 (631) 947-8782"
 
@@ -45,6 +52,11 @@ struct AddStoreScreen: View {
         }
         return base
     }
+
+    private func L(_ ar: String, _ en: String) -> String {
+        lang.isArabic ? ar : en
+    }
+
     private func categoryLabelAR(_ category: PlaceCategory) -> String {
         switch category {
         case .restaurant: return "مطعم"
@@ -59,19 +71,45 @@ struct AddStoreScreen: View {
         case .funeral: return "مغسلة/دفن"
         default: return "أخرى"
         }
-    }    // MARK: - BODY (very small)
+    }
+
+    private func categoryLabelEN(_ category: PlaceCategory) -> String {
+        switch category {
+        case .restaurant: return "Restaurant"
+        case .grocery: return "Grocery"
+        case .foodTruck: return "Food truck"
+        case .market: return "Market"
+        case .mosque: return "Masjid"
+        case .school: return "School"
+        case .service: return "Service"
+        case .shop: return "Shop"
+        case .center: return "Center"
+        case .funeral: return "Funeral service"
+        default: return "Other"
+        }
+    }
+
+    private func categoryTitle(_ category: PlaceCategory) -> String {
+        lang.isArabic ? categoryLabelAR(category) : categoryLabelEN(category)
+    }
+
+    // MARK: - BODY
 
     var body: some View {
         NavigationStack {
             content
                 .navigationTitle(lang.isArabic ? titleAR : titleEN)
                 .navigationBarTitleDisplayMode(.inline)
+
+                // Success
                 .alert(lang.isArabic ? "شكراً لك!" : "Thank you!",
                        isPresented: $vm.showSuccessAlert) {
                     Button("OK", role: .cancel) { }
                 } message: {
                     Text(successMessage)
                 }
+
+                // Validation
                 .alert(lang.isArabic ? "يرجى تعبئة الحقول المطلوبة" : "Please fill all required fields",
                        isPresented: $vm.showValidationAlert) {
                     Button("OK", role: .cancel) { }
@@ -92,16 +130,17 @@ struct AddStoreScreen: View {
             }
             .padding()
         }
+        .background(Color(.systemGroupedBackground).ignoresSafeArea())
     }
 
     // MARK: - SECTIONS
 
     private var headerSection: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(lang.isArabic ? titleAR : titleEN)
+            Text(L(titleAR, titleEN))
                 .font(.title2.bold())
 
-            Text(lang.isArabic ? subtitleAR : subtitleEN)
+            Text(L(subtitleAR, subtitleEN))
                 .font(.subheadline)
                 .foregroundColor(.secondary)
         }
@@ -109,7 +148,7 @@ struct AddStoreScreen: View {
 
     private var categorySection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(lang.isArabic ? "التصنيف" : "Category")
+            Text(L("نوع الموقع", "Place type"))
                 .font(.headline)
 
             ScrollView(.horizontal, showsIndicators: false) {
@@ -118,28 +157,34 @@ struct AddStoreScreen: View {
                         Button {
                             vm.selectedCategory = category
                         } label: {
-                            Text(lang.isArabic ? categoryLabelAR(category) : category.rawValue)                                .font(.subheadline)
+                            Text(categoryTitle(category))
+                                .font(.subheadline)
                                 .padding(.horizontal, 12)
                                 .padding(.vertical, 10)
                                 .background(
                                     vm.selectedCategory == category
-                                    ? Color.blue.opacity(0.2)
+                                    ? Color.blue.opacity(0.20)
                                     : Color(.systemGray6)
                                 )
                                 .cornerRadius(16)
                         }
+                        .buttonStyle(.plain)
                     }
                 }
             }
+
+            Text(L("اختر التصنيف الأقرب لمكانك. هذا يساعدنا في ترتيب ظهور الموقع داخل التطبيق.",
+                   "Choose the closest category. This helps us organize how your place appears in the app."))
+            .font(.footnote)
+            .foregroundColor(.secondary)
         }
     }
 
     private var verificationSection: some View {
         VStack(alignment: .leading, spacing: 8) {
+
             Toggle(
-                lang.isArabic
-                ? "طلب توثيق (Verified Halal)"
-                : "Request Verified Halal",
+                L("أريد شارة Halal Verified (اختياري)", "I want a Halal Verified badge (optional)"),
                 isOn: $requestHalalVerification
             )
             .tint(.orange)
@@ -147,12 +192,10 @@ struct AddStoreScreen: View {
             if requestHalalVerification {
                 Text(
                     isFoodCategory
-                    ? (lang.isArabic
-                       ? "بعد الإرسال: أرسل فاتورة أو صورة للمحل على واتساب."
-                       : "After submitting: send a receipt or store photo to WhatsApp.")
-                    : (lang.isArabic
-                       ? "التوثيق مخصص عادة لأماكن الطعام فقط."
-                       : "Verification is typically for food places only.")
+                    ? L("بعد الإرسال: أرسل فاتورة أو صورة للمحل على واتساب لإكمال التوثيق.",
+                        "After submitting: send a receipt or store photo to WhatsApp to complete verification.")
+                    : L("التوثيق عادة مخصص لأماكن الطعام فقط. يمكنك المتابعة بدون توثيق.",
+                        "Verification is typically for food places. You can continue without verification.")
                 )
                 .font(.footnote)
                 .foregroundColor(.secondary)
@@ -165,27 +208,27 @@ struct AddStoreScreen: View {
 
     private var fieldsSection: some View {
         Group {
-            TextField(lang.isArabic ? "اسم المكان" : "Place name", text: $vm.name)
+            TextField(L("اسم المكان", "Place name"), text: $vm.name)
                 .textFieldStyle(.roundedBorder)
 
-            TextField(lang.isArabic ? "العنوان" : "Address", text: $vm.address)
+            TextField(L("العنوان", "Address"), text: $vm.address)
                 .textFieldStyle(.roundedBorder)
 
             HStack {
-                TextField(lang.isArabic ? "المدينة" : "City", text: $vm.city)
+                TextField(L("المدينة", "City"), text: $vm.city)
                     .textFieldStyle(.roundedBorder)
 
-                TextField(lang.isArabic ? "الولاية" : "State", text: $vm.state)
+                TextField(L("الولاية", "State"), text: $vm.state)
                     .textFieldStyle(.roundedBorder)
             }
 
-            TextField(lang.isArabic ? "الهاتف" : "Phone", text: $vm.phone)
+            TextField(L("الهاتف", "Phone"), text: $vm.phone)
                 .textFieldStyle(.roundedBorder)
 
-            TextField(lang.isArabic ? "الموقع الإلكتروني" : "Website (optional)", text: $vm.website)
+            TextField(L("الموقع الإلكتروني (اختياري)", "Website (optional)"), text: $vm.website)
                 .textFieldStyle(.roundedBorder)
 
-            TextField(lang.isArabic ? "ملاحظات" : "Notes (optional)", text: $vm.notes, axis: .vertical)
+            TextField(L("ملاحظات (اختياري)", "Notes (optional)"), text: $vm.notes, axis: .vertical)
                 .textFieldStyle(.roundedBorder)
                 .lineLimit(3, reservesSpace: true)
         }
@@ -198,8 +241,8 @@ struct AddStoreScreen: View {
             } label: {
                 Text(
                     vm.isSubmitting
-                    ? (lang.isArabic ? "جارٍ الإرسال..." : "Submitting...")
-                    : (lang.isArabic ? submitAR : submitEN)
+                    ? L("جارٍ الإرسال...", "Submitting...")
+                    : L(submitAR, submitEN)
                 )
                 .font(.headline)
                 .frame(maxWidth: .infinity)
@@ -211,6 +254,13 @@ struct AddStoreScreen: View {
             if vm.isSubmitting {
                 ProgressView()
             }
+
+            // WhatsApp hint (always visible but subtle)
+            Text(L("للتوثيق أو الاستفسار: واتساب \(whatsappNumber)",
+                   "For verification or questions: WhatsApp \(whatsappNumber)"))
+            .font(.caption2)
+            .foregroundColor(.secondary)
+            .padding(.top, 2)
         }
     }
 }

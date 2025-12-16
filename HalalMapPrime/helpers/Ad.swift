@@ -1,3 +1,10 @@
+//
+//  Ad.swift
+//  HalalMapPrime
+//
+//  Created by zaid nahleh on 12/16/25.
+//
+
 import Foundation
 
 struct Ad: Identifiable, Hashable, Codable {
@@ -24,6 +31,25 @@ struct Ad: Identifiable, Hashable, Codable {
     let tier: Tier
     let status: Status
     let createdAt: Date
+
+    // ✅ مدة الإعلان الافتراضية
+    var durationDays: Int {
+        switch tier {
+        case .free: return 30
+        case .standard: return 30   // لاحقاً نغيرها حسب الخطة
+        case .prime: return 30      // لاحقاً نغيرها حسب الخطة
+        }
+    }
+
+    // ✅ تاريخ الانتهاء
+    var expiresAt: Date {
+        Calendar.current.date(byAdding: .day, value: durationDays, to: createdAt) ?? createdAt
+    }
+
+    // ✅ هل انتهى؟
+    var isExpired: Bool {
+        Date() >= expiresAt
+    }
 
     init(
         id: String = UUID().uuidString,
