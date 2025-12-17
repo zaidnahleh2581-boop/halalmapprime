@@ -190,3 +190,82 @@ struct Ad: Identifiable, Hashable, Codable {
         }
     }
 }
+import FirebaseFirestore
+
+extension Ad {
+
+    func toFirestore() -> [String: Any] {
+        return [
+            "tier": tier.rawValue,
+            "status": status.rawValue,
+            "placeId": placeId as Any,
+            "imagePaths": imagePaths,
+
+            "businessName": businessName,
+            "ownerName": ownerName,
+            "phone": phone,
+            "addressLine": addressLine,
+            "city": city,
+            "state": state,
+            "businessType": businessType.rawValue,
+
+            "template": template.rawValue,
+
+            "createdAt": Timestamp(date: createdAt),
+            "expiresAt": Timestamp(date: expiresAt),
+            "freeCooldownKey": freeCooldownKey
+        ]
+    }
+
+    static func fromFirestore(id: String, data: [String: Any]) -> Ad? {
+        guard
+            let tierStr = data["tier"] as? String,
+            let tier = Tier(rawValue: tierStr),
+            let statusStr = data["status"] as? String,
+            let status = Status(rawValue: statusStr),
+
+            let imagePaths = data["imagePaths"] as? [String],
+
+            let businessName = data["businessName"] as? String,
+            let ownerName = data["ownerName"] as? String,
+            let phone = data["phone"] as? String,
+            let addressLine = data["addressLine"] as? String,
+            let city = data["city"] as? String,
+            let state = data["state"] as? String,
+
+            let businessTypeStr = data["businessType"] as? String,
+            let businessType = BusinessType(rawValue: businessTypeStr),
+
+            let templateStr = data["template"] as? String,
+            let template = CopyTemplate(rawValue: templateStr),
+
+            let createdAtTS = data["createdAt"] as? Timestamp,
+            let expiresAtTS = data["expiresAt"] as? Timestamp,
+
+            let freeCooldownKey = data["freeCooldownKey"] as? String
+        else {
+            return nil
+        }
+
+        let placeId = data["placeId"] as? String
+
+        return Ad(
+            id: id,
+            tier: tier,
+            status: status,
+            placeId: placeId,
+            imagePaths: imagePaths,
+            businessName: businessName,
+            ownerName: ownerName,
+            phone: phone,
+            addressLine: addressLine,
+            city: city,
+            state: state,
+            businessType: businessType,
+            template: template,
+            createdAt: createdAtTS.dateValue(),
+            expiresAt: expiresAtTS.dateValue(),
+            freeCooldownKey: freeCooldownKey
+        )
+    }
+}

@@ -3,6 +3,7 @@
 //  HalalMapPrime
 //
 //  Created by Zaid Nahleh on 12/16/25.
+//  Updated by Zaid Nahleh on 12/17/25.
 //
 
 import SwiftUI
@@ -46,10 +47,12 @@ struct FreeAdFormView: View {
                 Section(header: Text(L("بيانات المحل", "Business info"))) {
                     TextField(L("اسم المحل", "Business name"), text: $businessName)
                     TextField(L("اسم صاحب المحل", "Owner name"), text: $ownerName)
+
                     TextField(L("رقم الهاتف", "Phone number"), text: $phone)
                         .keyboardType(.phonePad)
 
                     TextField(L("العنوان", "Address"), text: $addressLine)
+
                     HStack {
                         TextField(L("المدينة", "City"), text: $city)
                         TextField(L("الولاية", "State"), text: $state)
@@ -73,7 +76,6 @@ struct FreeAdFormView: View {
                         }
                     }
 
-                    // Preview
                     VStack(alignment: .leading, spacing: 6) {
                         Text(L("معاينة النص", "Copy preview"))
                             .font(.footnote.bold())
@@ -172,23 +174,32 @@ struct FreeAdFormView: View {
 
     // MARK: - Preview copy
     private func previewCopy() -> String {
+
+        let bName = businessName.trimmingCharacters(in: .whitespacesAndNewlines)
+        let oName = ownerName.trimmingCharacters(in: .whitespacesAndNewlines)
+        let ph = phone.trimmingCharacters(in: .whitespacesAndNewlines)
+        let addr = addressLine.trimmingCharacters(in: .whitespacesAndNewlines)
+        let c = city.trimmingCharacters(in: .whitespacesAndNewlines)
+        let st = state.trimmingCharacters(in: .whitespacesAndNewlines)
+
         let temp = Ad(
             tier: .free,
             status: .active,
             placeId: nil,
             imagePaths: [],
-            businessName: businessName.isEmpty ? L("اسم المحل", "Business name") : businessName,
-            ownerName: ownerName.isEmpty ? L("صاحب المحل", "Owner") : ownerName,
-            phone: phone.isEmpty ? "000-000-0000" : phone,
-            addressLine: addressLine.isEmpty ? L("العنوان", "Address") : addressLine,
-            city: city.isEmpty ? L("المدينة", "City") : city,
-            state: state.isEmpty ? L("NY", "NY") : state,
+            businessName: bName.isEmpty ? L("اسم المحل", "Business name") : bName,
+            ownerName: oName.isEmpty ? L("صاحب المحل", "Owner") : oName,
+            phone: ph.isEmpty ? "000-000-0000" : ph,
+            addressLine: addr.isEmpty ? L("العنوان", "Address") : addr,
+            city: c.isEmpty ? L("المدينة", "City") : c,
+            state: st.isEmpty ? "NY" : st,
             businessType: businessType,
             template: template,
             createdAt: Date(),
             expiresAt: Date().addingTimeInterval(14 * 24 * 60 * 60),
-            freeCooldownKey: phone
+            freeCooldownKey: ph.isEmpty ? "temp" : ph
         )
+
         return temp.generatedCopy(isArabic: lang.isArabic)
     }
 
@@ -238,11 +249,16 @@ struct FreeAdFormView: View {
 
         // Save images locally
         let paths = pickedImages.compactMap { saveImageToDocuments($0) }
+        if paths.isEmpty {
+            errorMessage = L("تعذر حفظ الصور. جرّب مرة ثانية.", "Failed to save images. Try again.")
+            return
+        }
 
         // 14 days expiration
         let expires = Date().addingTimeInterval(14 * 24 * 60 * 60)
 
         let pid = placeIdOptional.trimmingCharacters(in: .whitespacesAndNewlines)
+
         let ad = Ad(
             tier: .free,
             status: .active,
@@ -261,7 +277,9 @@ struct FreeAdFormView: View {
             freeCooldownKey: ph
         )
 
-        AdsStore.shared.add(ad)
+        // ✅ المهم: استخدم adsStore (الآن صار يحفظ على Disk)
+        adsStore.add(ad)
+
         showSavedAlert = true
     }
 
@@ -276,7 +294,7 @@ struct FreeAdFormView: View {
             try data.write(to: url, options: .atomic)
             return filename
         } catch {
-            print("❌ save image error: \(error)")
+            print("❌ save image error:", error)
             return nil
         }
     }
