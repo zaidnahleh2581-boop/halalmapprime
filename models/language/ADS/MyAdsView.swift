@@ -3,7 +3,7 @@
 //  HalalMapPrime
 //
 //  Created by Zaid Nahleh
-//  Updated by Zaid Nahleh on 12/17/25
+//  Updated by Zaid Nahleh on 12/18/25
 //
 
 import SwiftUI
@@ -15,17 +15,27 @@ struct MyAdsView: View {
 
     @State private var pendingDeleteAd: FirebaseAd? = nil
     @State private var isDeleting = false
+    @State private var isLoading = false
 
     var body: some View {
         NavigationStack {
             List {
+
+                if isLoading {
+                    HStack(spacing: 10) {
+                        ProgressView()
+                        Text("Loading…")
+                            .foregroundColor(.secondary)
+                    }
+                }
+
                 if let errorMessage {
                     Text(errorMessage)
                         .foregroundColor(.red)
                         .font(.footnote)
                 }
 
-                if adsStore.myAds.isEmpty {
+                if !isLoading, adsStore.myAds.isEmpty {
                     Text("No ads yet.")
                         .foregroundColor(.secondary)
                 } else {
@@ -42,7 +52,11 @@ struct MyAdsView: View {
                 EditButton()
             }
             .onAppear {
-                adsStore.startMyAdsListener()
+                start()
+            }
+            .onDisappear {
+                // ✅ prevent duplicated listeners
+                adsStore.stopAllListeners()
             }
             .alert("Delete Ad?", isPresented: Binding(
                 get: { pendingDeleteAd != nil },
@@ -58,6 +72,28 @@ struct MyAdsView: View {
                 }
             } message: {
                 Text("This will permanently delete the ad from Firebase.")
+            }
+        }
+    }
+
+    // MARK: - Start (guarantee login then listen)
+
+    private func start() {
+        errorMessage = nil
+        isLoading = true
+
+        Task {
+            do {
+                _ = try await AuthManager.shared.ensureSignedIn()
+                await MainActor.run {
+                    self.adsStore.startMyAdsListener()
+                    self.isLoading = false
+                }
+            } catch {
+                await MainActor.run {
+                    self.isLoading = false
+                    self.errorMessage = "Auth failed: \(error.localizedDescription)"
+                }
             }
         }
     }

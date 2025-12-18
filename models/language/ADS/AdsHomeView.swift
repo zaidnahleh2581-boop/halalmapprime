@@ -3,203 +3,269 @@
 //  HalalMapPrime
 //
 //  Created by Zaid Nahleh on 12/16/25.
+//  Updated by Zaid Nahleh on 12/18/25.
 //
 
 import SwiftUI
 
-/// الشاشة الرئيسية لنظام الإعلانات داخل Halal Map Prime
 struct AdsHomeView: View {
 
     @EnvironmentObject var lang: LanguageManager
-    @Environment(\.dismiss) private var dismiss
+    @StateObject private var store = AdsStore.shared
 
-    @State private var showFreeAdForm: Bool = false
-    @State private var showPaidAdPlans: Bool = false
-    @State private var showPrimeAdPlans: Bool = false
-    @State private var showMyAds: Bool = false
+    @State private var isLoading = false
+    @State private var errorMessage: String?
 
-    /// شاشة إعلانات الوظائف (أبحث عن عمل / أبحث عن موظف)
-    @State private var showJobAds: Bool = false
+    @State private var showAddAd = false
+
+    private func L(_ ar: String, _ en: String) -> String { lang.isArabic ? ar : en }
 
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
+                VStack(alignment: .leading, spacing: 14) {
 
-                    headerSection
-                    introSection
-                    buttonsSection
-                    footerNote
+                    headerButtons
+
+                    if isLoading {
+                        HStack(spacing: 10) {
+                            ProgressView()
+                            Text(L("جاري التحميل…", "Loading…"))
+                                .foregroundColor(.secondary)
+                        }
+                        .padding(.top, 16)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                    }
+
+                    if let errorMessage {
+                        Text(errorMessage)
+                            .foregroundColor(.red)
+                            .font(.footnote)
+                            .padding(.top, 8)
+                    }
+
+                    if !isLoading, store.activeAds.isEmpty {
+                        Text(L("لا يوجد إعلانات حالياً.", "No ads available right now."))
+                            .foregroundColor(.secondary)
+                            .padding(.top, 30)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    } else {
+                        ForEach(store.activeAds) { ad in
+                            FirebaseAdCard(ad: ad, isArabic: lang.isArabic)
+                        }
+                    }
                 }
                 .padding()
             }
-            .navigationTitle(lang.isArabic ? "الإعلانات" : "Ads")
+            .navigationTitle(L("الإعلانات", "Ads"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button { dismiss() } label: {
-                        Image(systemName: "xmark")
-                            .imageScale(.medium)
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showAddAd = true
+                    } label: {
+                        Image(systemName: "plus")
                     }
                 }
             }
-
-            // الشاشات الفرعية
-            .sheet(isPresented: $showFreeAdForm) {
+            .task {
+                await start()
+            }
+            .onDisappear {
+                // ✅ امنع تكرار listeners لما ترجع/تطلع من التبويب
+                store.stopAllListeners()
+            }
+            .sheet(isPresented: $showAddAd) {
+                // ✅ إذا عندك FreeAdFormView موجودة بالمشروع: رح تشتغل
                 FreeAdFormView()
                     .environmentObject(lang)
             }
-            .sheet(isPresented: $showPaidAdPlans) {
-                SelectAdPlanView()
-                    .environmentObject(lang)
+        }
+    }
+
+    private var headerButtons: some View {
+        HStack(spacing: 10) {
+
+            Button {
+                showAddAd = true
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: "plus.circle.fill")
+                    Text(L("إضافة إعلان", "Add Ad"))
+                }
+                .font(.subheadline.weight(.semibold))
+                .padding(.vertical, 10)
+                .padding(.horizontal, 12)
+                .background(Color(.systemGray6))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
             }
-            .sheet(isPresented: $showPrimeAdPlans) {
-                SelectAdPlanView()
-                    .environmentObject(lang)
-            }
-            .sheet(isPresented: $showMyAds) {
+            .buttonStyle(.plain)
+
+            NavigationLink {
                 MyAdsView()
-                    .environmentObject(lang)
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: "doc.text.magnifyingglass")
+                    Text(L("إعلاناتي", "My Ads"))
+                }
+                .font(.subheadline.weight(.semibold))
+                .padding(.vertical, 10)
+                .padding(.horizontal, 12)
+                .background(Color(.systemGray6))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
             }
-            .sheet(isPresented: $showJobAds) {
-                JobAdsBoardView()
-                    .environmentObject(lang)
+            .buttonStyle(.plain)
+
+            Spacer()
+        }
+    }
+
+    // ✅ Start: ensure login then start listener
+    private func start() async {
+        await MainActor.run {
+            isLoading = true
+            errorMessage = nil
+        }
+
+        do {
+            _ = try await AuthManager.shared.ensureSignedIn()
+
+            await MainActor.run {
+                store.startActiveListener()
+                isLoading = false
+            }
+        } catch {
+            await MainActor.run {
+                isLoading = false
+                errorMessage = L(
+                    "فشل تسجيل الدخول: \(error.localizedDescription)",
+                    "Auth failed: \(error.localizedDescription)"
+                )
             }
         }
     }
 }
 
-// MARK: - Sections
+// MARK: - Firebase Ad Card
 
-private extension AdsHomeView {
+private struct FirebaseAdCard: View {
 
-    var headerSection: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(lang.isArabic ? "الإعلانات في Halal Map Prime" : "Ads in Halal Map Prime")
-                .font(.title2.weight(.semibold))
+    let ad: FirebaseAd
+    let isArabic: Bool
 
-            Text(lang.isArabic
-                 ? "اختر نوع الإعلان الذي يناسب نشاطك التجاري أو خدمتك، وابدأ بالوصول إلى المجتمع المسلم في نيويورك ونيوجيرسي."
-                 : "Choose the ad type that fits your business or service and reach the Muslim community in NYC & NJ.")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+
+            FirebaseAdImagesCarousel(urls: ad.imageURLs)
+                .frame(height: 190)
+                .clipShape(RoundedRectangle(cornerRadius: 18))
+
+            VStack(alignment: .leading, spacing: 6) {
+
+                HStack {
+                    Text(ad.businessName.isEmpty ? (isArabic ? "إعلان" : "Ad") : ad.businessName)
+                        .font(.headline)
+                        .lineLimit(1)
+
+                    Spacer()
+
+                    Text(statusBadge)
+                        .font(.caption2.bold())
+                        .padding(.vertical, 4)
+                        .padding(.horizontal, 10)
+                        .background(Color(.systemGray6))
+                        .clipShape(Capsule())
+                        .foregroundColor(.secondary)
+                }
+
+                Text("\(ad.city), \(ad.state)")
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
+                    .lineLimit(1)
+
+                Text(tierBadge)
+                    .font(.caption.bold())
+                    .foregroundColor(.secondary)
+            }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
-    var introSection: some View {
-        Text(
-            lang.isArabic
-            ? "يمكنك بدء إعلان مجاني بسيط مرة واحدة لكل متجر، أو اختيار باقات مدفوعة يومية/أسبوعية/شهرية للحصول على ظهور أقوى في الخريطة والبنرات."
-            : "You can start with a simple one-time free ad per store, or choose paid daily / weekly / monthly plans for stronger visibility in the map and banners."
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color(.systemBackground))
+                .shadow(color: .black.opacity(0.08), radius: 6, y: 3)
         )
-        .font(.subheadline)
-        .foregroundColor(.secondary)
+        .overlay(
+            RoundedRectangle(cornerRadius: 20)
+                .stroke(Color(.systemGray5), lineWidth: 1)
+        )
     }
 
-    var buttonsSection: some View {
-        VStack(spacing: 12) {
-
-            adButton(
-                titleAr: "إعلان مجاني (مرة واحدة)",
-                titleEn: "Free basic ad (one time)",
-                subtitleAr: "إعلان بسيط لمحلّك يظهر ضمن النتائج، متاح مرة واحدة لكل إيميل.",
-                subtitleEn: "Simple listing for your place, available once per email.",
-                background: Color.green
-            ) {
-                showFreeAdForm = true
-            }
-
-            adButton(
-                titleAr: "إعلان مدفوع (يومي / أسبوعي / شهري)",
-                titleEn: "Paid ad (daily / weekly / monthly)",
-                subtitleAr: "اختر باقة مرنة لزيادة ظهور نشاطك في الخريطة والبنرات.",
-                subtitleEn: "Choose a flexible plan to boost your visibility in map and banners.",
-                background: Color.blue
-            ) {
-                showPaidAdPlans = true
-            }
-
-            adButton(
-                titleAr: "Prime Ads (أعلى الخريطة)",
-                titleEn: "Prime Ads (top banner)",
-                subtitleAr: "أفضل ظهور ممكن: بانر مميز أعلى الصفحة الرئيسية وعلى الخريطة.",
-                subtitleEn: "Maximum visibility: featured banner on top of the main map screen.",
-                background: Color.orange
-            ) {
-                showPrimeAdPlans = true
-            }
-
-            adButton(
-                titleAr: "إعلاناتي",
-                titleEn: "My ads",
-                subtitleAr: "إدارة الإعلانات التي قمت بإنشائها من قبل.",
-                subtitleEn: "Manage the ads you have already created.",
-                background: Color.purple
-            ) {
-                showMyAds = true
-            }
-
-            adButton(
-                titleAr: "إعلانات وظائف (أبحث عن عمل / موظّف)",
-                titleEn: "Job ads (looking for job / staff)",
-                subtitleAr: "نموذج جاهز: أدخل اسمك والمدينة ونوع المكان، والنظام يجهّز نص الإعلان تلقائياً.",
-                subtitleEn: "Structured template: enter your name, area, and place type, and we generate the ad text for you.",
-                background: Color.brown
-            ) {
-                showJobAds = true
-            }
+    private var tierBadge: String {
+        switch ad.tier.lowercased() {
+        case "prime":
+            return isArabic ? "⭐ برايم" : "⭐ Prime"
+        case "standard":
+            return isArabic ? "💼 مدفوع" : "💼 Paid"
+        default:
+            return isArabic ? "🆓 مجاني" : "🆓 Free"
         }
     }
 
-    var footerNote: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(lang.isArabic ? "ملاحظة مهمة" : "Policy note")
-                .font(.footnote.weight(.semibold))
-
-            Text(
-                lang.isArabic
-                ? "جميع الإعلانات يجب أن تكون حلال، قانونية داخل الولايات المتحدة، ومتوافقة مع سياسات Apple App Store وقواعد مجتمع Halal Map Prime."
-                : "All ads must be halal, legal in the USA, and fully compliant with Apple App Store policies and Halal Map Prime community rules."
-            )
-            .font(.footnote)
-            .foregroundColor(.secondary)
-        }
-        .padding(.top, 12)
+    private var statusBadge: String {
+        // ✅ أهم نقطة: Expired ما يخلي الشاشة فاضية — يعرضها كبادج
+        if ad.isExpired { return isArabic ? "منتهي" : "Expired" }
+        return ad.isActive ? (isArabic ? "فعّال" : "Active") : (isArabic ? "غير فعّال" : "Inactive")
     }
 }
 
-// MARK: - Components
+// MARK: - Images Carousel (Firebase URLs)
 
-private extension AdsHomeView {
+private struct FirebaseAdImagesCarousel: View {
 
-    func adButton(
-        titleAr: String,
-        titleEn: String,
-        subtitleAr: String,
-        subtitleEn: String,
-        background: Color,
-        action: @escaping () -> Void
-    ) -> some View {
-        Button { action() } label: {
-            VStack(alignment: .leading, spacing: 8) {
-                Text(lang.isArabic ? titleAr : titleEn)
-                    .font(.headline)
-                    .foregroundColor(.white)
+    let urls: [String]
 
-                Text(lang.isArabic ? subtitleAr : subtitleEn)
-                    .font(.subheadline)
-                    .foregroundColor(Color.white.opacity(0.9))
-                    .fixedSize(horizontal: false, vertical: true)
+    var body: some View {
+        Group {
+            if urls.isEmpty {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 18).fill(Color(.systemGray5))
+                    Image(systemName: "photo.on.rectangle.angled")
+                        .font(.title2)
+                        .foregroundColor(.secondary)
+                }
+            } else if urls.count == 1, let u = URL(string: urls[0]) {
+                FirebaseAdImage(url: u)
+            } else {
+                TabView {
+                    ForEach(Array(urls.prefix(3)), id: \.self) { s in
+                        if let u = URL(string: s) {
+                            FirebaseAdImage(url: u)
+                        } else {
+                            RoundedRectangle(cornerRadius: 18).fill(Color(.systemGray5))
+                        }
+                    }
+                }
+                .tabViewStyle(.page(indexDisplayMode: .automatic))
             }
-            .padding()
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(background.opacity(0.92))
-            )
-            .shadow(color: background.opacity(0.25), radius: 6, x: 0, y: 3)
         }
-        .buttonStyle(.plain)
+    }
+}
+
+private struct FirebaseAdImage: View {
+    let url: URL
+
+    var body: some View {
+        AsyncImage(url: url) { phase in
+            switch phase {
+            case .empty:
+                ZStack { Color(.systemGray5); ProgressView() }
+            case .success(let image):
+                image.resizable().scaledToFill().clipped()
+            case .failure:
+                ZStack { Color(.systemGray5); Image(systemName: "xmark.octagon").foregroundColor(.secondary) }
+            @unknown default:
+                Color(.systemGray5)
+            }
+        }
     }
 }

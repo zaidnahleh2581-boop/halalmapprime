@@ -3,7 +3,7 @@
 //  HalalMapPrime
 //
 //  Created by Zaid Nahleh on 12/16/25.
-//  Updated by Zaid Nahleh on 12/17/25.
+//  Updated by Zaid Nahleh on 12/18/25.
 //
 
 import SwiftUI
@@ -16,7 +16,6 @@ struct FreeAdFormView: View {
     @EnvironmentObject var lang: LanguageManager
     @Environment(\.dismiss) private var dismiss
 
-    // MARK: - Form fields
     @State private var businessName: String = ""
     @State private var ownerName: String = ""
     @State private var phone: String = ""
@@ -29,10 +28,9 @@ struct FreeAdFormView: View {
     @State private var businessType: Ad.BusinessType = .restaurant
     @State private var template: Ad.CopyTemplate = .simple
 
-    // ✅ Optional placeId
+    // Optional placeId (but validated)
     @State private var placeIdOptional: String = ""
 
-    // Photos
     @State private var pickedItems: [PhotosPickerItem] = []
     @State private var pickedImages: [UIImage] = []
 
@@ -76,7 +74,6 @@ struct FreeAdFormView: View {
                             Text(lang.isArabic ? t.titleAR : t.titleEN).tag(t)
                         }
                     }
-
                     VStack(alignment: .leading, spacing: 6) {
                         Text(L("معاينة النص (من النظام)", "Copy preview (system-generated)"))
                             .font(.footnote.bold())
@@ -88,12 +85,7 @@ struct FreeAdFormView: View {
                 }
 
                 Section(header: Text(L("صور الإعلان (1–3)", "Ad images (1–3)"))) {
-
-                    PhotosPicker(
-                        selection: $pickedItems,
-                        maxSelectionCount: 3,
-                        matching: .images
-                    ) {
+                    PhotosPicker(selection: $pickedItems, maxSelectionCount: 3, matching: .images) {
                         HStack {
                             Image(systemName: "photo.on.rectangle.angled")
                             Text(L("اختر صور", "Pick photos"))
@@ -131,8 +123,8 @@ struct FreeAdFormView: View {
                         .autocorrectionDisabled()
 
                     Text(L(
-                        "إذا عندك Place.id للإضافة الموجودة، الإعلان عند الضغط يفتح تفاصيل المحل. إذا تركته فارغ، الإعلان يظهر فقط ككرت.",
-                        "If you have a Place.id, tapping the ad opens place details. If empty, it shows as a normal ad card."
+                        "إذا كتبت Place ID لازم يكون موجود فعلاً في Firebase/places، وإلا سيتم رفض النشر. (هذا يمنع التلاعب)",
+                        "If you enter Place ID, it must exist in Firebase/places, otherwise publish is rejected (anti-abuse)."
                     ))
                     .font(.footnote)
                     .foregroundColor(.secondary)
@@ -149,11 +141,7 @@ struct FreeAdFormView: View {
                 }
 
                 if let errorMessage {
-                    Section {
-                        Text(errorMessage)
-                            .foregroundColor(.red)
-                            .font(.footnote)
-                    }
+                    Section { Text(errorMessage).foregroundColor(.red).font(.footnote) }
                 }
             }
             .navigationTitle(L("إعلان مجاني", "Free Ad"))
@@ -175,10 +163,9 @@ struct FreeAdFormView: View {
         }
     }
 
-    // MARK: - Preview copy (system generated only)
     private func previewCopy() -> String {
-        let bName = businessName.trimmingCharacters(in: .whitespacesAndNewlines)
-        let oName = ownerName.trimmingCharacters(in: .whitespacesAndNewlines)
+        let b = businessName.trimmingCharacters(in: .whitespacesAndNewlines)
+        let o = ownerName.trimmingCharacters(in: .whitespacesAndNewlines)
         let ph = phone.trimmingCharacters(in: .whitespacesAndNewlines)
         let addr = addressLine.trimmingCharacters(in: .whitespacesAndNewlines)
         let c = city.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -189,8 +176,8 @@ struct FreeAdFormView: View {
             status: .active,
             placeId: nil,
             imagePaths: [],
-            businessName: bName.isEmpty ? L("اسم المحل", "Business name") : bName,
-            ownerName: oName.isEmpty ? L("صاحب المحل", "Owner") : oName,
+            businessName: b.isEmpty ? L("اسم المحل", "Business name") : b,
+            ownerName: o.isEmpty ? L("صاحب المحل", "Owner") : o,
             phone: ph.isEmpty ? "000-000-0000" : ph,
             addressLine: addr.isEmpty ? L("العنوان", "Address") : addr,
             city: c.isEmpty ? L("المدينة", "City") : c,
@@ -205,7 +192,6 @@ struct FreeAdFormView: View {
         return temp.generatedCopy(isArabic: lang.isArabic)
     }
 
-    // MARK: - Load images ✅ (fix: always in scope)
     private func loadImages(from items: [PhotosPickerItem]) async {
         await MainActor.run {
             pickedImages.removeAll()
@@ -220,12 +206,9 @@ struct FreeAdFormView: View {
             }
         }
 
-        await MainActor.run {
-            pickedImages = imgs
-        }
+        await MainActor.run { pickedImages = imgs }
     }
 
-    // MARK: - Publish
     private func publish() {
         errorMessage = nil
 
@@ -253,10 +236,24 @@ struct FreeAdFormView: View {
 
         Task {
             do {
-                // ✅ guarantee login HERE (fixes No logged-in user)
                 let uid = try await AuthManager.shared.ensureSignedIn()
 
-                // ✅ cooldown check (monthly)
+                // ✅ validate placeId if provided
+                if !pid.isEmpty {
+                    let exists = try await placeExists(placeId: pid)
+                    if !exists {
+                        await MainActor.run {
+                            self.isPublishing = false
+                            self.errorMessage = self.L(
+                                "Place ID غير موجود في Firebase/places. امسحه أو اختر ID صحيح.",
+                                "Place ID does not exist in Firebase/places. Remove it or use a valid ID."
+                            )
+                        }
+                        return
+                    }
+                }
+
+                // cooldown check
                 let cooldown = try await canPostFreeAd(phone: ph)
                 if !cooldown.allowed {
                     await MainActor.run {
@@ -269,10 +266,7 @@ struct FreeAdFormView: View {
                     return
                 }
 
-                // ✅ upload images
                 let imageURLs = try await uploadImagesToFirebase(uid: uid, phone: ph, images: pickedImages)
-
-                // ✅ firestore doc
                 let expires = Date().addingTimeInterval(14 * 24 * 60 * 60)
 
                 var adData: [String: Any] = [
@@ -291,7 +285,6 @@ struct FreeAdFormView: View {
                     "template": template.rawValue,
 
                     "imageURLs": imageURLs,
-
                     "createdAt": Timestamp(date: Date()),
                     "expiresAt": Timestamp(date: expires),
 
@@ -299,9 +292,7 @@ struct FreeAdFormView: View {
                     "freeCooldownKey": ph
                 ]
 
-                if !pid.isEmpty {
-                    adData["placeId"] = pid
-                }
+                if !pid.isEmpty { adData["placeId"] = pid }
 
                 try await Firestore.firestore().collection("ads").addDocument(data: adData)
 
@@ -311,6 +302,7 @@ struct FreeAdFormView: View {
                 }
 
             } catch {
+                print("❌ Publish error:", error) // مهم للتشخيص
                 await MainActor.run {
                     self.isPublishing = false
                     self.errorMessage = self.L(
@@ -322,7 +314,11 @@ struct FreeAdFormView: View {
         }
     }
 
-    // MARK: - Cooldown
+    private func placeExists(placeId: String) async throws -> Bool {
+        let doc = try await Firestore.firestore().collection("places").document(placeId).getDocument()
+        return doc.exists
+    }
+
     private struct CooldownResult {
         let allowed: Bool
         let remainingDays: Int
@@ -352,7 +348,6 @@ struct FreeAdFormView: View {
         return CooldownResult(allowed: remaining == 0, remainingDays: remaining)
     }
 
-    // MARK: - Upload images to Firebase Storage
     private func uploadImagesToFirebase(uid: String, phone: String, images: [UIImage]) async throws -> [String] {
         let storage = Storage.storage()
         let root = storage.reference().child("ads").child(uid).child(phone).child(UUID().uuidString)

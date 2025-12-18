@@ -3,7 +3,7 @@
 //  HalalMapPrime
 //
 //  Created by Zaid Nahleh on 12/16/25.
-//  Updated by Zaid Nahleh on 12/17/25.
+//  Updated by Zaid Nahleh on 12/18/25.
 //
 
 import Foundation
@@ -34,6 +34,11 @@ struct FirebaseAd: Identifiable, Equatable {
     let createdAt: Date
     let expiresAt: Date?
     let isActive: Bool
+
+    var isExpired: Bool {
+        if let expiresAt { return Date() >= expiresAt }
+        return false
+    }
 
     static func from(doc: DocumentSnapshot) -> FirebaseAd? {
         let data = doc.data() ?? [:]
@@ -84,6 +89,7 @@ final class AdsStore: ObservableObject {
     private var activeListener: ListenerRegistration?
     private var myListener: ListenerRegistration?
 
+    /// ✅ Active ads listener
     func startActiveListener() {
         activeListener?.remove()
 
@@ -93,15 +99,25 @@ final class AdsStore: ObservableObject {
 
         activeListener = query.addSnapshotListener { [weak self] snap, err in
             guard let self else { return }
-            guard err == nil, let docs = snap?.documents else {
+
+            if let err {
+                DispatchQueue.main.async { self.activeAds = [] }
+                print("❌ Active ads listener error:", err.localizedDescription)
+                return
+            }
+
+            guard let docs = snap?.documents else {
                 DispatchQueue.main.async { self.activeAds = [] }
                 return
             }
+
+            // ✅ FIX: لا تخفي Expired هنا — خلي الـ UI يقرر كيف يعرضها
             let ads = docs.compactMap { FirebaseAd.from(doc: $0) }
             DispatchQueue.main.async { self.activeAds = ads }
         }
     }
 
+    /// ✅ My ads listener
     func startMyAdsListener() {
         myListener?.remove()
 
@@ -116,10 +132,18 @@ final class AdsStore: ObservableObject {
 
         myListener = query.addSnapshotListener { [weak self] snap, err in
             guard let self else { return }
-            guard err == nil, let docs = snap?.documents else {
+
+            if let err {
+                DispatchQueue.main.async { self.myAds = [] }
+                print("❌ My ads listener error:", err.localizedDescription)
+                return
+            }
+
+            guard let docs = snap?.documents else {
                 DispatchQueue.main.async { self.myAds = [] }
                 return
             }
+
             let ads = docs.compactMap { FirebaseAd.from(doc: $0) }
             DispatchQueue.main.async { self.myAds = ads }
         }
