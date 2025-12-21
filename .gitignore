@@ -1,0 +1,24 @@
+# Xcode
+DerivedData
+*.xcuserstate
+*.xcuserdata
+xcuserdata/
+
+# CocoaPods
+Pods/
+Podfile.lock
+
+# Secrets
+Secrets.xcconfig
+
+# macOS
+.DS_Store
+Secrets.xcconfig
+
+# Xcode
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.xcuserdata
+
+HalalMapPrime.xcworkspace/

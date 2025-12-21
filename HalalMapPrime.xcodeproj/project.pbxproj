@@ -14,6 +14,8 @@
 		151BD9EF2EE597260065F10C /* SelectAdPlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151BD9EE2EE597260065F10C /* SelectAdPlanView.swift */; };
 		151BD9F32EE597800065F10C /* MyAdsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151BD9F22EE597800065F10C /* MyAdsView.swift */; };
 		1525A5BF2EF3015C0081DCB1 /* FirebaseAdsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1525A5BE2EF3015C0081DCB1 /* FirebaseAdsService.swift */; };
+		152C749B2EF7927D002E1C78 /* ExploreMapScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 152C749A2EF7927D002E1C78 /* ExploreMapScreen.swift */; };
+		155862432EF4D08A0057F895 /* Secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 155862422EF4D08A0057F895 /* Secrets.xcconfig */; };
 		15683DDF2EE701270011A09F /* JobAdComposerViewswift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15683DDE2EE701270011A09F /* JobAdComposerViewswift.swift */; };
 		15777EA72EF0391B00C2B089 /* CategoryBrowseScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15777EA62EF0391B00C2B089 /* CategoryBrowseScreen.swift */; };
 		15777EAD2EF03CE400C2B089 /* PlaceCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15777EAC2EF03CE400C2B089 /* PlaceCardView.swift */; };
@@ -29,14 +31,6 @@
 		15A8E3322EF17D1A00B770F4 /* AdsHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A8E3312EF17D1A00B770F4 /* AdsHomeView.swift */; };
 		15ABCB952EF41D490010D35F /* PlacesStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15ABCB942EF41D490010D35F /* PlacesStore.swift */; };
 		15B48CDC2EE1A70C00A88AB7 /* AddStoreViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B48CDB2EE1A70C00A88AB7 /* AddStoreViewModel.swift */; };
-		15B48CDF2EE1B2A600A88AB7 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 15B48CDE2EE1B2A600A88AB7 /* FirebaseAnalytics */; };
-		15B48CE12EE1B2A600A88AB7 /* FirebaseAnalyticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 15B48CE02EE1B2A600A88AB7 /* FirebaseAnalyticsCore */; };
-		15B48CE32EE1B2A600A88AB7 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 15B48CE22EE1B2A600A88AB7 /* FirebaseAuth */; };
-		15B48CE52EE1B2A600A88AB7 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 15B48CE42EE1B2A600A88AB7 /* FirebaseCore */; };
-		15B48CE72EE1B2A600A88AB7 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 15B48CE62EE1B2A600A88AB7 /* FirebaseCrashlytics */; };
-		15B48CE92EE1B2A600A88AB7 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 15B48CE82EE1B2A600A88AB7 /* FirebaseFirestore */; };
-		15B48CEB2EE1B2A600A88AB7 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 15B48CEA2EE1B2A600A88AB7 /* FirebaseMessaging */; };
-		15B48CED2EE1B2A600A88AB7 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 15B48CEC2EE1B2A600A88AB7 /* FirebaseStorage */; };
 		15B48CF32EE1E50300A88AB7 /* GooglePlacesModelsswift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B48CF22EE1E50300A88AB7 /* GooglePlacesModelsswift.swift */; };
 		15CEB1F62EE78A810035A83D /* EventAdsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15CEB1F52EE78A810035A83D /* EventAdsService.swift */; };
 		15CEB1F82EE78AB00035A83D /* EventAdComposerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15CEB1F72EE78AB00035A83D /* EventAdComposerView.swift */; };
@@ -45,9 +39,11 @@
 		15E162482EE0D50500A5C42C /* GooglePlacesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15E162472EE0D50500A5C42C /* GooglePlacesService.swift */; };
 		15E1624A2EE0D5D600A5C42C /* MapScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15E162492EE0D5D600A5C42C /* MapScreenViewModel.swift */; };
 		15E1626F2EE121DC00A5C42C /* Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15E1626E2EE121DC00A5C42C /* Place.swift */; };
+		7C2C68AC64A9DAFB433941D9 /* Pods_HalalMapPrime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14D38C44304393F3D85FFD52 /* Pods_HalalMapPrime.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		14D38C44304393F3D85FFD52 /* Pods_HalalMapPrime.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HalalMapPrime.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		151BD9E12EE521030065F10C /* AppLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppLanguage.swift; path = views/AppLanguage.swift; sourceTree = SOURCE_ROOT; };
 		151BD9E32EE5223D0065F10C /* LanguageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageManager.swift; sourceTree = "<group>"; };
 		151BD9E52EE522760065F10C /* LanguageSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageSelectionView.swift; sourceTree = "<group>"; };
@@ -55,6 +51,8 @@
 		151BD9EE2EE597260065F10C /* SelectAdPlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectAdPlanView.swift; sourceTree = "<group>"; };
 		151BD9F22EE597800065F10C /* MyAdsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAdsView.swift; sourceTree = "<group>"; };
 		1525A5BE2EF3015C0081DCB1 /* FirebaseAdsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAdsService.swift; sourceTree = SOURCE_ROOT; };
+		152C749A2EF7927D002E1C78 /* ExploreMapScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreMapScreen.swift; sourceTree = "<group>"; };
+		155862422EF4D08A0057F895 /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 		15683DDE2EE701270011A09F /* JobAdComposerViewswift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobAdComposerViewswift.swift; sourceTree = "<group>"; };
 		15777EA62EF0391B00C2B089 /* CategoryBrowseScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryBrowseScreen.swift; sourceTree = "<group>"; };
 		15777EAC2EF03CE400C2B089 /* PlaceCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceCardView.swift; sourceTree = "<group>"; };
@@ -79,11 +77,26 @@
 		15E162472EE0D50500A5C42C /* GooglePlacesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GooglePlacesService.swift; sourceTree = SOURCE_ROOT; };
 		15E162492EE0D5D600A5C42C /* MapScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapScreenViewModel.swift; sourceTree = SOURCE_ROOT; };
 		15E1626E2EE121DC00A5C42C /* Place.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Place.swift; sourceTree = "<group>"; };
+		61E3714246CE1C3FF69694B1 /* Pods-HalalMapPrime.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HalalMapPrime.debug.xcconfig"; path = "Target Support Files/Pods-HalalMapPrime/Pods-HalalMapPrime.debug.xcconfig"; sourceTree = "<group>"; };
+		C08AE3A26CBB21AAE753A652 /* Pods-HalalMapPrime.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HalalMapPrime.release.xcconfig"; path = "Target Support Files/Pods-HalalMapPrime/Pods-HalalMapPrime.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		1536F15E2EF5F767007339E2 /* Exceptions for "HalalMapPrime" folder in "HalalMapPrime" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 15A0D7722EE055040063ED79 /* HalalMapPrime */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		15A0D7752EE055040063ED79 /* HalalMapPrime */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				1536F15E2EF5F767007339E2 /* Exceptions for "HalalMapPrime" folder in "HalalMapPrime" target */,
+			);
 			path = HalalMapPrime;
 			sourceTree = "<group>";
 		};
@@ -94,14 +107,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				15B48CDF2EE1B2A600A88AB7 /* FirebaseAnalytics in Frameworks */,
-				15B48CE32EE1B2A600A88AB7 /* FirebaseAuth in Frameworks */,
-				15B48CEB2EE1B2A600A88AB7 /* FirebaseMessaging in Frameworks */,
-				15B48CE72EE1B2A600A88AB7 /* FirebaseCrashlytics in Frameworks */,
-				15B48CE52EE1B2A600A88AB7 /* FirebaseCore in Frameworks */,
-				15B48CED2EE1B2A600A88AB7 /* FirebaseStorage in Frameworks */,
-				15B48CE12EE1B2A600A88AB7 /* FirebaseAnalyticsCore in Frameworks */,
-				15B48CE92EE1B2A600A88AB7 /* FirebaseFirestore in Frameworks */,
+				7C2C68AC64A9DAFB433941D9 /* Pods_HalalMapPrime.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -132,16 +138,10 @@
 			path = ADS;
 			sourceTree = "<group>";
 		};
-		159D533B2EF2621000F3BB60 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		15A0D76A2EE055040063ED79 = {
 			isa = PBXGroup;
 			children = (
+				155862422EF4D08A0057F895 /* Secrets.xcconfig */,
 				15CEB2092EE7CC780035A83D /* EventAdsBoardView.swift */,
 				15A0D7A32EE0BBD90063ED79 /* GoogleService-Info.plist */,
 				15A0D78A2EE05CC30063ED79 /* models */,
@@ -149,8 +149,9 @@
 				15A0D7822EE059C90063ED79 /* viewmodels */,
 				15A0D7812EE059A10063ED79 /* views */,
 				15A0D7752EE055040063ED79 /* HalalMapPrime */,
-				159D533B2EF2621000F3BB60 /* Frameworks */,
 				15A0D7742EE055040063ED79 /* Products */,
+				4B9B68C545E4A39DB78FFF56 /* Pods */,
+				485523530BD57116B5A0A29E /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -175,6 +176,7 @@
 				151BD9E92EE528050065F10C /* AdsHomeScreen.swift */,
 				15CEB2032EE7C5DF0035A83D /* NoticeBoardViews.swift */,
 				15777EA62EF0391B00C2B089 /* CategoryBrowseScreen.swift */,
+				152C749A2EF7927D002E1C78 /* ExploreMapScreen.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -210,6 +212,23 @@
 			path = models;
 			sourceTree = "<group>";
 		};
+		485523530BD57116B5A0A29E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				14D38C44304393F3D85FFD52 /* Pods_HalalMapPrime.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4B9B68C545E4A39DB78FFF56 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				61E3714246CE1C3FF69694B1 /* Pods-HalalMapPrime.debug.xcconfig */,
+				C08AE3A26CBB21AAE753A652 /* Pods-HalalMapPrime.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -217,9 +236,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 15A0D77E2EE055050063ED79 /* Build configuration list for PBXNativeTarget "HalalMapPrime" */;
 			buildPhases = (
+				6107D8D85AE1060EC12B41D7 /* [CP] Check Pods Manifest.lock */,
 				15A0D76F2EE055040063ED79 /* Sources */,
 				15A0D7702EE055040063ED79 /* Frameworks */,
 				15A0D7712EE055040063ED79 /* Resources */,
+				ED6C33BB68A52651FCEE2119 /* [CP] Embed Pods Frameworks */,
+				A2A74834A31824099C3A7A53 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -229,16 +251,6 @@
 				15A0D7752EE055040063ED79 /* HalalMapPrime */,
 			);
 			name = HalalMapPrime;
-			packageProductDependencies = (
-				15B48CDE2EE1B2A600A88AB7 /* FirebaseAnalytics */,
-				15B48CE02EE1B2A600A88AB7 /* FirebaseAnalyticsCore */,
-				15B48CE22EE1B2A600A88AB7 /* FirebaseAuth */,
-				15B48CE42EE1B2A600A88AB7 /* FirebaseCore */,
-				15B48CE62EE1B2A600A88AB7 /* FirebaseCrashlytics */,
-				15B48CE82EE1B2A600A88AB7 /* FirebaseFirestore */,
-				15B48CEA2EE1B2A600A88AB7 /* FirebaseMessaging */,
-				15B48CEC2EE1B2A600A88AB7 /* FirebaseStorage */,
-			);
 			productName = HalalMapPrime;
 			productReference = 15A0D7732EE055040063ED79 /* HalalMapPrime.app */;
 			productType = "com.apple.product-type.application";
@@ -267,9 +279,6 @@
 			);
 			mainGroup = 15A0D76A2EE055040063ED79;
 			minimizedProjectReferenceProxies = 1;
-			packageReferences = (
-				15B48CDD2EE1B2A600A88AB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 15A0D7742EE055040063ED79 /* Products */;
 			projectDirPath = "";
@@ -285,11 +294,80 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				155862432EF4D08A0057F895 /* Secrets.xcconfig in Resources */,
 				15A0D7A42EE0BBD90063ED79 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		6107D8D85AE1060EC12B41D7 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-HalalMapPrime-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A2A74834A31824099C3A7A53 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HalalMapPrime/Pods-HalalMapPrime-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HalalMapPrime/Pods-HalalMapPrime-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HalalMapPrime/Pods-HalalMapPrime-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		ED6C33BB68A52651FCEE2119 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HalalMapPrime/Pods-HalalMapPrime-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HalalMapPrime/Pods-HalalMapPrime-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HalalMapPrime/Pods-HalalMapPrime-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		15A0D76F2EE055040063ED79 /* Sources */ = {
@@ -316,6 +394,7 @@
 				15A0D7922EE05E4C0063ED79 /* PrayerTime.swift in Sources */,
 				151BD9F32EE597800065F10C /* MyAdsView.swift in Sources */,
 				15A0D7A02EE068740063ED79 /* BannerAd.swift in Sources */,
+				152C749B2EF7927D002E1C78 /* ExploreMapScreen.swift in Sources */,
 				15E162482EE0D50500A5C42C /* GooglePlacesService.swift in Sources */,
 				15A8E3322EF17D1A00B770F4 /* AdsHomeView.swift in Sources */,
 				15B48CF32EE1E50300A88AB7 /* GooglePlacesModelsswift.swift in Sources */,
@@ -333,6 +412,7 @@
 /* Begin XCBuildConfiguration section */
 		15A0D77C2EE055050063ED79 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 155862422EF4D08A0057F895 /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -369,7 +449,7 @@
 				DEVELOPMENT_TEAM = Q839X9CL76;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -397,6 +477,7 @@
 		};
 		15A0D77D2EE055050063ED79 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 155862422EF4D08A0057F895 /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -433,7 +514,7 @@
 				DEVELOPMENT_TEAM = Q839X9CL76;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -454,6 +535,7 @@
 		};
 		15A0D77F2EE055050063ED79 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 61E3714246CE1C3FF69694B1 /* Pods-HalalMapPrime.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -462,16 +544,22 @@
 				DEVELOPMENT_TEAM = Q839X9CL76;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HalalMapPrime/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				NEW_SETTING = "";
+				NEW_SETTING1 = "";
+				NEW_SETTING2 = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.HMP.Zaid;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -486,6 +574,7 @@
 		};
 		15A0D7802EE055050063ED79 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C08AE3A26CBB21AAE753A652 /* Pods-HalalMapPrime.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -494,16 +583,22 @@
 				DEVELOPMENT_TEAM = Q839X9CL76;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HalalMapPrime/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				NEW_SETTING = "";
+				NEW_SETTING1 = "";
+				NEW_SETTING2 = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.HMP.Zaid;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -538,60 +633,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		15B48CDD2EE1B2A600A88AB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 12.6.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		15B48CDE2EE1B2A600A88AB7 /* FirebaseAnalytics */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 15B48CDD2EE1B2A600A88AB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAnalytics;
-		};
-		15B48CE02EE1B2A600A88AB7 /* FirebaseAnalyticsCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 15B48CDD2EE1B2A600A88AB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAnalyticsCore;
-		};
-		15B48CE22EE1B2A600A88AB7 /* FirebaseAuth */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 15B48CDD2EE1B2A600A88AB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAuth;
-		};
-		15B48CE42EE1B2A600A88AB7 /* FirebaseCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 15B48CDD2EE1B2A600A88AB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseCore;
-		};
-		15B48CE62EE1B2A600A88AB7 /* FirebaseCrashlytics */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 15B48CDD2EE1B2A600A88AB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseCrashlytics;
-		};
-		15B48CE82EE1B2A600A88AB7 /* FirebaseFirestore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 15B48CDD2EE1B2A600A88AB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseFirestore;
-		};
-		15B48CEA2EE1B2A600A88AB7 /* FirebaseMessaging */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 15B48CDD2EE1B2A600A88AB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseMessaging;
-		};
-		15B48CEC2EE1B2A600A88AB7 /* FirebaseStorage */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 15B48CDD2EE1B2A600A88AB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseStorage;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 15A0D76B2EE055040063ED79 /* Project object */;
 }
