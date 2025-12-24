@@ -12,107 +12,80 @@ import SwiftUI
 struct HomeCategoriesGrid: View {
 
     @EnvironmentObject var lang: LanguageManager
-
-    /// ✅ عندما يضغط المستخدم على Category
     let onSelect: (PlaceCategory) -> Void
 
-    private func L(_ ar: String, _ en: String) -> String {
-        lang.isArabic ? ar : en
-    }
+    @State private var showMore = false
+
+    private func L(_ ar: String, _ en: String) -> String { lang.isArabic ? ar : en }
 
     private let columns: [GridItem] = [
         GridItem(.flexible(), spacing: 12),
         GridItem(.flexible(), spacing: 12)
     ]
 
+    private var primary: [PlaceCategory] { [.restaurant, .foodTruck, .grocery] }
+    private var secondary: [PlaceCategory] {
+        [.mosque, .school, .service, .shop, .market, .center]
+    }
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
 
-            Text(L("التصنيفات", "Categories"))
-                .font(.headline)
-                .padding(.horizontal)
+            HStack {
+                Text(L("التصنيفات", "Categories"))
+                    .font(.headline)
+
+                Spacer()
+
+                Button {
+                    withAnimation(.easeInOut) { showMore.toggle() }
+                } label: {
+                    HStack(spacing: 6) {
+                        Text(showMore ? L("إخفاء", "Hide") : L("المزيد", "More"))
+                            .font(.subheadline.weight(.semibold))
+                        Image(systemName: showMore ? "chevron.up" : "chevron.down")
+                            .font(.caption.weight(.semibold))
+                    }
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(Color(.systemGray6))
+                    .clipShape(Capsule())
+                }
+                .buttonStyle(.plain)
+            }
+            .padding(.horizontal)
 
             LazyVGrid(columns: columns, spacing: 12) {
-
-                // 🥇 Restaurants
-                categoryCard(
-                    icon: "fork.knife",
-                    title: L("مطاعم", "Restaurants"),
-                    accent: .orange
-                ) {
-                    onSelect(.restaurant)
+                ForEach(primary, id: \.self) { category in
+                    categoryCard(for: category)
                 }
 
-                // 🥈 Food Trucks (لو عندك Category مخصصة للفود ترك غيّرها)
-                categoryCard(
-                    icon: "car.fill",
-                    title: L("فود ترك", "Food Trucks"),
-                    accent: .red
-                ) {
-                    // إن لم يكن عندك foodTruck في PlaceCategory خلّيه restaurant مؤقتاً
-                    onSelect(.restaurant)
-                }
-
-                // 🥉 Halal Stores
-                categoryCard(
-                    icon: "cart.fill",
-                    title: L("متاجر حلال", "Halal Stores"),
-                    accent: .green
-                ) {
-                    onSelect(.grocery)
-                }
-
-                // 🔥 Jobs (ذهب) — هنا ليس خريطة، لاحقاً نربطه لشاشة Jobs
-                categoryCard(
-                    icon: "briefcase.fill",
-                    title: L("وظائف", "Jobs"),
-                    accent: .blue
-                ) {
-                    // مؤقتاً: نفتح CommunityHubScreen أو JobAdsBoardView لاحقاً
-                    // الآن خلّيها تفتح خريطة مطاعم مؤقتاً أو لا تعمل شيء
-                    // الأفضل: نربطها لشاشة Jobs بالمرحلة التالية
-                }
-
-                // 📢 Community — لاحقاً نربطه لصفحة Community
-                categoryCard(
-                    icon: "person.3.fill",
-                    title: L("المجتمع", "Community"),
-                    accent: .teal
-                ) {
-                    // لاحقاً
-                }
-
-                // 🕌 Masjid (Last)
-                categoryCard(
-                    icon: "moon.stars.fill",
-                    title: L("مساجد", "Masjid"),
-                    accent: .purple
-                ) {
-                    onSelect(.mosque)
+                if showMore {
+                    ForEach(secondary, id: \.self) { category in
+                        categoryCard(for: category)
+                    }
                 }
             }
             .padding(.horizontal)
         }
     }
 
-    private func categoryCard(
-        icon: String,
-        title: String,
-        accent: Color,
-        action: @escaping () -> Void
-    ) -> some View {
-        Button(action: action) {
+    @ViewBuilder
+    private func categoryCard(for category: PlaceCategory) -> some View {
+        Button {
+            onSelect(category)
+        } label: {
             VStack(spacing: 10) {
-                Image(systemName: icon)
+                Image(systemName: icon(for: category))
                     .font(.system(size: 26))
-                    .foregroundColor(accent)
+                    .foregroundColor(category.mapColor)
 
-                Text(title)
+                Text(category.displayName)
                     .font(.subheadline.bold())
                     .foregroundColor(.primary)
+                    .multilineTextAlignment(.center)
             }
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 20)
+            .padding(.vertical, 18)
             .background(
                 RoundedRectangle(cornerRadius: 16)
                     .fill(Color(.systemBackground))
@@ -120,5 +93,22 @@ struct HomeCategoriesGrid: View {
             .shadow(color: Color.black.opacity(0.06), radius: 4, x: 0, y: 2)
         }
         .buttonStyle(.plain)
+    }
+
+    private func icon(for category: PlaceCategory) -> String {
+        switch category {
+        case .restaurant: return "fork.knife"
+        case .foodTruck:  return "truck.box.fill"
+        case .grocery:    return "cart.fill"
+        case .market:     return "basket.fill"
+        case .shop:       return "bag.fill"
+        case .mosque:     return "moon.stars.fill"
+        case .school:     return "book.fill"
+        case .service:    return "wrench.and.screwdriver.fill"
+        case .center:
+            return "building.2.fill"
+        default:
+            return "square.grid.2x2.fill"
+        }
     }
 }

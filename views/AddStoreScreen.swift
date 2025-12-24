@@ -56,10 +56,9 @@ struct AddStoreScreen: View {
         case .service: return "خدمة"
         case .shop: return "محل"
         case .center: return "مركز"
-        case .funeral: return "مغسلة/دفن"
-        default: return "أخرى"
         }
-    }    // MARK: - BODY (very small)
+    }
+    // MARK: - BODY (very small)
 
     var body: some View {
         NavigationStack {

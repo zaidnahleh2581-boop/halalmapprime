@@ -5,7 +5,7 @@ import FirebaseCore
 struct HalalMapPrimeApp: App {
 
     @StateObject private var languageManager = LanguageManager()
-    @StateObject private var locationManager = LocationManager()
+    @StateObject private var locationManager = AppLocationManager()
 
     init() {
         FirebaseApp.configure()

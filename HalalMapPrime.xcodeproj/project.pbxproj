@@ -39,6 +39,7 @@
 		15B48CF32EE1E50300A88AB7 /* GooglePlacesModelsswift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B48CF22EE1E50300A88AB7 /* GooglePlacesModelsswift.swift */; };
 		15C0B4BB2EFC8F8600532F0F /* FiLocationManagerle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15C0B4BA2EFC8F8600532F0F /* FiLocationManagerle.swift */; };
 		15C0B4BD2EFC8FC200532F0F /* LocationPermissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15C0B4BC2EFC8FC200532F0F /* LocationPermissionView.swift */; };
+		15C0B4C02EFCA2FC00532F0F /* AppLocationManager .swift in Sources */ = {isa = PBXBuildFile; fileRef = 15C0B4BF2EFCA2FC00532F0F /* AppLocationManager .swift */; };
 		15CEB1F62EE78A810035A83D /* EventAdsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15CEB1F52EE78A810035A83D /* EventAdsService.swift */; };
 		15CEB1F82EE78AB00035A83D /* EventAdComposerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15CEB1F72EE78AB00035A83D /* EventAdComposerView.swift */; };
 		15CEB2042EE7C5DF0035A83D /* NoticeBoardViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15CEB2032EE7C5DF0035A83D /* NoticeBoardViews.swift */; };
@@ -74,6 +75,7 @@
 		15B48CF22EE1E50300A88AB7 /* GooglePlacesModelsswift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GooglePlacesModelsswift.swift; sourceTree = SOURCE_ROOT; };
 		15C0B4BA2EFC8F8600532F0F /* FiLocationManagerle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiLocationManagerle.swift; sourceTree = SOURCE_ROOT; };
 		15C0B4BC2EFC8FC200532F0F /* LocationPermissionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPermissionView.swift; sourceTree = SOURCE_ROOT; };
+		15C0B4BF2EFCA2FC00532F0F /* AppLocationManager .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppLocationManager .swift"; sourceTree = "<group>"; };
 		15CEB1F52EE78A810035A83D /* EventAdsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventAdsService.swift; sourceTree = "<group>"; };
 		15CEB1F72EE78AB00035A83D /* EventAdComposerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventAdComposerView.swift; sourceTree = "<group>"; };
 		15CEB2032EE7C5DF0035A83D /* NoticeBoardViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeBoardViews.swift; sourceTree = "<group>"; };
@@ -138,7 +140,7 @@
 		15A0D76A2EE055040063ED79 = {
 			isa = PBXGroup;
 			children = (
-				15CEB2092EE7CC780035A83D /* EventAdsBoardView.swift */,
+				15C0B4BE2EFCA1F500532F0F /* 	Managers */,
 				15A0D7A32EE0BBD90063ED79 /* GoogleService-Info.plist */,
 				15A0D78A2EE05CC30063ED79 /* models */,
 				15A0D7832EE059E60063ED79 /* services */,
@@ -203,6 +205,15 @@
 				151BD9E02EE520AA0065F10C /* language */,
 			);
 			path = models;
+			sourceTree = "<group>";
+		};
+		15C0B4BE2EFCA1F500532F0F /* 	Managers */ = {
+			isa = PBXGroup;
+			children = (
+				15CEB2092EE7CC780035A83D /* EventAdsBoardView.swift */,
+				15C0B4BF2EFCA2FC00532F0F /* AppLocationManager .swift */,
+			);
+			path = "\tManagers";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -316,6 +327,7 @@
 				15E1626F2EE121DC00A5C42C /* Place.swift in Sources */,
 				15A0D79C2EE060900063ED79 /* PlaceDetailView.swift in Sources */,
 				15C0B4BD2EFC8FC200532F0F /* LocationPermissionView.swift in Sources */,
+				15C0B4C02EFCA2FC00532F0F /* AppLocationManager .swift in Sources */,
 				15E1624A2EE0D5D600A5C42C /* MapScreenViewModel.swift in Sources */,
 				151BD9F12EE597570065F10C /* FreeAdFormView.swift in Sources */,
 				151BD9E22EE521030065F10C /* AppLanguage.swift in Sources */,
