@@ -3,7 +3,7 @@
 //  Halal Map Prime
 //
 //  Created by Zaid Nahleh on 2025-12-23.
-//  Updated by Zaid Nahleh on 2025-12-25.
+//  Updated by Zaid Nahleh on 2025-12-27.
 //  Copyright © 2025 Zaid Nahleh.
 //  All rights reserved.
 //
@@ -13,62 +13,56 @@ import SwiftUI
 struct MainTabView: View {
 
     @EnvironmentObject var lang: LanguageManager
-    @State private var selectedTab: Int = 0
+    @EnvironmentObject var router: AppRouter
 
-    private func L(_ ar: String, _ en: String) -> String {
-        lang.isArabic ? ar : en
-    }
+    private func L(_ ar: String, _ en: String) -> String { lang.isArabic ? ar : en }
 
     var body: some View {
-        TabView(selection: $selectedTab) {
+        TabView(selection: $router.selectedTab) {
 
-            // 1) Home
+            // 0) Home
             NavigationStack {
                 HomeOverviewScreen()
             }
             .tabItem {
-                Image(systemName: "house.fill")
-                Text(L("الرئيسية", "Home"))
+                Label(L("الرئيسية", "Home"), systemImage: "house.fill")
             }
             .tag(0)
 
-            // 2) Jobs
+            // 1) Jobs
             NavigationStack {
                 JobAdsScreen()
             }
             .tabItem {
-                Image(systemName: "briefcase.fill")
-                Text(L("وظائف", "Jobs"))
+                Label(L("وظائف", "Jobs"), systemImage: "briefcase.fill")
             }
             .tag(1)
 
-            // 3) Ads
+            // 2) Ads
             NavigationStack {
                 AdsHomeView()
             }
             .tabItem {
-                Image(systemName: "megaphone.fill")
-                Text(L("إعلانات", "Ads"))
+                Label(L("إعلانات", "Ads"), systemImage: "megaphone.fill")
             }
             .tag(2)
 
-            // 4) Community (وفيها رح نحط زر "المزيد" بدل تبويب More)
+            // 3) Community
             NavigationStack {
-                CommunityHubScreen()
+                HomeLiveFeedScreen()
             }
             .tabItem {
-                Image(systemName: "person.3.fill")
-                Text(L("المجتمع", "Community"))
+                Label(L("مجتمع", "Community"), systemImage: "person.3.fill")
             }
             .tag(3)
 
-            // 5) Faith tools (بديل تبويب المزيد)
+            // 4) Faith
             NavigationStack {
-                FaithToolsScreen()
+                // ضع شاشة الإيمان عندك هنا (إذا عندك FaithHomeScreen بدلها)
+                HomeLiveFeedScreen()
             }
             .tabItem {
-                Image(systemName: "moon.stars.fill")
-                Text(L("الإيمان", "Faith"))
+                Label(L("إيمان", "Faith"), systemImage: "moon.stars.fill")
             }
             .tag(4)
         }

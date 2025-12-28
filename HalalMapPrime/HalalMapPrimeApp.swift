@@ -6,6 +6,7 @@ struct HalalMapPrimeApp: App {
 
     @StateObject private var languageManager = LanguageManager()
     @StateObject private var locationManager = AppLocationManager()
+    @StateObject private var appRouter = AppRouter()   // ✅ NEW
 
     init() {
         FirebaseApp.configure()
@@ -16,6 +17,7 @@ struct HalalMapPrimeApp: App {
             RootView()
                 .environmentObject(languageManager)
                 .environmentObject(locationManager)
+                .environmentObject(appRouter)          // ✅ IMPORTANT
         }
     }
 }

@@ -1,11 +1,19 @@
+//
+//  PlaceCategory.swift
+//  Halal Map Prime
+//
+//  Created by Zaid Nahleh on 2025-12-27.
+//  Copyright © 2025 Zaid Nahleh.
+//  All rights reserved.
+//
+
 import Foundation
 import SwiftUI
 
-// كل أنواع الأماكن في الأب
 enum PlaceCategory: String, CaseIterable, Identifiable, Codable, Hashable {
 
     case restaurant = "Restaurant"
-    case grocery    = " Grocery"
+    case grocery    = "Grocery"
     case school     = "School"
     case mosque     = "Mosque"
     case service    = "Service"
@@ -13,11 +21,9 @@ enum PlaceCategory: String, CaseIterable, Identifiable, Codable, Hashable {
     case market     = "Market"
     case shop       = "Shop"
     case center     = "Center"
-    // ❌ تم حذف funeral بناءً على طلبك
 
     var id: String { rawValue }
 
-    // الاسم الظاهر فوق الفلاتر
     var displayName: String {
         switch self {
         case .restaurant: return "Restaurants"
@@ -32,7 +38,6 @@ enum PlaceCategory: String, CaseIterable, Identifiable, Codable, Hashable {
         }
     }
 
-    // نوع Google Places – هذا اللي بيستخدمه GooglePlacesService
     var googleType: String {
         switch self {
         case .restaurant: return "restaurant"
@@ -47,7 +52,6 @@ enum PlaceCategory: String, CaseIterable, Identifiable, Codable, Hashable {
         }
     }
 
-    // لون العلامة على الخريطة حسب النوع
     var mapColor: Color {
         switch self {
         case .restaurant: return .red
@@ -62,7 +66,6 @@ enum PlaceCategory: String, CaseIterable, Identifiable, Codable, Hashable {
         }
     }
 
-    // الإيموجي اللي بنحطه في الليست أو البانر
     var emoji: String {
         switch self {
         case .restaurant: return "🍽️"
