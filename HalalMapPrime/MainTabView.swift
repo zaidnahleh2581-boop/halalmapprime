@@ -3,7 +3,7 @@
 //  Halal Map Prime
 //
 //  Created by Zaid Nahleh on 2025-12-23.
-//  Updated by Zaid Nahleh on 2025-12-27.
+//  Updated by Zaid Nahleh on 2025-12-29.
 //  Copyright © 2025 Zaid Nahleh.
 //  All rights reserved.
 //
@@ -20,12 +20,12 @@ struct MainTabView: View {
     var body: some View {
         TabView(selection: $router.selectedTab) {
 
-            // 0) Map (Main)
+            // 0) Home (Main)
             NavigationStack {
-                MapScreen()
+                HomeOverviewScreen()
             }
             .tabItem {
-                Label(L("الخريطة", "Map"), systemImage: "map.fill")
+                Label(L("الرئيسية", "Home"), systemImage: "house.fill")
             }
             .tag(0)
 
@@ -47,7 +47,7 @@ struct MainTabView: View {
             }
             .tag(2)
 
-            // 3) Community ✅
+            // 3) Community
             NavigationStack {
                 CommunityHubScreen()
             }
@@ -56,7 +56,7 @@ struct MainTabView: View {
             }
             .tag(3)
 
-            // 4) Faith ✅
+            // 4) Faith
             NavigationStack {
                 FaithToolsScreen()
             }
