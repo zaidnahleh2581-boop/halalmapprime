@@ -1,6 +1,7 @@
 import SwiftUI
 import FirebaseFirestore
 import Combine
+import FirebaseAuth
 
 // MARK: - موديل إعلان لوحة المجتمع
 

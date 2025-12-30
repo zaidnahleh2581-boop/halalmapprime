@@ -1,3 +1,12 @@
+//
+//  EventAdsService.swift
+//  Halal Map Prime
+//
+//  Created by Zaid Nahleh on 2025-12-30.
+//  Copyright © 2025 Zaid Nahleh.
+//  All rights reserved.
+//
+
 import Foundation
 import FirebaseFirestore
 import FirebaseAuth
@@ -27,6 +36,11 @@ struct EventAd: Identifiable {
     let phone: String
     let templateId: String
 
+    let tier: String            // "free" / "paid"
+    let priceCents: Int
+    let paidAt: Date?
+    let paymentRef: String?
+
     let createdAt: Date
     let updatedAt: Date?
     let deletedAt: Date?
@@ -42,9 +56,7 @@ struct EventAd: Identifiable {
             let description = data["description"] as? String,
             let phone = data["phone"] as? String,
             let dateTS = data["date"] as? Timestamp
-        else {
-            return nil
-        }
+        else { return nil }
 
         self.id = snapshot.documentID
         self.ownerId = ownerId
@@ -57,23 +69,15 @@ struct EventAd: Identifiable {
 
         self.templateId = data["templateId"] as? String ?? "communityMeeting"
 
-        if let createdTS = data["createdAt"] as? Timestamp {
-            self.createdAt = createdTS.dateValue()
-        } else {
-            self.createdAt = Date()
-        }
+        self.tier = data["tier"] as? String ?? "free"
+        self.priceCents = data["priceCents"] as? Int ?? 0
 
-        if let ts = data["updatedAt"] as? Timestamp {
-            self.updatedAt = ts.dateValue()
-        } else {
-            self.updatedAt = nil
-        }
+        if let ts = data["paidAt"] as? Timestamp { self.paidAt = ts.dateValue() } else { self.paidAt = nil }
+        self.paymentRef = data["paymentRef"] as? String
 
-        if let ts = data["deletedAt"] as? Timestamp {
-            self.deletedAt = ts.dateValue()
-        } else {
-            self.deletedAt = nil
-        }
+        if let createdTS = data["createdAt"] as? Timestamp { self.createdAt = createdTS.dateValue() } else { self.createdAt = Date() }
+        if let ts = data["updatedAt"] as? Timestamp { self.updatedAt = ts.dateValue() } else { self.updatedAt = nil }
+        if let ts = data["deletedAt"] as? Timestamp { self.deletedAt = ts.dateValue() } else { self.deletedAt = nil }
     }
 }
 
@@ -95,7 +99,7 @@ final class EventAdsService {
         }
 
         Auth.auth().signInAnonymously { result, error in
-            if let error = error {
+            if let error {
                 completion(.failure(error))
                 return
             }
@@ -111,23 +115,22 @@ final class EventAdsService {
         }
     }
 
-    // MARK: - Monthly Gate Helper
+    // MARK: - Monthly Gate (consume even if deleted)
     private func userDocRef(uid: String) -> DocumentReference {
         db.collection(usersCollection).document(uid)
     }
 
     private func canPostFreeThisMonth(lastPost: Date?, now: Date = Date()) -> (allowed: Bool, nextAllowed: Date?) {
         guard let lastPost else { return (true, nil) }
-        // 30 يوم “تقريبًا” — ثابت وواضح للمستخدم
-        let next = Calendar.current.date(byAdding: .day, value: 30, to: lastPost) ?? lastPost.addingTimeInterval(30 * 24 * 60 * 60)
+        let next = Calendar.current.date(byAdding: .day, value: 30, to: lastPost)
+        ?? lastPost.addingTimeInterval(30 * 24 * 60 * 60)
         return (now >= next, next)
     }
 
     private func fetchLastFreePostDate(uid: String, completion: @escaping (Result<Date?, Error>) -> Void) {
         userDocRef(uid: uid).getDocument { snap, error in
-            if let error = error { completion(.failure(error)); return }
+            if let error { completion(.failure(error)); return }
             guard let data = snap?.data() else { completion(.success(nil)); return }
-
             if let ts = data["lastFreeEventPostAt"] as? Timestamp {
                 completion(.success(ts.dateValue()))
             } else {
@@ -150,7 +153,7 @@ final class EventAdsService {
             .whereField("date", isGreaterThanOrEqualTo: todayTS)
             .order(by: "date", descending: false)
             .addSnapshotListener { snapshot, error in
-                if let error = error {
+                if let error {
                     completion(.failure(error))
                     return
                 }
@@ -161,42 +164,30 @@ final class EventAdsService {
             }
     }
 
-    // MARK: - Monthly Limit
+    // MARK: - Gate Check (free)
     func canCreateFreeEventThisMonth(completion: @escaping (Result<Bool, Error>) -> Void) {
-        ensureSignedIn { [weak self] result in
+        ensureSignedIn { [weak self] authResult in
             guard let self else { return }
 
-            switch result {
+            switch authResult {
             case .failure(let error):
                 completion(.failure(error))
 
             case .success(let uid):
-                let cal = Calendar.current
-                let now = Date()
-                let startOfMonth = cal.date(from: cal.dateComponents([.year, .month], from: now)) ?? now
-
-                // ✅ نعد فقط إعلانات هذا الشهر + غير محذوفة
-                // ownerId == uid
-                // deletedAt == null
-                // createdAt >= startOfMonth
-                self.db.collection(self.collectionName)
-                    .whereField("ownerId", isEqualTo: uid)
-                    .whereField("deletedAt", isEqualTo: NSNull())
-                    .whereField("createdAt", isGreaterThanOrEqualTo: Timestamp(date: startOfMonth))
-                    .order(by: "createdAt", descending: true)
-                    .limit(to: 1) // يكفينا نعرف هل في واحد ولا لا
-                    .getDocuments { snap, error in
-                        if let error = error {
-                            completion(.failure(error))
-                            return
-                        }
-                        let hasPostedThisMonth = !(snap?.documents.isEmpty ?? true)
-                        completion(.success(!hasPostedThisMonth))
+                self.fetchLastFreePostDate(uid: uid) { gateResult in
+                    switch gateResult {
+                    case .failure(let error):
+                        completion(.failure(error))
+                    case .success(let lastDate):
+                        let gate = self.canPostFreeThisMonth(lastPost: lastDate)
+                        completion(.success(gate.allowed))
                     }
+                }
             }
         }
     }
-    // MARK: - Create (Monthly Free Gate)
+
+    // MARK: - Create FREE
     func createEventAd(
         title: String,
         city: String,
@@ -227,10 +218,8 @@ final class EventAdsService {
                             return
                         }
 
-                        // ✅ Atomic write: event + update user's lastFreeEventPostAt
                         let eventRef = self.db.collection(self.collectionName).document()
                         let userRef = self.userDocRef(uid: uid)
-
                         let batch = self.db.batch()
 
                         let eventData: [String: Any] = [
@@ -242,26 +231,78 @@ final class EventAdsService {
                             "description": description,
                             "phone": phone,
                             "templateId": templateId,
+
+                            "tier": "free",
+                            "priceCents": 0,
+                            "paidAt": NSNull(),
+                            "paymentRef": NSNull(),
+
                             "deletedAt": NSNull(),
                             "updatedAt": NSNull(),
                             "createdAt": FieldValue.serverTimestamp()
                         ]
 
                         batch.setData(eventData, forDocument: eventRef)
-
-                        // نخزن آخر “بوست مجاني” لهذا المستخدم
-                        batch.setData([
-                            "lastFreeEventPostAt": FieldValue.serverTimestamp()
-                        ], forDocument: userRef, merge: true)
+                        batch.setData(["lastFreeEventPostAt": FieldValue.serverTimestamp()],
+                                      forDocument: userRef,
+                                      merge: true)
 
                         batch.commit { error in
-                            if let error = error {
-                                completion(.failure(error))
-                            } else {
-                                completion(.success(()))
-                            }
+                            if let error { completion(.failure(error)) }
+                            else { completion(.success(())) }
                         }
                     }
+                }
+            }
+        }
+    }
+
+    // MARK: - Create PAID (after IAP)
+    func createPaidEventAd(
+        title: String,
+        city: String,
+        placeName: String,
+        date: Date,
+        description: String,
+        phone: String,
+        templateId: String,
+        priceCents: Int,
+        paymentRef: String,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        ensureSignedIn { [weak self] authResult in
+            guard let self else { return }
+
+            switch authResult {
+            case .failure(let error):
+                completion(.failure(error))
+
+            case .success(let uid):
+                let eventRef = self.db.collection(self.collectionName).document()
+
+                let eventData: [String: Any] = [
+                    "ownerId": uid,
+                    "title": title,
+                    "city": city,
+                    "placeName": placeName,
+                    "date": Timestamp(date: date),
+                    "description": description,
+                    "phone": phone,
+                    "templateId": templateId,
+
+                    "tier": "paid",
+                    "priceCents": priceCents,
+                    "paidAt": FieldValue.serverTimestamp(),
+                    "paymentRef": paymentRef,
+
+                    "deletedAt": NSNull(),
+                    "updatedAt": NSNull(),
+                    "createdAt": FieldValue.serverTimestamp()
+                ]
+
+                eventRef.setData(eventData) { error in
+                    if let error { completion(.failure(error)) }
+                    else { completion(.success(())) }
                 }
             }
         }
@@ -281,7 +322,7 @@ final class EventAdsService {
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         ensureSignedIn { [weak self] result in
-            guard let self = self else { return }
+            guard let self else { return }
 
             switch result {
             case .failure(let error):
@@ -309,11 +350,8 @@ final class EventAdsService {
                 ]
 
                 self.db.collection(self.collectionName).document(adId).updateData(data) { error in
-                    if let error = error {
-                        completion(.failure(error))
-                    } else {
-                        completion(.success(()))
-                    }
+                    if let error { completion(.failure(error)) }
+                    else { completion(.success(())) }
                 }
             }
         }
@@ -326,7 +364,7 @@ final class EventAdsService {
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         ensureSignedIn { [weak self] result in
-            guard let self = self else { return }
+            guard let self else { return }
 
             switch result {
             case .failure(let error):
@@ -345,11 +383,8 @@ final class EventAdsService {
                 self.db.collection(self.collectionName).document(adId).updateData([
                     "deletedAt": FieldValue.serverTimestamp()
                 ]) { error in
-                    if let error = error {
-                        completion(.failure(error))
-                    } else {
-                        completion(.success(()))
-                    }
+                    if let error { completion(.failure(error)) }
+                    else { completion(.success(())) }
                 }
             }
         }

@@ -1,8 +1,9 @@
 //
 //  EventAdComposerView.swift
-//  HalalMapPrime
+//  Halal Map Prime
 //
 //  Created by Zaid Nahleh on 2025-12-29.
+//  Updated by Zaid Nahleh on 2025-12-30.
 //  Copyright © 2025 Zaid Nahleh.
 //  All rights reserved.
 //
@@ -31,17 +32,25 @@ struct EventAdComposerView: View {
     // ✅ Paywall
     @State private var showPaywall: Bool = false
 
+    // ✅ Draft payload for paid publish after paywall
+    struct PendingDraft {
+        let title: String
+        let city: String
+        let placeName: String
+        let date: Date
+        let description: String
+        let phone: String
+        let templateId: String
+    }
+    @State private var pendingDraft: PendingDraft? = nil
+
     init(editingAd: EventAd? = nil) {
         self.editingAd = editingAd
     }
 
-    private func L(_ ar: String, _ en: String) -> String {
-        lang.isArabic ? ar : en
-    }
+    private func L(_ ar: String, _ en: String) -> String { lang.isArabic ? ar : en }
 
-    private var minDate: Date {
-        Calendar.current.startOfDay(for: Date())
-    }
+    private var minDate: Date { Calendar.current.startOfDay(for: Date()) }
 
     private var dateText: String {
         let df = DateFormatter()
@@ -80,8 +89,7 @@ struct EventAdComposerView: View {
                 Section(header: Text(L("اختر صيغة جاهزة", "Choose a ready template"))) {
                     Picker(L("القالب", "Template"), selection: $selectedTemplate) {
                         ForEach(EventTemplate.allCases) { t in
-                            Text(lang.isArabic ? t.displayTitle.ar : t.displayTitle.en)
-                                .tag(t)
+                            Text(lang.isArabic ? t.displayTitle.ar : t.displayTitle.en).tag(t)
                         }
                     }
 
@@ -126,9 +134,7 @@ struct EventAdComposerView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button { dismiss() } label: {
-                        Image(systemName: "xmark").imageScale(.medium)
-                    }
+                    Button { dismiss() } label: { Image(systemName: "xmark").imageScale(.medium) }
                 }
             }
             .alert(isPresented: $showErrorAlert) {
@@ -139,9 +145,10 @@ struct EventAdComposerView: View {
                 )
             }
             .sheet(isPresented: $showPaywall) {
-                // ✅ ملاحظة: لازم MonthlyEventPaywallView يكون initializer بدون parameters
-                MonthlyEventPaywallView()
-                    .environmentObject(lang)
+                MonthlyEventPaywallView(onPaid: { paymentRef in
+                    publishPaid(paymentRef: paymentRef)
+                })
+                .environmentObject(lang)
             }
             .onAppear {
                 if let ad = editingAd {
@@ -174,6 +181,7 @@ struct EventAdComposerView: View {
         isSaving = true
 
         if let ad = editingAd {
+            // UPDATE
             EventAdsService.shared.updateEventAd(
                 adId: ad.id,
                 ownerId: ad.ownerId,
@@ -197,11 +205,8 @@ struct EventAdComposerView: View {
                 }
             }
         } else {
-            // ✅ هنا مكان ربط Paywall (شهري)
-            // مؤقتًا: لو بدك تمنع النشر وتفتح Paywall حط شرطك هنا:
-            // if shouldShowPaywall { self.showPaywall = true; self.isSaving = false; return }
-
-            EventAdsService.shared.createEventAd(
+            // CREATE: check free gate first
+            let draft = PendingDraft(
                 title: t,
                 city: c,
                 placeName: p,
@@ -209,16 +214,78 @@ struct EventAdComposerView: View {
                 description: templatePreview,
                 phone: ph,
                 templateId: selectedTemplate.rawValue
-            ) { result in
+            )
+            pendingDraft = draft
+
+            EventAdsService.shared.canCreateFreeEventThisMonth { result in
                 DispatchQueue.main.async {
-                    isSaving = false
                     switch result {
-                    case .success:
-                        dismiss()
                     case .failure(let error):
-                        errorMessage = error.localizedDescription
-                        showErrorAlert = true
+                        self.isSaving = false
+                        self.errorMessage = error.localizedDescription
+                        self.showErrorAlert = true
+
+                    case .success(let canFree):
+                        if canFree {
+                            // ✅ publish FREE
+                            EventAdsService.shared.createEventAd(
+                                title: draft.title,
+                                city: draft.city,
+                                placeName: draft.placeName,
+                                date: draft.date,
+                                description: draft.description,
+                                phone: draft.phone,
+                                templateId: draft.templateId
+                            ) { res in
+                                DispatchQueue.main.async {
+                                    self.isSaving = false
+                                    switch res {
+                                    case .success:
+                                        dismiss()
+                                    case .failure(let error):
+                                        self.errorMessage = error.localizedDescription
+                                        self.showErrorAlert = true
+                                    }
+                                }
+                            }
+                        } else {
+                            // ❌ free used → show paywall (IAP)
+                            self.isSaving = false
+                            self.showPaywall = true
+                        }
                     }
+                }
+            }
+        }
+    }
+
+    private func publishPaid(paymentRef: String) {
+        guard let draft = pendingDraft else { return }
+
+        isSaving = true
+
+        // ✅ مطابق للـ IAP price (4.99 -> 499)
+        let priceCents = 499
+
+        EventAdsService.shared.createPaidEventAd(
+            title: draft.title,
+            city: draft.city,
+            placeName: draft.placeName,
+            date: draft.date,
+            description: draft.description,
+            phone: draft.phone,
+            templateId: draft.templateId,
+            priceCents: priceCents,
+            paymentRef: paymentRef
+        ) { result in
+            DispatchQueue.main.async {
+                self.isSaving = false
+                switch result {
+                case .success:
+                    dismiss()
+                case .failure(let error):
+                    self.errorMessage = error.localizedDescription
+                    self.showErrorAlert = true
                 }
             }
         }
