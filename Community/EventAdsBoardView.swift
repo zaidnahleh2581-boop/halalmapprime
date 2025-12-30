@@ -1,3 +1,12 @@
+//
+//  EventAdsBoardView.swift
+//  Halal Map Prime
+//
+//  Created by Zaid Nahleh on 2025-12-29.
+//  Copyright © 2025 Zaid Nahleh.
+//  All rights reserved.
+//
+
 import SwiftUI
 
 struct EventAdsBoardView: View {
@@ -27,6 +36,7 @@ struct EventAdsBoardView: View {
                         .font(.footnote)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+
             } else if let err = vm.errorMessage {
                 VStack(spacing: 10) {
                     Image(systemName: "exclamationmark.triangle.fill")
@@ -48,6 +58,7 @@ struct EventAdsBoardView: View {
                     .buttonStyle(.bordered)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+
             } else {
                 List {
                     if vm.events.isEmpty {
@@ -67,6 +78,7 @@ struct EventAdsBoardView: View {
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 18)
                         .listRowSeparator(.hidden)
+
                     } else {
                         ForEach(vm.events) { ev in
                             VStack(alignment: .leading, spacing: 6) {

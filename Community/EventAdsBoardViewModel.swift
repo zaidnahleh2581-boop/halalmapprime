@@ -1,12 +1,14 @@
 //
 //  EventAdsBoardViewModel.swift
-//  HalalMapPrime
+//  Halal Map Prime
 //
-//  Created by zaid nahleh on 12/29/25.
+//  Created by Zaid Nahleh on 2025-12-29.
+//  Copyright © 2025 Zaid Nahleh.
+//  All rights reserved.
 //
 
 import Foundation
-import Combine          // ⬅️ هذا السطر هو الحل
+import Combine
 import FirebaseAuth
 import FirebaseFirestore
 
@@ -29,8 +31,9 @@ final class EventAdsBoardViewModel: ObservableObject {
 
         listener?.remove()
         listener = EventAdsService.shared.observeUpcomingEvents { [weak self] result in
-            DispatchQueue.main.async {
-                guard let self else { return }
+            guard let self else { return }
+
+            Task { @MainActor in
                 self.isLoading = false
 
                 switch result {
@@ -38,7 +41,7 @@ final class EventAdsBoardViewModel: ObservableObject {
                     self.events = items
                 case .failure(let error):
                     self.events = []
-                    self.errorMessage = error.localizedDescription
+                    self.errorMessage = self.prettyError(error)
                 }
             }
         }
@@ -49,6 +52,38 @@ final class EventAdsBoardViewModel: ObservableObject {
     }
 
     func delete(_ ad: EventAd) {
-        EventAdsService.shared.softDeleteEventAd(adId: ad.id) { _ in }
+        // ✅ الأمان الحقيقي: لازم الـ Rules تمنع غير صاحب الإعلان
+        // لذلك بنمرر ownerId للخدمة (والخدمة تعمل تحقق + الـ Rules تعمل enforce)
+        EventAdsService.shared.softDeleteEventAd(
+            adId: ad.id,
+            ownerId: ad.ownerId
+        ) { [weak self] result in
+            guard let self else { return }
+            Task { @MainActor in
+                switch result {
+                case .success:
+                    break
+                case .failure(let error):
+                    self.errorMessage = self.prettyError(error)
+                }
+            }
+        }
+    }
+
+    // MARK: - Helpers
+
+    private func prettyError(_ error: Error) -> String {
+        let msg = error.localizedDescription.lowercased()
+
+        if msg.contains("missing or insufficient permissions") {
+            return "ليس لديك صلاحية لهذه العملية. تأكد أنك نفس المستخدم الذي أنشأ الإعلان."
+        }
+
+        // Firestore sometimes returns "requires an index"
+        if msg.contains("requires an index") {
+            return "الاستعلام يحتاج Index في Firestore. افتح رابط الـ Index من الكونسول وأنشئه."
+        }
+
+        return error.localizedDescription
     }
 }

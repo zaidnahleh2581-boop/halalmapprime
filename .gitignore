@@ -11,3 +11,5 @@ xcuserdata/
 .swiftpm/xcode/package.xcworkspace/xcuserdata/
 *.xcuserstate
 xcuserdata/
+*.xcuserstate
+xcuserdata/

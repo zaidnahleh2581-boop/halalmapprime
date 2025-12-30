@@ -1,3 +1,12 @@
+//
+//  EventAdComposerView.swift
+//  HalalMapPrime
+//
+//  Created by Zaid Nahleh on 2025-12-29.
+//  Copyright © 2025 Zaid Nahleh.
+//  All rights reserved.
+//
+
 import SwiftUI
 
 struct EventAdComposerView: View {
@@ -5,7 +14,7 @@ struct EventAdComposerView: View {
     @EnvironmentObject var lang: LanguageManager
     @Environment(\.dismiss) private var dismiss
 
-    // ✅ لو nil = Create، لو موجود = Edit
+    // nil = Create, not nil = Edit
     let editingAd: EventAd?
 
     @State private var title: String = ""
@@ -19,16 +28,19 @@ struct EventAdComposerView: View {
     @State private var showErrorAlert: Bool = false
     @State private var errorMessage: String = ""
 
+    // ✅ Paywall
+    @State private var showPaywall: Bool = false
+
     init(editingAd: EventAd? = nil) {
         self.editingAd = editingAd
     }
 
-    private var minDate: Date {
-        Calendar.current.date(byAdding: .day, value: 0, to: Date()) ?? Date()
-    }
-
     private func L(_ ar: String, _ en: String) -> String {
         lang.isArabic ? ar : en
+    }
+
+    private var minDate: Date {
+        Calendar.current.startOfDay(for: Date())
     }
 
     private var dateText: String {
@@ -41,10 +53,10 @@ struct EventAdComposerView: View {
     private var templatePreview: String {
         selectedTemplate.text(
             isArabic: lang.isArabic,
-            city: city.trimmingCharacters(in: .whitespaces),
-            place: placeName.trimmingCharacters(in: .whitespaces),
+            city: city.trimmingCharacters(in: .whitespacesAndNewlines),
+            place: placeName.trimmingCharacters(in: .whitespacesAndNewlines),
             dateText: dateText,
-            phone: phone.trimmingCharacters(in: .whitespaces)
+            phone: phone.trimmingCharacters(in: .whitespacesAndNewlines)
         )
     }
 
@@ -78,10 +90,13 @@ struct EventAdComposerView: View {
                             .font(.footnote.weight(.semibold))
                             .foregroundColor(.secondary)
 
-                        Text(templatePreview.isEmpty ? L("املأ الحقول لإظهار المعاينة.", "Fill fields to see preview.") : templatePreview)
-                            .font(.footnote)
-                            .foregroundColor(.secondary)
-                            .fixedSize(horizontal: false, vertical: true)
+                        Text(templatePreview.isEmpty
+                             ? L("املأ الحقول لإظهار المعاينة.", "Fill fields to see preview.")
+                             : templatePreview
+                        )
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
                     }
                     .padding(.vertical, 6)
                 }
@@ -98,13 +113,16 @@ struct EventAdComposerView: View {
                         if isSaving {
                             ProgressView().frame(maxWidth: .infinity)
                         } else {
-                            Text(editingAd == nil ? L("نشر الفعالية", "Publish event") : L("حفظ التعديل", "Save changes"))
+                            Text(editingAd == nil ? L("نشر الفعالية", "Publish event")
+                                                  : L("حفظ التعديل", "Save changes"))
                                 .frame(maxWidth: .infinity)
                         }
                     }
+                    .disabled(isSaving)
                 }
             }
-            .navigationTitle(editingAd == nil ? L("إضافة فعالية", "Add event") : L("تعديل فعالية", "Edit event"))
+            .navigationTitle(editingAd == nil ? L("إضافة فعالية", "Add event")
+                                              : L("تعديل فعالية", "Edit event"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -120,8 +138,12 @@ struct EventAdComposerView: View {
                     dismissButton: .default(Text(L("حسناً", "OK")))
                 )
             }
+            .sheet(isPresented: $showPaywall) {
+                // ✅ ملاحظة: لازم MonthlyEventPaywallView يكون initializer بدون parameters
+                MonthlyEventPaywallView()
+                    .environmentObject(lang)
+            }
             .onAppear {
-                // ✅ Prefill لو Edit
                 if let ad = editingAd {
                     title = ad.title
                     city = ad.city
@@ -135,11 +157,12 @@ struct EventAdComposerView: View {
     }
 
     private func save() {
-        guard !title.trimmingCharacters(in: .whitespaces).isEmpty,
-              !city.trimmingCharacters(in: .whitespaces).isEmpty,
-              !placeName.trimmingCharacters(in: .whitespaces).isEmpty,
-              !phone.trimmingCharacters(in: .whitespaces).isEmpty
-        else {
+        let t = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        let c = city.trimmingCharacters(in: .whitespacesAndNewlines)
+        let p = placeName.trimmingCharacters(in: .whitespacesAndNewlines)
+        let ph = phone.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard !t.isEmpty, !c.isEmpty, !p.isEmpty, !ph.isEmpty else {
             errorMessage = L(
                 "الرجاء تعبئة: العنوان، المدينة، اسم المكان، رقم الهاتف.",
                 "Please fill: title, city, place name, phone."
@@ -153,12 +176,13 @@ struct EventAdComposerView: View {
         if let ad = editingAd {
             EventAdsService.shared.updateEventAd(
                 adId: ad.id,
-                title: title,
-                city: city,
-                placeName: placeName,
+                ownerId: ad.ownerId,
+                title: t,
+                city: c,
+                placeName: p,
                 date: date,
                 description: templatePreview,
-                phone: phone,
+                phone: ph,
                 templateId: selectedTemplate.rawValue
             ) { result in
                 DispatchQueue.main.async {
@@ -173,13 +197,17 @@ struct EventAdComposerView: View {
                 }
             }
         } else {
+            // ✅ هنا مكان ربط Paywall (شهري)
+            // مؤقتًا: لو بدك تمنع النشر وتفتح Paywall حط شرطك هنا:
+            // if shouldShowPaywall { self.showPaywall = true; self.isSaving = false; return }
+
             EventAdsService.shared.createEventAd(
-                title: title,
-                city: city,
-                placeName: placeName,
+                title: t,
+                city: c,
+                placeName: p,
                 date: date,
                 description: templatePreview,
-                phone: phone,
+                phone: ph,
                 templateId: selectedTemplate.rawValue
             ) { result in
                 DispatchQueue.main.async {
