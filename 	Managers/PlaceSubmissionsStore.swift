@@ -3,7 +3,8 @@
 //  Halal Map Prime
 //
 //  Created by Zaid Nahleh on 2025-12-30.
-//  Copyright © 2025 Zaid Nahleh.
+//  Updated by Zaid Nahleh on 2026-01-01.
+//  Copyright © 2026 Zaid Nahleh.
 //  All rights reserved.
 //
 
@@ -26,9 +27,35 @@ final class PlaceSubmissionsStore: ObservableObject {
 
     private init() {}
 
+    // MARK: - Gate Mode
+    enum GateMode {
+        /// Community monthly free slot (DEFAULT - keeps your existing behavior)
+        case communityMonthly(phone: String?)
+
+        /// Ads lifetime gift (one-time forever per place/location)
+        case adsLifetimeGift
+
+        /// No gate (for future paid ads flow, etc.)
+        case none
+    }
+
+    enum SubmitError: LocalizedError {
+        case lifetimeGiftAlreadyUsed
+
+        var errorDescription: String? {
+            switch self {
+            case .lifetimeGiftAlreadyUsed:
+                return "Lifetime free gift already used for this place."
+            }
+        }
+    }
+
     // MARK: - Submit Place
 
-    /// Submit a place (pending) + saves geo automatically + marks monthly free used
+    /// Submit a place (pending) + saves geo automatically
+    /// Gate behavior:
+    /// - communityMonthly: marks MonthlyFreeGate used (your existing behavior)
+    /// - adsLifetimeGift: blocks if this placeKey already used, then marks Lifetime gate used
     func submitPlace(
         placeName: String,
         phone: String?,
@@ -36,7 +63,8 @@ final class PlaceSubmissionsStore: ObservableObject {
         city: String,
         state: String,
         addressLine: String?,
-        foodTruckStop: String?
+        foodTruckStop: String?,
+        gateMode: GateMode = .communityMonthly(phone: nil)
     ) async throws -> String {
 
         lastError = nil
@@ -51,11 +79,26 @@ final class PlaceSubmissionsStore: ObservableObject {
             state: state
         )
 
+        // ✅ Geocode first (stronger against bypass)
         let coordinate = try await geocodeAddress(fullAddress)
 
-        // ✅ Free Ad timing (30 days)
-        let now = Date()
-        let freeEnds = Calendar.current.date(byAdding: .day, value: 30, to: now)!
+        // ✅ Normalize address for stable identity
+        let normalizedAddress = normalizeAddress(fullAddress)
+
+        // ✅ Lifetime gift gate check (per place)
+        var lifetimePlaceKey: String? = nil
+        if case .adsLifetimeGift = gateMode {
+            let key = LifetimeFreePlaceGate.shared.makePlaceKey(
+                normalizedAddress: normalizedAddress,
+                coordinate: coordinate
+            )
+            lifetimePlaceKey = key
+
+            let ok = try await LifetimeFreePlaceGate.shared.canUse(placeKey: key)
+            if !ok {
+                throw SubmitError.lifetimeGiftAlreadyUsed
+            }
+        }
 
         var data: [String: Any] = [
             "ownerId": uid,
@@ -63,18 +106,10 @@ final class PlaceSubmissionsStore: ObservableObject {
             "placeType": placeType,
             "city": city,
             "state": state,
-
-            // Status
             "status": "pending",
-
-            // Dates
             "createdAt": FieldValue.serverTimestamp(),
-            "isFreeAd": true,
-            "adType": "free",
-            "freeStartedAt": Timestamp(date: now),
-            "freeEndsAt": Timestamp(date: freeEnds),
 
-            // Geo
+            // ✅ Geo for map pins
             "geo": GeoPoint(latitude: coordinate.latitude, longitude: coordinate.longitude),
             "lat": coordinate.latitude,
             "lng": coordinate.longitude
@@ -89,10 +124,29 @@ final class PlaceSubmissionsStore: ObservableObject {
         let stop = (foodTruckStop ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
         if !stop.isEmpty { data["foodTruckStop"] = stop }
 
+        // ✅ Add submission
         let ref = try await db.collection("place_submissions").addDocument(data: data)
 
-        // ✅ mark monthly free used AFTER successful submit
-        try await MonthlyFreeGate.shared.markFreeUsed(phone: phone)
+        // ✅ Mark gates AFTER successful submit
+        switch gateMode {
+        case .communityMonthly(let gatePhone):
+            // keep your existing behavior
+            try await MonthlyFreeGate.shared.markFreeUsed(phone: gatePhone ?? phone)
+
+        case .adsLifetimeGift:
+            if let key = lifetimePlaceKey {
+                try await LifetimeFreePlaceGate.shared.markUsed(placeKey: key, payload: [
+                    "firstOwnerId": uid,
+                    "placeName": placeName,
+                    "normalizedAddress": normalizedAddress,
+                    "lat": round(coordinate.latitude * 10_000) / 10_000,
+                    "lng": round(coordinate.longitude * 10_000) / 10_000
+                ])
+            }
+
+        case .none:
+            break
+        }
 
         return ref.documentID
     }
@@ -104,16 +158,11 @@ final class PlaceSubmissionsStore: ObservableObject {
 
         return try await withCheckedThrowingContinuation { cont in
             Auth.auth().signInAnonymously { result, error in
-                if let error {
-                    cont.resume(throwing: error)
-                    return
-                }
+                if let error { cont.resume(throwing: error); return }
                 guard let uid = result?.user.uid else {
-                    cont.resume(throwing: NSError(
-                        domain: "Auth",
-                        code: -1,
-                        userInfo: [NSLocalizedDescriptionKey: "Missing UID"]
-                    ))
+                    cont.resume(throwing: NSError(domain: "Auth", code: -1, userInfo: [
+                        NSLocalizedDescriptionKey: "Missing UID"
+                    ]))
                     return
                 }
                 cont.resume(returning: uid)
@@ -131,12 +180,20 @@ final class PlaceSubmissionsStore: ObservableObject {
         return "\(a), \(city), \(state)"
     }
 
+    private func normalizeAddress(_ address: String) -> String {
+        let lower = address.lowercased()
+        let cleaned = lower
+            .replacingOccurrences(of: "\n", with: " ")
+            .replacingOccurrences(of: "\t", with: " ")
+        // collapse spaces
+        let parts = cleaned.split(whereSeparator: { $0.isWhitespace })
+        return parts.joined(separator: " ")
+    }
+
     /// Geocoding using MapKit (MKLocalSearch)
     private func geocodeAddress(_ address: String) async throws -> CLLocationCoordinate2D {
-
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = address
-
         let search = MKLocalSearch(request: request)
 
         return try await withCheckedThrowingContinuation { cont in
@@ -146,12 +203,11 @@ final class PlaceSubmissionsStore: ObservableObject {
                     return
                 }
                 guard let item = response?.mapItems.first,
-                      let coord = item.placemark.location?.coordinate else {
-                    cont.resume(throwing: NSError(
-                        domain: "Geocode",
-                        code: -2,
-                        userInfo: [NSLocalizedDescriptionKey: "Could not geocode address: \(address)"]
-                    ))
+                      let coord = item.placemark.location?.coordinate
+                else {
+                    cont.resume(throwing: NSError(domain: "Geocode", code: -2, userInfo: [
+                        NSLocalizedDescriptionKey: "Could not geocode address: \(address)"
+                    ]))
                     return
                 }
                 cont.resume(returning: coord)

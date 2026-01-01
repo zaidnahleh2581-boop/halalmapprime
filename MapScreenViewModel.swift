@@ -3,8 +3,8 @@
 //  Halal Map Prime
 //
 //  Created by Zaid Nahleh on 2025-12-23.
-//  Updated by Zaid Nahleh on 2025-12-25.
-//  Copyright © 2025 Zaid Nahleh.
+//  Updated by Zaid Nahleh on 2026-01-01.
+//  Copyright © 2026 Zaid Nahleh.
 //  All rights reserved.
 //
 
@@ -46,8 +46,9 @@ final class MapScreenViewModel: ObservableObject {
                 self.isLoading = false
                 switch result {
                 case .success(let loaded):
-                    self.places = loaded
-                    self.filteredPlaces = loaded
+                    let sorted = self.sortPlaces(loaded)
+                    self.places = sorted
+                    self.filteredPlaces = sorted
                 case .failure(let error):
                     self.places = []
                     self.filteredPlaces = []
@@ -71,8 +72,9 @@ final class MapScreenViewModel: ObservableObject {
                 self.isLoading = false
                 switch result {
                 case .success(let loaded):
-                    self.places = loaded
-                    self.filteredPlaces = loaded
+                    let sorted = self.sortPlaces(loaded)
+                    self.places = sorted
+                    self.filteredPlaces = sorted
                 case .failure(let error):
                     self.places = []
                     self.filteredPlaces = []
@@ -82,7 +84,7 @@ final class MapScreenViewModel: ObservableObject {
         }
     }
 
-    // MARK: - ✅ REQUIRED by MapScreen (Fixes your 3 errors)
+    // MARK: - ✅ REQUIRED by MapScreen
     /// Yelp-style search:
     /// - If query is empty → reload nearby for selected category
     /// - Else → filter locally inside already loaded places (name/address)
@@ -93,19 +95,17 @@ final class MapScreenViewModel: ObservableObject {
     ) {
         let q = query.trimmingCharacters(in: .whitespacesAndNewlines)
 
-        // لو فاضي: رجّع تحميل قريب
         guard !q.isEmpty else {
             searchNearby(category: category)
             completion(.success(filteredPlaces))
             return
         }
 
-        // بحث محلي داخل النتائج الحالية (آمن + سريع)
         filterBySearch(text: q)
         completion(.success(filteredPlaces))
     }
 
-    // MARK: - Local Filter
+    // MARK: - Local Filter (keeps sorting)
     func filterBySearch(text: String) {
         let q = text.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
 
@@ -114,10 +114,13 @@ final class MapScreenViewModel: ObservableObject {
             return
         }
 
-        filteredPlaces = places.filter {
+        let filtered = places.filter {
             $0.name.lowercased().contains(q) ||
             $0.address.lowercased().contains(q)
         }
+
+        // ✅ مهم: حتى بعد الفلترة، الإعلانات تبقى فوق
+        filteredPlaces = sortPlaces(filtered)
     }
 
     // MARK: - Focus Map
@@ -127,6 +130,54 @@ final class MapScreenViewModel: ObservableObject {
                 center: place.coordinate,
                 span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
             )
+        }
+    }
+}
+
+// MARK: - Sorting
+private extension MapScreenViewModel {
+
+    /// Ranking:
+    /// 1) isAdActive (true first)
+    /// 2) adPlan (prime > monthly > weekly > none/empty)
+    /// 3) rating (high first)
+    /// 4) reviewCount (high first)
+    /// 5) name (A-Z)
+    func sortPlaces(_ input: [Place]) -> [Place] {
+        input.sorted { a, b in
+
+            // 1) Active Ad first
+            if a.isAdActive != b.isAdActive {
+                return a.isAdActive && !b.isAdActive
+            }
+
+            // 2) Plan priority
+            let ap = planPriority(a.adPlan)
+            let bp = planPriority(b.adPlan)
+            if ap != bp { return ap > bp }
+
+            // 3) Rating
+            if a.rating != b.rating { return a.rating > b.rating }
+
+            // 4) Reviews
+            if a.reviewCount != b.reviewCount { return a.reviewCount > b.reviewCount }
+
+            // 5) Name
+            return a.name.localizedCaseInsensitiveCompare(b.name) == .orderedAscending
+        }
+    }
+
+    func planPriority(_ plan: String) -> Int {
+        let p = plan.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        switch p {
+        case "prime", "prime_ad", "primead", "prime plan":
+            return 3
+        case "monthly", "monthly_ad", "monthlyad":
+            return 2
+        case "weekly", "weekly_ad", "weeklyad":
+            return 1
+        default:
+            return 0
         }
     }
 }

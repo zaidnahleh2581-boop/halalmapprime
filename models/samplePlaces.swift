@@ -1,9 +1,16 @@
-import Foundation
-import CoreLocation
+//
+//  samplePlaces.swift
+//  Halal Map Prime
+//
+//  Created by Zaid Nahleh on 2025-12-25.
+//  Copyright © 2025 Zaid Nahleh.
+//  All rights reserved.
+//
 
-// MARK: - Sample Places (For Testing Only)
+import Foundation
 
 let samplePlaces: [Place] = [
+
     Place(
         id: "1",
         name: "Al-Aqsa Halal Grill",
@@ -15,8 +22,17 @@ let samplePlaces: [Place] = [
         rating: 4.2,
         reviewCount: 138,
         deliveryAvailable: true,
-        isCertified: true
+        isCertified: true,
+        phone: "+1 (347) 825-2032",
+        website: "https://alaqsagrill.com",
+        adStatus: "paid",
+        adPlan: "prime",
+        adPriority: 3,
+        startAt: Date(),
+        endAt: Calendar.current.date(byAdding: .day, value: 7, to: Date()),
+        isAdActive: true
     ),
+
     Place(
         id: "2",
         name: "Madina Grocery",
@@ -28,6 +44,14 @@ let samplePlaces: [Place] = [
         rating: 4.8,
         reviewCount: 62,
         deliveryAvailable: false,
-        isCertified: true
+        isCertified: true,
+        phone: nil,
+        website: nil,
+        adStatus: "free",
+        adPlan: "none",
+        adPriority: 0,
+        startAt: nil,
+        endAt: nil,
+        isAdActive: false
     )
 ]

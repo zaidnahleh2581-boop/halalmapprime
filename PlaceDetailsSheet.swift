@@ -3,6 +3,7 @@
 //  Halal Map Prime
 //
 //  Created by Zaid Nahleh on 2025-12-25.
+//  Updated by Zaid Nahleh on 2026-01-01.
 //  Copyright © 2025 Zaid Nahleh.
 //  All rights reserved.
 //
@@ -12,24 +13,30 @@ import MapKit
 
 struct PlaceDetailsSheet: View {
 
+    // MARK: - Environment
     @EnvironmentObject var lang: LanguageManager
     @Environment(\.dismiss) private var dismiss
 
+    // MARK: - Data
     let place: Place
 
-    private func L(_ ar: String, _ en: String) -> String { lang.isArabic ? ar : en }
+    // MARK: - Helpers
+    private func L(_ ar: String, _ en: String) -> String {
+        lang.isArabic ? ar : en
+    }
 
+    // MARK: - Body
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: 16) {
 
-                // Title + Emoji
+                // MARK: - Title + Emoji
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 6) {
                         Text(place.name)
                             .font(.title2.bold())
 
-                        Text(place.formattedAddress)
+                        Text(place.address + ", " + place.cityState)
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }
@@ -40,71 +47,88 @@ struct PlaceDetailsSheet: View {
                         .font(.title2)
                 }
 
-                // ⭐️ Stars + Rating text
+                // MARK: - Rating + Reviews + Certified
                 HStack(spacing: 10) {
                     StarRatingView(rating: place.rating)
+
                     Text(String(format: "%.1f", place.rating))
                         .font(.subheadline.bold())
 
                     Text("•")
 
-                    Text(L("\(place.reviewCount) تقييم", "\(place.reviewCount) reviews"))
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                    Text(
+                        L("\(place.reviewCount) تقييم",
+                          "\(place.reviewCount) reviews")
+                    )
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
 
                     if place.isCertified {
-                        Label(L("موثّق", "Certified"), systemImage: "checkmark.seal.fill")
+                        Label(L("موثّق", "Certified"),
+                              systemImage: "checkmark.seal.fill")
                             .font(.caption)
                             .foregroundStyle(.green)
-                            .padding(.leading, 6)
                     }
                 }
 
-                // Extra tags
-                HStack(spacing: 10) {
+                // MARK: - Tags
+                HStack(spacing: 12) {
                     if place.deliveryAvailable {
-                        Label(L("توصيل", "Delivery"), systemImage: "bicycle")
+                        Label(L("توصيل", "Delivery"),
+                              systemImage: "bicycle")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
 
-                    Label(place.cityState, systemImage: "building.2")
+                    Label(place.cityState,
+                          systemImage: "building.2")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
 
                 Divider()
 
-                // Actions
-                VStack(spacing: 10) {
+                // MARK: - Actions
+                VStack(spacing: 12) {
 
+                    // Directions
                     Button {
                         openDirections()
                     } label: {
-                        Label(L("الاتجاهات", "Directions"), systemImage: "arrow.triangle.turn.up.right.diamond.fill")
-                            .frame(maxWidth: .infinity)
+                        Label(
+                            L("الاتجاهات", "Directions"),
+                            systemImage: "arrow.triangle.turn.up.right.diamond.fill"
+                        )
+                        .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
 
-                    // يظهر فقط إذا الرقم فعلاً رقم
-                    if let phone = place.phoneNumber,
+                    // Call (only if phone exists and valid)
+                    if let phone = place.phone,
                        isValidPhone(phone) {
                         Button {
                             call(phone)
                         } label: {
-                            Label(L("اتصال", "Call"), systemImage: "phone.fill")
-                                .frame(maxWidth: .infinity)
+                            Label(
+                                L("اتصال", "Call"),
+                                systemImage: "phone.fill"
+                            )
+                            .frame(maxWidth: .infinity)
                         }
                         .buttonStyle(.bordered)
                     }
 
+                    // Website
                     if let website = place.website,
                        let url = URL(string: website) {
                         Button {
                             UIApplication.shared.open(url)
                         } label: {
-                            Label(L("الموقع", "Website"), systemImage: "safari.fill")
-                                .frame(maxWidth: .infinity)
+                            Label(
+                                L("الموقع", "Website"),
+                                systemImage: "safari.fill"
+                            )
+                            .frame(maxWidth: .infinity)
                         }
                         .buttonStyle(.bordered)
                     }
@@ -117,26 +141,33 @@ struct PlaceDetailsSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button(L("تم", "Done")) { dismiss() }
+                    Button(L("تم", "Done")) {
+                        dismiss()
+                    }
                 }
             }
         }
     }
 
-    // MARK: - Helpers
+    // MARK: - Actions Logic
 
     private func openDirections() {
-        let item = MKMapItem(placemark: MKPlacemark(coordinate: place.coordinate))
+        let item = MKMapItem(
+            placemark: MKPlacemark(coordinate: place.coordinate)
+        )
         item.name = place.name
         item.openInMaps(launchOptions: [
-            MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving
+            MKLaunchOptionsDirectionsModeKey:
+                MKLaunchOptionsDirectionsModeDriving
         ])
     }
 
     private func call(_ phone: String) {
         let digits = phone.filter { "0123456789+".contains($0) }
         guard let url = URL(string: "tel://\(digits)"),
-              UIApplication.shared.canOpenURL(url) else { return }
+              UIApplication.shared.canOpenURL(url)
+        else { return }
+
         UIApplication.shared.open(url)
     }
 
@@ -146,7 +177,7 @@ struct PlaceDetailsSheet: View {
     }
 }
 
-// MARK: - Stars View
+// MARK: - Star Rating View
 private struct StarRatingView: View {
     let rating: Double
 

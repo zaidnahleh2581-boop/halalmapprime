@@ -3,8 +3,8 @@
 //  Halal Map Prime
 //
 //  Created by Zaid Nahleh on 2025-12-30.
-//  Updated by Zaid Nahleh on 2025-12-30.
-//  Copyright © 2025 Zaid Nahleh.
+//  Updated by Zaid Nahleh on 2026-01-01.
+//  Copyright © 2026 Zaid Nahleh.
 //  All rights reserved.
 //
 
@@ -24,10 +24,24 @@ struct AddHalalPlaceFormView: View {
         case normal
     }
 
+    // ✅ Gate mode: community monthly vs ads lifetime gift
+    private let gateMode: PlaceSubmissionsStore.GateMode
     private let preset: Preset
 
-    init(preset: Preset = .normal) {
+    // ✅ Callbacks (NO manual edits elsewhere)
+    private let onGiftConsumedOrAttempted: (() -> Void)?
+    private let onNeedPaidUpgrade: (() -> Void)?
+
+    init(
+        preset: Preset = .normal,
+        gateMode: PlaceSubmissionsStore.GateMode = .communityMonthly(phone: nil),
+        onGiftConsumedOrAttempted: (() -> Void)? = nil,
+        onNeedPaidUpgrade: (() -> Void)? = nil
+    ) {
         self.preset = preset
+        self.gateMode = gateMode
+        self.onGiftConsumedOrAttempted = onGiftConsumedOrAttempted
+        self.onNeedPaidUpgrade = onNeedPaidUpgrade
     }
 
     enum PlaceType: String, CaseIterable, Identifiable {
@@ -46,9 +60,13 @@ struct AddHalalPlaceFormView: View {
     @State private var addressLine: String = ""
     @State private var foodTruckStop: String = ""
 
+    // Alerts
     @State private var showAlert = false
     @State private var alertTitle = ""
     @State private var alertMessage = ""
+
+    // ✅ Special “gift used” alert with actions
+    @State private var showGiftUsedAlert = false
 
     @State private var didApplyPreset = false
 
@@ -93,7 +111,7 @@ struct AddHalalPlaceFormView: View {
                         if store.isSubmitting {
                             ProgressView()
                         } else {
-                            Text(L("إضافة المكان على الخريطة", "Add place to the map"))
+                            Text(submitButtonTitle)
                                 .font(.headline)
                         }
                         Spacer()
@@ -102,11 +120,7 @@ struct AddHalalPlaceFormView: View {
                 .disabled(store.isSubmitting)
             }
 
-            Section(footer:
-                Text(L(
-                    "هذه الخطوة تضيف محلك الحلال كـ Listing على الخريطة. سيتم حفظ الطلب كـ Pending وقد يخضع للمراجعة قبل الظهور.",
-                    "This adds your halal place as a listing on the map. The submission is saved as Pending and may be reviewed before appearing."
-                ))
+            Section(footer: Text(footerText)
                 .font(.footnote)
                 .foregroundColor(.secondary)
             ) { EmptyView() }
@@ -119,17 +133,34 @@ struct AddHalalPlaceFormView: View {
             }
         }
         .onAppear { applyPresetOnceIfNeeded() }
+
+        // Normal alert
         .alert(alertTitle, isPresented: $showAlert) {
             Button("OK", role: .cancel) { }
         } message: {
             Text(alertMessage)
+        }
+
+        // ✅ Gift-used alert with action to Paid
+        .alert(L("الهدية مستخدمة", "Gift already used"), isPresented: $showGiftUsedAlert) {
+            Button(L("إلغاء", "Cancel"), role: .cancel) { }
+            Button(L("انتقل للإعلان المدفوع", "Go to Paid Ads")) {
+                // Close this form then open paid flow from parent
+                dismiss()
+                onGiftConsumedOrAttempted?()
+                onNeedPaidUpgrade?()
+            }
+        } message: {
+            Text(L(
+                "تم استخدام هدية التطبيق لهذا المحل/اللوكيشن سابقًا. يمكنك المتابعة بإعلان مدفوع.",
+                "This business/location already used the free gift. You can continue with a paid ad."
+            ))
         }
     }
 
     // MARK: - Submit
 
     private func submit() async {
-        // Validation
         let trimmedName = placeName.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedCity = city.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedState = state.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -160,23 +191,40 @@ struct AddHalalPlaceFormView: View {
         }
 
         do {
-            let docId = try await store.submitPlace(
+            _ = try await store.submitPlace(
                 placeName: trimmedName,
                 phone: phone.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? nil : phone,
                 placeType: placeType.rawValue,
                 city: trimmedCity,
                 state: trimmedState,
                 addressLine: placeType == .foodTruck ? nil : addressLine,
-                foodTruckStop: placeType == .foodTruck ? foodTruckStop : nil
+                foodTruckStop: placeType == .foodTruck ? foodTruckStop : nil,
+                gateMode: gateMode
             )
+
+            // ✅ Mark gift as used locally immediately (hide button), then close
+            if case .adsLifetimeGift = gateMode {
+                onGiftConsumedOrAttempted?()
+            }
 
             alertTitle = L("تم الإرسال", "Submitted")
             alertMessage = L(
-                "تم إرسال طلبك بنجاح (Pending). رقم الطلب: \(docId)",
-                "Your submission was sent successfully (Pending). ID: \(docId)"
+                "تم إرسال طلبك بنجاح (Pending).",
+                "Your submission was sent successfully (Pending)."
             )
             showAlert = true
 
+            // optional: auto close after success
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                dismiss()
+            }
+
+        } catch let e as PlaceSubmissionsStore.SubmitError {
+            switch e {
+            case .lifetimeGiftAlreadyUsed:
+                // ✅ show action alert to go paid
+                showGiftUsedAlert = true
+            }
         } catch {
             alertTitle = L("خطأ", "Error")
             alertMessage = L(
@@ -211,6 +259,32 @@ struct AddHalalPlaceFormView: View {
             return L("أضف محلك الحلال", "Add Halal Place")
         case .normal:
             return L("أضف مكان", "Add Place")
+        }
+    }
+
+    private var submitButtonTitle: String {
+        switch gateMode {
+        case .adsLifetimeGift:
+            return L("إضافة المكان (هدية مرة واحدة)", "Add place (one-time gift)")
+        default:
+            return L("إضافة المكان على الخريطة", "Add place to the map")
+        }
+    }
+
+    private var footerText: String {
+        switch gateMode {
+        case .adsLifetimeGift:
+            return L(
+                "هذه هدية من التطبيق مرة واحدة للعُمر لكل محل/لوكيشن. إذا تم استخدامها سابقًا لنفس العنوان/الموقع سيتم منعها تلقائيًا.",
+                "This is a lifetime one-time gift per business/location. If already used for the same place, it will be blocked automatically."
+            )
+        case .communityMonthly:
+            return L(
+                "هذه إضافة مجتمعية (Monthly). قد تتجدد حسب نظام المجتمع لديك.",
+                "This is a Community monthly flow. It may renew based on your community system."
+            )
+        case .none:
+            return L("إضافة عادية.", "Normal submission.")
         }
     }
 

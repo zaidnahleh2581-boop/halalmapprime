@@ -3,96 +3,52 @@
 //  Halal Map Prime
 //
 //  Created by Zaid Nahleh on 2025-12-30.
-//  Updated by Zaid Nahleh on 2025-12-31.
-//  Copyright © 2025 Zaid Nahleh.
+//  Updated by Zaid Nahleh on 2026-01-01.
+//  Copyright © 2026 Zaid Nahleh.
 //  All rights reserved.
 //
 
 import SwiftUI
-import Combine
-import FirebaseAuth
-
-// MARK: - Free Gift State Store (in-file, no extra files needed)
-@MainActor
-final class FreeGiftBannerStore: ObservableObject {
-
-    enum State: Equatable {
-        case loading
-        case neverUsed
-        case alreadyUsed
-        case error(String)
-    }
-
-    @Published var state: State = .loading
-
-    func refresh(phone: String?) {
-        state = .loading
-        Task {
-            do {
-                _ = try await ensureUID()
-                let canUse = try await MonthlyFreeGate.shared.canUseFreeThisMonth(phone: phone)
-                self.state = canUse ? .neverUsed : .alreadyUsed
-            } catch {
-                self.state = .error(error.localizedDescription)
-            }
-        }
-    }
-
-    private func ensureUID() async throws -> String {
-        if let uid = Auth.auth().currentUser?.uid { return uid }
-
-        return try await withCheckedThrowingContinuation { cont in
-            Auth.auth().signInAnonymously { result, error in
-                if let error { cont.resume(throwing: error); return }
-                guard let uid = result?.user.uid else {
-                    cont.resume(throwing: NSError(domain: "Auth", code: -1, userInfo: [
-                        NSLocalizedDescriptionKey: "Missing UID"
-                    ]))
-                    return
-                }
-                cont.resume(returning: uid)
-            }
-        }
-    }
-}
 
 struct AdsHomeView: View {
 
     @EnvironmentObject var lang: LanguageManager
     @Environment(\.dismiss) private var dismiss
 
-    // ✅ Needed (was missing in your errors)
-    @State private var showComingSoon = false
-
-    // Sheets
-    @State private var showAddPlaceSheet = false
-    @State private var showMyAdsSheet = false
-    @State private var showPrivacySheet = false
-
-    // ✅ Free gift banner store (self-contained)
-    @StateObject private var freeGiftStore = FreeGiftBannerStore()
-
     // MARK: - Tabs
     enum TopTab: String, CaseIterable, Identifiable {
-        case free
+        case freeGift
         case myAds
         case privacy
         var id: String { rawValue }
     }
 
-    @State private var selectedTab: TopTab = .free
+    @State private var selectedTab: TopTab = .freeGift
+
+    // Sheets
+    @State private var showGiftAddPlaceSheet = false
+    @State private var showMyAdsSheet = false
+    @State private var showPrivacySheet = false
+    @State private var showPaidPlansSheet = false
+
+    // ✅ UI hide after used on THIS device (real protection is server-side gate)
+    @AppStorage("ads_lifetime_gift_used_local") private var giftUsedLocal: Bool = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
 
             topTabs
+
             Divider().opacity(0.20)
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
 
-                    // ✅ FREE GIFT Banner (One-time)
-                    freeGiftBanner
+                    if !giftUsedLocal {
+                        giftCard
+                    } else {
+                        usedGiftCard
+                    }
 
                     Text(L("إعلانات مدفوعة", "Paid Ads"))
                         .font(.title2.weight(.bold))
@@ -100,11 +56,12 @@ struct AdsHomeView: View {
 
                     paidCard(
                         title: L("إعلان مدفوع (باقات)", "Paid Ads (Packages)"),
-                        subtitle: L("يومي / أسبوعي / شهري — ظهور أعلى على الخريطة والزيارات.", "Daily / Weekly / Monthly — higher visibility on map & visits."),
+                        subtitle: L("أسبوعي / شهري — ظهور أعلى على الخريطة والزيارات.", "Weekly / Monthly — higher visibility on map & visits."),
                         icon: "creditcard.fill",
                         tint: .cyan
                     ) {
-                        showComingSoon = true
+                        // open plans UI (no monetization dependency)
+                        showPaidPlansSheet = true
                     }
 
                     paidCard(
@@ -113,7 +70,7 @@ struct AdsHomeView: View {
                         icon: "sparkles",
                         tint: .orange
                     ) {
-                        showComingSoon = true
+                        showPaidPlansSheet = true
                     }
 
                     Spacer(minLength: 18)
@@ -131,22 +88,46 @@ struct AdsHomeView: View {
                 }
             }
         }
-        .alert(L("قريباً", "Coming Soon"), isPresented: $showComingSoon) {
-            Button("OK", role: .cancel) { }
-        } message: {
-            Text(L("هذه الميزة قيد التجهيز. سنفعّلها قريباً.", "This feature is being prepared and will be enabled soon."))
+
+        // ✅ Gift Add Place Sheet (Lifetime gift)
+        .sheet(isPresented: $showGiftAddPlaceSheet) {
+            NavigationStack {
+                AddHalalPlaceFormView(
+                    preset: .normal,
+                    gateMode: .adsLifetimeGift,
+                    onGiftConsumedOrAttempted: {
+                        // hide gift button locally immediately
+                        giftUsedLocal = true
+                    },
+                    onNeedPaidUpgrade: {
+                        // if blocked, go to paid plans
+                        showPaidPlansSheet = true
+                    }
+                )
+                .environmentObject(lang)
+                .navigationTitle(L("هدية مرة واحدة", "One-time Gift"))
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button(L("إغلاق", "Close")) {
+                            showGiftAddPlaceSheet = false
+                        }
+                    }
+                }
+            }
         }
 
-        // ✅ Add Place Sheet
-        .sheet(isPresented: $showAddPlaceSheet) {
+        // ✅ Paid Plans Sheet (SelectAdPlanView)
+        .sheet(isPresented: $showPaidPlansSheet) {
             NavigationStack {
-                AddHalalPlaceFormView(preset: .normal)
+                SelectAdPlanView()
                     .environmentObject(lang)
-                    .navigationTitle(L("إضافة مكان", "Add Place"))
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing) {
-                            Button(L("إغلاق", "Close")) { showAddPlaceSheet = false }
+                            Button(L("إغلاق", "Close")) {
+                                showPaidPlansSheet = false
+                            }
                         }
                     }
             }
@@ -159,7 +140,9 @@ struct AdsHomeView: View {
                     .environmentObject(lang)
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing) {
-                            Button(L("إغلاق", "Close")) { showMyAdsSheet = false }
+                            Button(L("إغلاق", "Close")) {
+                                showMyAdsSheet = false
+                            }
                         }
                     }
             }
@@ -174,16 +157,12 @@ struct AdsHomeView: View {
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing) {
-                            Button(L("إغلاق", "Close")) { showPrivacySheet = false }
+                            Button(L("إغلاق", "Close")) {
+                                showPrivacySheet = false
+                            }
                         }
                     }
             }
-        }
-
-        // ✅ Refresh free gift status when view appears
-        .onAppear {
-            // phone is optional gate; if you later store phone globally, pass it here
-            freeGiftStore.refresh(phone: nil)
         }
     }
 
@@ -191,15 +170,16 @@ struct AdsHomeView: View {
 
     private var topTabs: some View {
         HStack(spacing: 10) {
-
             tabButton(
-                title: L("إضافة مكان (مجاني)", "Add Place (Free)"),
-                systemImage: "mappin.and.ellipse",
-                tint: .blue,
-                isSelected: selectedTab == .free
+                title: L("هدية مجانية", "Free Gift"),
+                systemImage: "gift.fill",
+                tint: .green,
+                isSelected: selectedTab == .freeGift
             ) {
-                selectedTab = .free
-                showAddPlaceSheet = true
+                selectedTab = .freeGift
+                if !giftUsedLocal {
+                    showGiftAddPlaceSheet = true
+                }
             }
 
             tabButton(
@@ -226,108 +206,79 @@ struct AdsHomeView: View {
         .padding(.top, 8)
     }
 
-    // MARK: - Free Gift Banner (One-time)
+    // MARK: - Gift Cards
 
-    @ViewBuilder
-    private var freeGiftBanner: some View {
-        switch freeGiftStore.state {
-
-        case .loading:
-            HStack(spacing: 10) {
-                ProgressView()
-                Text(L("جاري التحقق من الهدية...", "Checking free gift..."))
-                    .font(.footnote)
-                    .foregroundColor(.secondary)
-            }
-            .padding()
-            .background(cardBG)
-
-        case .neverUsed:
-            VStack(alignment: .leading, spacing: 10) {
-
-                HStack(spacing: 10) {
-                    Image(systemName: "gift.fill")
-                        .foregroundColor(.white)
-                        .padding(10)
-                        .background(Color.green.opacity(0.95))
-                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(L("🎁 إعلان مجاني — هدية من التطبيق", "🎁 Free Ad — Gift from the app"))
-                            .font(.headline)
-
-                        Text(L("لمرة واحدة فقط • مدة 30 يوم", "One-time only • 30 days"))
-                            .font(.footnote)
-                            .foregroundColor(.secondary)
-                    }
-
-                    Spacer()
-                }
-
-                Text(L(
-                    "جرّب البرنامج براحتك. قبل ما ينتهي الإعلان بنذكّرك في آخر أسبوع + قبل 24 ساعة.",
-                    "Try the app comfortably. We’ll remind you in the last week + 24 hours before expiry."
-                ))
-                .font(.footnote)
-                .foregroundColor(.secondary)
-
-                Button {
-                    showAddPlaceSheet = true
-                } label: {
-                    HStack {
-                        Spacer()
-                        Text(L("ابدأ الإعلان المجاني", "Start Free Ad"))
-                            .font(.subheadline.weight(.semibold))
-                        Spacer()
-                    }
-                    .padding(.vertical, 10)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .fill(Color.green.opacity(0.95))
-                    )
-                    .foregroundColor(.white)
-                }
-                .buttonStyle(.plain)
-            }
-            .padding()
-            .background(cardBG)
-
-        case .alreadyUsed:
+    private var giftCard: some View {
+        Button {
+            showGiftAddPlaceSheet = true
+        } label: {
             VStack(alignment: .leading, spacing: 8) {
-                HStack(spacing: 10) {
-                    Image(systemName: "checkmark.seal.fill")
+                HStack {
+                    Image(systemName: "gift.fill")
                         .foregroundColor(.green)
-
-                    Text(L("تم استخدام الهدية المجانية", "Free gift already used"))
+                    Text(L("هدية من التطبيق (مرة واحدة)", "App Gift (One-time)"))
                         .font(.headline)
-
                     Spacer()
+                    Image(systemName: "chevron.right")
+                        .foregroundColor(.secondary)
                 }
 
                 Text(L(
-                    "الهدية كانت لمرة واحدة فقط. تابع الآن على الباقات المدفوعة.",
-                    "The free gift was one-time only. Continue with paid plans."
+                    "أضف محلك على الخريطة مجانًا مرة واحدة بالعُمر. إذا تم استخدام الهدية لنفس المحل سابقًا سيتم منعها تلقائيًا.",
+                    "Add your place to the map for free once in a lifetime. If this place already used the gift, it will be blocked automatically."
                 ))
                 .font(.footnote)
                 .foregroundColor(.secondary)
+                .lineLimit(3)
             }
             .padding()
-            .background(cardBG)
-
-        case .error(let message):
-            VStack(alignment: .leading, spacing: 6) {
-                Text(L("ملاحظة", "Note"))
-                    .font(.headline)
-                Text(message)
-                    .font(.footnote)
-                    .foregroundColor(.secondary)
-            }
-            .padding()
-            .background(cardBG)
+            .background(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(Color(.systemBackground))
+                    .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3)
+            )
         }
+        .buttonStyle(.plain)
     }
 
-    // MARK: - UI Helpers
+    private var usedGiftCard: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Image(systemName: "checkmark.seal.fill")
+                    .foregroundColor(.green)
+                Text(L("تم استخدام الهدية", "Gift Used"))
+                    .font(.headline)
+                Spacer()
+            }
+
+            Text(L(
+                "هدية الإضافة المجانية تم استخدامها. يمكنك الآن اختيار باقة مدفوعة لترويج نشاطك.",
+                "The free gift was used. You can now choose a paid plan to boost your business."
+            ))
+            .font(.footnote)
+            .foregroundColor(.secondary)
+
+            Button {
+                showPaidPlansSheet = true
+            } label: {
+                Text(L("عرض الباقات المدفوعة", "View paid plans"))
+                    .font(.footnote.weight(.semibold))
+                    .padding(.vertical, 10)
+                    .frame(maxWidth: .infinity)
+                    .background(Color.blue.opacity(0.92))
+                    .foregroundColor(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            }
+            .buttonStyle(.plain)
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(Color(.systemGray6))
+        )
+    }
+
+    // MARK: - UI
 
     private func paidCard(title: String, subtitle: String, icon: String, tint: Color, action: @escaping () -> Void) -> some View {
         Button(action: action) {
@@ -352,7 +303,11 @@ struct AdsHomeView: View {
                     .foregroundColor(.secondary)
             }
             .padding()
-            .background(cardBG)
+            .background(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(Color(.systemBackground))
+                    .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3)
+            )
         }
         .buttonStyle(.plain)
     }
@@ -376,13 +331,6 @@ struct AdsHomeView: View {
             .foregroundColor(isSelected ? .white : (tint == .gray ? .primary : tint))
         }
         .buttonStyle(.plain)
-    }
-
-    // ✅ This fixes your “Cannot find cardBG”
-    private var cardBG: some View {
-        RoundedRectangle(cornerRadius: 16, style: .continuous)
-            .fill(Color(.systemBackground))
-            .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3)
     }
 
     private func L(_ ar: String, _ en: String) -> String { lang.isArabic ? ar : en }

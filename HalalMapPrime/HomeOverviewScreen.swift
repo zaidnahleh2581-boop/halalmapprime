@@ -3,8 +3,8 @@
 //  Halal Map Prime
 //
 //  Created by Zaid Nahleh on 2025-12-23.
-//  Updated by Zaid Nahleh on 2025-12-31.
-//  Copyright © 2025 Zaid Nahleh.
+//  Updated by Zaid Nahleh on 2026-01-01.
+//  Copyright © 2026 Zaid Nahleh.
 //  All rights reserved.
 //
 
@@ -54,15 +54,15 @@ struct HomeOverviewScreen: View {
                 // 3) Core: One job ticker (changes every minute)
                 jobsTicker
 
-                // ✅ 3.5) NEW: Events ticker (PAID ONLY) – opens Community
+                // ✅ 3.5) Events ticker (PAID ONLY) – opens Community
                 HomeEventsTickerView()
                     .environmentObject(lang)
                     .environmentObject(router)
                     .padding(.horizontal, 16)
                     .padding(.top, 2)
 
-                // 4) Paid Ads (placeholder UI for now)
-                paidAdsSection
+                // ✅ 4) Sponsored (Banners carousel from demoBannerAds)
+                sponsoredBannersSection
             }
             .padding(.top, 8)
             .padding(.bottom, 22)
@@ -225,7 +225,6 @@ struct HomeOverviewScreen: View {
     }
 
     private func headlineForAd(_ ad: JobAd) -> String {
-        // very short, visual, no long text
         let cat = ad.category.trimmingCharacters(in: .whitespacesAndNewlines)
         if !cat.isEmpty {
             return ad.type == .hiring
@@ -236,9 +235,9 @@ struct HomeOverviewScreen: View {
         }
     }
 
-    // MARK: - Paid Ads (placeholder)
+    // MARK: - ✅ Sponsored Banners (Carousel)
 
-    private var paidAdsSection: some View {
+    private var sponsoredBannersSection: some View {
         VStack(alignment: .leading, spacing: 12) {
 
             HStack {
@@ -249,50 +248,89 @@ struct HomeOverviewScreen: View {
             .padding(.horizontal, 16)
             .padding(.top, 6)
 
-            VStack(spacing: 12) {
-                sponsoredCard(title: "Halal Grill", subtitle: L("مميز • قريب منك", "Sponsored • Near you"))
-                sponsoredCard(title: "Grocery Market", subtitle: L("مميز • عروض اليوم", "Sponsored • Today deals"))
-                sponsoredCard(title: "Quality One HVAC", subtitle: L("مميز • 24/7", "Sponsored • 24/7"))
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    ForEach(demoBannerAds) { ad in
+                        sponsoredBannerCard(ad)
+                    }
+                }
+                .padding(.horizontal, 16)
+                .padding(.bottom, 4)
             }
-            .padding(.horizontal, 16)
         }
     }
 
-    private func sponsoredCard(title: String, subtitle: String) -> some View {
-        Button { } label: {
-            HStack(spacing: 12) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .fill(Color(.systemBackground))
-                        .frame(width: 52, height: 52)
-                        .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3)
-
-                    Image(systemName: "crown.fill")
-                        .foregroundColor(.yellow)
-                }
-
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(title)
-                        .font(.subheadline.weight(.bold))
-                        .lineLimit(1)
-
-                    Text(subtitle)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .lineLimit(1)
-                }
-
-                Spacer()
-
-                Image(systemName: "chevron.right")
-                    .foregroundColor(.secondary)
+    private func sponsoredBannerCard(_ ad: BannerAd) -> some View {
+        Button {
+            // يفتح الخريطة على الفئة المناسبة
+            if let cat = mapCategory(for: ad.categoryAudience) {
+                openMap(cat)
+            } else {
+                // fallback: open map without category
+                mapStartingCategory = nil
+                showMapSheet = true
             }
-            .padding(12)
-            .background(Color(.systemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-            .shadow(color: Color.black.opacity(0.06), radius: 10, x: 0, y: 6)
+        } label: {
+            ZStack {
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .fill(Color(.systemBackground))
+                    .shadow(color: Color.black.opacity(0.06), radius: 10, x: 0, y: 6)
+
+                HStack(spacing: 12) {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 14, style: .continuous)
+                            .fill(Color.orange.opacity(0.12))
+                            .frame(width: 52, height: 52)
+
+                        Image(systemName: ad.imageSystemName)
+                            .font(.system(size: 18, weight: .bold))
+                            .foregroundColor(.orange)
+                    }
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack(spacing: 6) {
+                            Text(ad.title)
+                                .font(.subheadline.weight(.bold))
+                                .lineLimit(1)
+
+                            Text(L("مميز", "Sponsored"))
+                                .font(.caption2.weight(.bold))
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                                .background(Color.black.opacity(0.75))
+                                .clipShape(Capsule())
+                        }
+
+                        Text(ad.subtitle)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .lineLimit(2)
+                    }
+
+                    Spacer()
+
+                    Image(systemName: "chevron.right")
+                        .foregroundColor(.secondary)
+                }
+                .padding(14)
+            }
+            .frame(width: 310, height: 92)
         }
         .buttonStyle(.plain)
+    }
+
+    private func mapCategory(for audience: AdAudience) -> PlaceCategory? {
+        switch audience {
+        case .restaurants:
+            return .restaurant
+        case .mosques:
+            return .mosque
+        case .shops:
+            return .shop
+        case .schools:
+            return .school
+        }
     }
 
     // MARK: - Map open (category-based)
@@ -365,7 +403,6 @@ struct HomeOverviewScreen: View {
 
                     let all = docs.compactMap { JobAd(from: $0) }
 
-                    // لاحقاً: فلترة حسب radiusMiles و lastLocation
                     self.previewJobs = all.sorted {
                         ($0.createdAt ?? .distantPast) > ($1.createdAt ?? .distantPast)
                     }

@@ -28,6 +28,51 @@
       "productID" : "com.halalmapprime.event.post",
       "referenceName" : "Event Post",
       "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "6.99",
+      "familyShareable" : false,
+      "internalID" : "9F01C50A",
+      "localizations" : [
+        {
+          "description" : "Promote your business for 7 days",
+          "displayName" : "Weekly Ad",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.halalmapprime.weeklyad",
+      "referenceName" : "Weekly Ad ",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "24.99",
+      "familyShareable" : false,
+      "internalID" : "C6894EEE",
+      "localizations" : [
+        {
+          "description" : "Promote your business for 30 days\nPromote your business for 30 days\nPromote your business for 30 days",
+          "displayName" : "24.99",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.halalmapprime.monthlyad",
+      "referenceName" : "Monthly Ad",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "49.99",
+      "familyShareable" : false,
+      "internalID" : "E516EFBA",
+      "localizations" : [
+        {
+          "description" : "Top priority placement and maximum visibility",
+          "displayName" : "Prime Ad",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.halalmapprime.primead",
+      "referenceName" : "Prime Ad",
+      "type" : "Consumable"
     }
   ],
   "settings" : {

@@ -33,6 +33,7 @@
 		153BA6772F06BA1B000D22FD /* IAPProducts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153BA6762F06BA1B000D22FD /* IAPProducts.swift */; };
 		153BA67B2F06BA7A000D22FD /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153BA67A2F06BA7A000D22FD /* PurchaseManager.swift */; };
 		153BA67D2F06BABB000D22FD /* PaidAdsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153BA67C2F06BABB000D22FD /* PaidAdsScreen.swift */; };
+		153BA67F2F06CEC4000D22FD /* LifetimeFreePlaceGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153BA67E2F06CEC4000D22FD /* LifetimeFreePlaceGate.swift */; };
 		156016592F032F3D00ABC8BB /* EventTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156016582F032F3D00ABC8BB /* EventTemplate.swift */; };
 		1560165B2F032F6F00ABC8BB /* ContactUsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1560165A2F032F6F00ABC8BB /* ContactUsView.swift */; };
 		1560165D2F032F9500ABC8BB /* PrivacyPolicyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1560165C2F032F9500ABC8BB /* PrivacyPolicyView.swift */; };
@@ -108,6 +109,7 @@
 		153BA6762F06BA1B000D22FD /* IAPProducts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPProducts.swift; sourceTree = "<group>"; };
 		153BA67A2F06BA7A000D22FD /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
 		153BA67C2F06BABB000D22FD /* PaidAdsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaidAdsScreen.swift; sourceTree = "<group>"; };
+		153BA67E2F06CEC4000D22FD /* LifetimeFreePlaceGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifetimeFreePlaceGate.swift; sourceTree = "<group>"; };
 		156016582F032F3D00ABC8BB /* EventTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTemplate.swift; sourceTree = "<group>"; };
 		1560165A2F032F6F00ABC8BB /* ContactUsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactUsView.swift; sourceTree = "<group>"; };
 		1560165C2F032F9500ABC8BB /* PrivacyPolicyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyView.swift; sourceTree = "<group>"; };
@@ -206,6 +208,7 @@
 				153BA6542F05677E000D22FD /* AdsPrivacyView.swift */,
 				153BA6742F06A648000D22FD /*  FreeAdStateStore  .swift */,
 				153BA67C2F06BABB000D22FD /* PaidAdsScreen.swift */,
+				153BA67E2F06CEC4000D22FD /* LifetimeFreePlaceGate.swift */,
 			);
 			path = ADS;
 			sourceTree = "<group>";
@@ -470,6 +473,7 @@
 				156A32362F00940E00819D25 /* CommunityHubScreen.swift in Sources */,
 				153BA6552F05677E000D22FD /* AdsPrivacyView.swift in Sources */,
 				153BA5EB2F052E07000D22FD /* MarqueeText.swift in Sources */,
+				153BA67F2F06CEC4000D22FD /* LifetimeFreePlaceGate.swift in Sources */,
 				15B3D4C32EFDB7B900704BB6 /* FaithPlaceholders.swift in Sources */,
 				156016592F032F3D00ABC8BB /* EventTemplate.swift in Sources */,
 				15B3D4BB2EFDAF6C00704BB6 /* PrayerTimesViewModel.swift in Sources */,

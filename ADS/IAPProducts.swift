@@ -9,14 +9,10 @@
 
 import Foundation
 
-/// ضع هنا Product IDs كما هي في App Store Connect (In-App Purchases / Subscriptions)
 enum IAPProducts {
+    static let weeklyAd  = "com.halalmapprime.weeklyad"
+    static let monthlyAd = "com.halalmapprime.monthlyad"
+    static let primeAd   = "com.halalmapprime.primead"
 
-    /// إعلان أسبوعي
-    static let weeklyAd: String = "hmp_weekly_ad"
-
-    /// Prime Ad (أفضل ظهور) أسبوعي
-    static let primeAd: String = "hmp_prime_ad"
-
-    static let all: [String] = [weeklyAd, primeAd]
+    static let all: [String] = [weeklyAd, monthlyAd, primeAd]
 }
