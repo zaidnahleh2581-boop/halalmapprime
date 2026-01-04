@@ -29,13 +29,8 @@ final class PlaceSubmissionsStore: ObservableObject {
 
     // MARK: - Gate Mode
     enum GateMode {
-        /// Community monthly free slot (DEFAULT - keeps your existing behavior)
         case communityMonthly(phone: String?)
-
-        /// Ads lifetime gift (one-time forever per place/location)
         case adsLifetimeGift
-
-        /// No gate (for future paid ads flow, etc.)
         case none
     }
 
@@ -52,10 +47,6 @@ final class PlaceSubmissionsStore: ObservableObject {
 
     // MARK: - Submit Place
 
-    /// Submit a place (pending) + saves geo automatically
-    /// Gate behavior:
-    /// - communityMonthly: marks MonthlyFreeGate used (your existing behavior)
-    /// - adsLifetimeGift: blocks if this placeKey already used, then marks Lifetime gate used
     func submitPlace(
         placeName: String,
         phone: String?,
@@ -79,27 +70,13 @@ final class PlaceSubmissionsStore: ObservableObject {
             state: state
         )
 
-        // ✅ Geocode first (stronger against bypass)
+        // ✅ Geocode first
         let coordinate = try await geocodeAddress(fullAddress)
 
         // ✅ Normalize address for stable identity
         let normalizedAddress = normalizeAddress(fullAddress)
 
-        // ✅ Lifetime gift gate check (per place)
-        var lifetimePlaceKey: String? = nil
-        if case .adsLifetimeGift = gateMode {
-            let key = LifetimeFreePlaceGate.shared.makePlaceKey(
-                normalizedAddress: normalizedAddress,
-                coordinate: coordinate
-            )
-            lifetimePlaceKey = key
-
-            let ok = try await LifetimeFreePlaceGate.shared.canUse(placeKey: key)
-            if !ok {
-                throw SubmitError.lifetimeGiftAlreadyUsed
-            }
-        }
-
+        // ✅ Prepare data
         var data: [String: Any] = [
             "ownerId": uid,
             "placeName": placeName,
@@ -109,7 +86,7 @@ final class PlaceSubmissionsStore: ObservableObject {
             "status": "pending",
             "createdAt": FieldValue.serverTimestamp(),
 
-            // ✅ Geo for map pins
+            "normalizedAddress": normalizedAddress,
             "geo": GeoPoint(latitude: coordinate.latitude, longitude: coordinate.longitude),
             "lat": coordinate.latitude,
             "lng": coordinate.longitude
@@ -124,25 +101,50 @@ final class PlaceSubmissionsStore: ObservableObject {
         let stop = (foodTruckStop ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
         if !stop.isEmpty { data["foodTruckStop"] = stop }
 
+        // =========================
+        // ✅ Gate logic
+        // =========================
+
+        // For Lifetime Gift: consume gate using CREATE-only (NO READ)
+        if case .adsLifetimeGift = gateMode {
+
+            let placeKey = LifetimeFreePlaceGate.shared.makePlaceKey(
+                normalizedAddress: normalizedAddress,
+                coordinate: coordinate
+            )
+
+            do {
+                try await LifetimeFreePlaceGate.shared.consumeOrThrow(
+                    placeKey: placeKey,
+                    payload: [
+                        "firstOwnerId": uid,
+                        "placeName": placeName,
+                        "normalizedAddress": normalizedAddress,
+                        "lat": round(coordinate.latitude * 10_000) / 10_000,
+                        "lng": round(coordinate.longitude * 10_000) / 10_000
+                    ]
+                )
+            } catch {
+                // If gate create fails (most common: already exists) -> show "gift used"
+                throw SubmitError.lifetimeGiftAlreadyUsed
+            }
+
+            // save placeKey inside submission (optional, helps admin tools)
+            data["lifetimePlaceKey"] = placeKey
+            data["gateMode"] = "adsLifetimeGift"
+        }
+
         // ✅ Add submission
         let ref = try await db.collection("place_submissions").addDocument(data: data)
 
-        // ✅ Mark gates AFTER successful submit
+        // ✅ Mark monthly gate AFTER successful submit (keep your existing behavior)
         switch gateMode {
         case .communityMonthly(let gatePhone):
-            // keep your existing behavior
             try await MonthlyFreeGate.shared.markFreeUsed(phone: gatePhone ?? phone)
 
         case .adsLifetimeGift:
-            if let key = lifetimePlaceKey {
-                try await LifetimeFreePlaceGate.shared.markUsed(placeKey: key, payload: [
-                    "firstOwnerId": uid,
-                    "placeName": placeName,
-                    "normalizedAddress": normalizedAddress,
-                    "lat": round(coordinate.latitude * 10_000) / 10_000,
-                    "lng": round(coordinate.longitude * 10_000) / 10_000
-                ])
-            }
+            // Already consumed above — nothing else needed.
+            break
 
         case .none:
             break
@@ -185,12 +187,10 @@ final class PlaceSubmissionsStore: ObservableObject {
         let cleaned = lower
             .replacingOccurrences(of: "\n", with: " ")
             .replacingOccurrences(of: "\t", with: " ")
-        // collapse spaces
         let parts = cleaned.split(whereSeparator: { $0.isWhitespace })
         return parts.joined(separator: " ")
     }
 
-    /// Geocoding using MapKit (MKLocalSearch)
     private func geocodeAddress(_ address: String) async throws -> CLLocationCoordinate2D {
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = address

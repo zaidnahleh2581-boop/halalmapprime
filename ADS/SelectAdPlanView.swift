@@ -1,128 +1,107 @@
+//
+//  SelectAdPlanView.swift
+//  Halal Map Prime
+//
+//  Created by Zaid Nahleh on 2026-01-04.
+//  Copyright © 2026 Zaid Nahleh.
+//  All rights reserved.
+//
+
 import SwiftUI
 
-/// شاشة اختيار باقة الإعلان (يومي / أسبوعي / شهري)
+/// شاشة اختيار الباقة (UI فقط) → وبعدها نفتح PaidAdsScreen للمنتجات الحقيقية (StoreKit)
 struct SelectAdPlanView: View {
 
     @EnvironmentObject var lang: LanguageManager
+    @Environment(\.dismiss) private var dismiss
 
-    @State private var showAlert: Bool = false
-    @State private var selectedPlanMessage: String = ""
+    @State private var showPaidAds = false
+
+    private func L(_ ar: String, _ en: String) -> String {
+        lang.isArabic ? ar : en
+    }
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
 
-                // العنوان
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(lang.isArabic ? "اختر باقة الإعلان" : "Select Your Ad Plan")
-                        .font(.title2)
-                        .fontWeight(.semibold)
+                headerSection
 
-                    Text(
-                        lang.isArabic
-                        ? "اختر مدة ودرجة ظهور إعلانك في التطبيق."
-                        : "Choose how long and how strong your ad will appear in the app."
-                    )
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.top, 8)
-
-                // نص تعريفي
-                Text(
-                    lang.isArabic
-                    ? "اختر مدة ظهور إعلانك داخل التطبيق. جميع عمليات الدفع تتم بأمان من خلال Apple In-App Purchase."
-                    : "Pick how long your ad will run. All payments will be processed securely through Apple In-App Purchase."
-                )
+                Text(L(
+                    "اختر مدة الإعلان. بعد ما تختار، سننقلك لصفحة الدفع الرسمية عبر Apple (StoreKit).",
+                    "Pick your ad duration. After selecting, we'll take you to Apple’s official payment screen (StoreKit)."
+                ))
                 .font(.subheadline)
                 .foregroundColor(.secondary)
 
-                // كروت الباقات
                 VStack(spacing: 12) {
-                    dailyPlanCard
                     weeklyPlanCard
                     monthlyPlanCard
+                    primePlanCard
                 }
                 .padding(.top, 4)
 
-                // مقارنة بسيطة
                 comparisonSection
-
-                // ملاحظة أخيرة
                 footerNote
             }
             .padding()
         }
-        .navigationTitle(lang.isArabic ? "اختيار الباقة" : "Choose a Plan")
+        .navigationTitle(L("اختيار الباقة", "Choose a Plan"))
         .navigationBarTitleDisplayMode(.inline)
-        .alert(isPresented: $showAlert) {
-            Alert(
-                title: Text(lang.isArabic ? "قيد التنفيذ" : "Coming soon"),
-                message: Text(selectedPlanMessage),
-                dismissButton: .default(Text(lang.isArabic ? "حسناً" : "OK"))
-            )
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(L("إغلاق", "Close")) { dismiss() }
+            }
+        }
+        .sheet(isPresented: $showPaidAds) {
+            NavigationStack {
+                PaidAdsScreen()
+                    .environmentObject(lang)
+            }
         }
     }
 }
 
-// MARK: - Components
-
+// MARK: - UI Components
 private extension SelectAdPlanView {
 
-    var dailyPlanCard: some View {
-        planCard(
-            titleAR: "إعلان يومي",
-            titleEN: "Daily Ad",
-            subtitleAR: "$4.99 / اليوم (مثال)",
-            subtitleEN: "$4.99 / day (example)",
-            descriptionAR: "ظهور إعلانك لمدة ٢٤ ساعة في الأماكن المميزة داخل التطبيق والخريطة.",
-            descriptionEN: "Your ad appears for 24 hours in highlighted spots across the app and map.",
-            bulletsAR: [
-                "مناسب للعروض السريعة أو الافتتاحات.",
-                "تفعيل فوري بعد إتمام الدفع.",
-                "ظهور جيد ضمن نظام التدوير (Rotation)."
-            ],
-            bulletsEN: [
-                "Great for quick promos or grand openings.",
-                "Instant activation after payment.",
-                "Good visibility in the rotation system."
-            ],
-            accentColor: Color(.systemYellow)
-        ) {
-            selectedPlanMessage =
-            lang.isArabic
-            ? "تم اختيار الباقة اليومية. لاحقًا سيتم ربط هذه الخطوة بالدفع عبر StoreKit ثم شاشة تعبئة تفاصيل الإعلان."
-            : "Daily plan selected. Later this step will be connected to StoreKit payment, then the ad details form."
-            showAlert = true
+    var headerSection: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(L("اختر باقة الإعلان", "Select Your Ad Plan"))
+                .font(.title2.bold())
+
+            Text(L(
+                "كل باقة تختلف في مدة الظهور والأولوية داخل التطبيق.",
+                "Each plan differs by duration and priority inside the app."
+            ))
+            .font(.subheadline)
+            .foregroundColor(.secondary)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.top, 8)
     }
 
     var weeklyPlanCard: some View {
         planCard(
             titleAR: "إعلان أسبوعي (الأكثر اختياراً)",
             titleEN: "Weekly Ad (Most popular)",
-            subtitleAR: "$14.99 / الأسبوع (مثال)",
-            subtitleEN: "$14.99 / week (example)",
-            descriptionAR: "ظهور إعلانك لمدة ٧ أيام متواصلة مع ترتيب أعلى في نتائج الإعلانات.",
-            descriptionEN: "Your ad appears for 7 days with higher ranking in ad placements.",
+            subtitleAR: "7 أيام • أولوية متوسطة",
+            subtitleEN: "7 days • Medium priority",
+            descriptionAR: "يظهر إعلانك في أماكن الإعلانات داخل التطبيق + ترتيب أعلى في النتائج.",
+            descriptionEN: "Your ad appears in the app’s ad spots + higher ranking in results.",
             bulletsAR: [
-                "مناسب للمطاعم والخدمات التي ترغب في ثبات الظهور.",
-                "أولوية أعلى من الإعلان اليومي.",
-                "قيمة أفضل مقابل السعر."
+                "مناسب للمطاعم والخدمات.",
+                "ظهور ثابت لمدة أسبوع.",
+                "أفضل توازن بين السعر والنتيجة."
             ],
             bulletsEN: [
-                "Perfect for restaurants and services that want steady visibility.",
-                "Higher priority than daily ads.",
-                "Better value for money."
+                "Great for restaurants & services.",
+                "Steady visibility for a week.",
+                "Best balance of cost and outcome."
             ],
-            accentColor: Color(.systemBlue)
+            accent: .blue
         ) {
-            selectedPlanMessage =
-            lang.isArabic
-            ? "تم اختيار الباقة الأسبوعية. لاحقًا سيتم ربط هذه الخطوة بالدفع عبر StoreKit ثم شاشة تعبئة تفاصيل الإعلان."
-            : "Weekly plan selected. Later this step will be connected to StoreKit payment, then the ad details form."
-            showAlert = true
+            showPaidAds = true
         }
     }
 
@@ -130,27 +109,47 @@ private extension SelectAdPlanView {
         planCard(
             titleAR: "إعلان شهري (مميز)",
             titleEN: "Monthly Ad (Premium)",
-            subtitleAR: "$49.99 / الشهر (مثال)",
-            subtitleEN: "$49.99 / month (example)",
-            descriptionAR: "أقوى ظهور للإعلان داخل التطبيق مع أولوية عالية في تدوير البانرات.",
-            descriptionEN: "Maximum visibility inside the app with top priority in banner rotation.",
+            subtitleAR: "30 يوم • أولوية عالية",
+            subtitleEN: "30 days • High priority",
+            descriptionAR: "ظهور أقوى لمدة شهر مع أولوية أعلى في التدوير وترتيب النتائج.",
+            descriptionEN: "Stronger visibility for a month with higher rotation priority and ranking.",
             bulletsAR: [
-                "أفضل خيار لأصحاب الأعمال الذين يريدون حضوراً دائماً.",
-                "أعلى أولوية بين جميع الإعلانات.",
-                "ظهور مستمر لمدة ٣٠ يوماً."
+                "أفضل خيار لثبات الظهور.",
+                "أولوية أعلى من الأسبوعي.",
+                "مناسب للعروض الطويلة."
             ],
             bulletsEN: [
-                "Best choice for businesses that want constant presence.",
-                "Highest priority among all ad types.",
-                "Continuous visibility for 30 days."
+                "Best for consistent presence.",
+                "Higher priority than weekly.",
+                "Great for longer promos."
             ],
-            accentColor: Color(.systemGreen)
+            accent: .green
         ) {
-            selectedPlanMessage =
-            lang.isArabic
-            ? "تم اختيار الباقة الشهرية. لاحقًا سيتم ربط هذه الخطوة بالدفع عبر StoreKit ثم شاشة تعبئة تفاصيل الإعلان."
-            : "Monthly plan selected. Later this step will be connected to StoreKit payment, then the ad details form."
-            showAlert = true
+            showPaidAds = true
+        }
+    }
+
+    var primePlanCard: some View {
+        planCard(
+            titleAR: "Prime Ads (أفضل ظهور)",
+            titleEN: "Prime Ads (Top visibility)",
+            subtitleAR: "أعلى أولوية • ظهور أقوى",
+            subtitleEN: "Top priority • Max exposure",
+            descriptionAR: "أقوى خطة: بانر مميز + ظهور أعلى داخل التطبيق.",
+            descriptionEN: "Strongest plan: featured banner + top visibility inside the app.",
+            bulletsAR: [
+                "أولوية رقم 1.",
+                "أفضل ظهور داخل التطبيق.",
+                "مناسب للبراندات القوية."
+            ],
+            bulletsEN: [
+                "Priority #1.",
+                "Maximum in-app exposure.",
+                "Great for strong brands."
+            ],
+            accent: .orange
+        ) {
+            showPaidAds = true
         }
     }
 
@@ -163,15 +162,15 @@ private extension SelectAdPlanView {
         descriptionEN: String,
         bulletsAR: [String],
         bulletsEN: [String],
-        accentColor: Color,
+        accent: Color,
         action: @escaping () -> Void
     ) -> some View {
+
         let bullets = lang.isArabic ? bulletsAR : bulletsEN
 
-        return Button {
-            action()
-        } label: {
+        return Button(action: action) {
             VStack(alignment: .leading, spacing: 10) {
+
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(lang.isArabic ? titleAR : titleEN)
@@ -185,11 +184,11 @@ private extension SelectAdPlanView {
                     Spacer()
 
                     Circle()
-                        .fill(accentColor.opacity(0.15))
+                        .fill(accent.opacity(0.15))
                         .frame(width: 40, height: 40)
                         .overlay(
                             Image(systemName: "star.fill")
-                                .foregroundColor(accentColor)
+                                .foregroundColor(accent)
                                 .imageScale(.medium)
                         )
                 }
@@ -209,13 +208,13 @@ private extension SelectAdPlanView {
                     }
                 }
 
-                Text(lang.isArabic ? "اختيار هذه الباقة" : "Choose this plan")
+                Text(L("تابع للدفع", "Continue to payment"))
                     .font(.subheadline.weight(.semibold))
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 10)
                     .background(
                         RoundedRectangle(cornerRadius: 12)
-                            .fill(accentColor)
+                            .fill(accent)
                     )
                     .foregroundColor(.white)
                     .padding(.top, 4)
@@ -224,8 +223,7 @@ private extension SelectAdPlanView {
             .background(
                 RoundedRectangle(cornerRadius: 16)
                     .fill(Color(.systemBackground))
-                    .shadow(color: Color.black.opacity(0.06),
-                            radius: 6, x: 0, y: 3)
+                    .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3)
             )
         }
         .buttonStyle(.plain)
@@ -233,29 +231,29 @@ private extension SelectAdPlanView {
 
     var comparisonSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(lang.isArabic ? "مقارنة سريعة بين الباقات" : "Quick comparison between plans")
+            Text(L("مقارنة سريعة", "Quick comparison"))
                 .font(.headline)
 
             VStack(spacing: 6) {
                 comparisonRow(
-                    label: lang.isArabic ? "مدة العرض" : "Duration",
-                    daily: lang.isArabic ? "٢٤ ساعة" : "24 hours",
-                    weekly: lang.isArabic ? "٧ أيام" : "7 days",
-                    monthly: lang.isArabic ? "٣٠ يوم" : "30 days"
+                    label: L("المدة", "Duration"),
+                    weekly: L("7 أيام", "7 days"),
+                    monthly: L("30 يوم", "30 days"),
+                    prime: L("أعلى", "Top")
                 )
 
                 comparisonRow(
-                    label: lang.isArabic ? "قوة الظهور" : "Visibility strength",
-                    daily: "⭐",
+                    label: L("قوة الظهور", "Visibility"),
                     weekly: "⭐⭐",
-                    monthly: "⭐⭐⭐"
+                    monthly: "⭐⭐⭐",
+                    prime: "⭐⭐⭐⭐"
                 )
 
                 comparisonRow(
-                    label: lang.isArabic ? "الأولوية" : "Priority",
-                    daily: lang.isArabic ? "أساسية" : "Basic",
-                    weekly: lang.isArabic ? "متوسطة" : "Medium",
-                    monthly: lang.isArabic ? "عالية" : "High"
+                    label: L("الأولوية", "Priority"),
+                    weekly: L("متوسطة", "Medium"),
+                    monthly: L("عالية", "High"),
+                    prime: L("الأعلى", "Top")
                 )
             }
             .font(.footnote)
@@ -269,29 +267,28 @@ private extension SelectAdPlanView {
         .padding(.top, 8)
     }
 
-    func comparisonRow(label: String, daily: String, weekly: String, monthly: String) -> some View {
+    func comparisonRow(label: String, weekly: String, monthly: String, prime: String) -> some View {
         HStack {
             Text(label)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            Text(daily)
-                .frame(maxWidth: .infinity, alignment: .center)
             Text(weekly)
                 .frame(maxWidth: .infinity, alignment: .center)
             Text(monthly)
+                .frame(maxWidth: .infinity, alignment: .center)
+            Text(prime)
                 .frame(maxWidth: .infinity, alignment: .trailing)
         }
     }
 
     var footerNote: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(lang.isArabic ? "ملاحظة مهمة" : "Important note")
+            Text(L("ملاحظة مهمة", "Important note"))
                 .font(.footnote.weight(.semibold))
 
-            Text(
-                lang.isArabic
-                ? "جميع عمليات الشراء تتم من خلال Apple In-App Purchase، ويمكنك إدارة أو إلغاء الاشتراكات من إعدادات حسابك في App Store."
-                : "All purchases will be handled through Apple In-App Purchase. You can manage or cancel subscriptions from your App Store settings."
-            )
+            Text(L(
+                "الدفع يتم عبر Apple In-App Purchase. يمكنك إدارة الاشتراك من إعدادات App Store.",
+                "Payments are handled via Apple In-App Purchase. You can manage subscriptions from App Store settings."
+            ))
             .font(.footnote)
             .foregroundColor(.secondary)
         }
@@ -300,7 +297,6 @@ private extension SelectAdPlanView {
 }
 
 // MARK: - Preview
-
 struct SelectAdPlanView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {

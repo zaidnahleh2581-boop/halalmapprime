@@ -18,40 +18,48 @@ final class LifetimeFreePlaceGate {
     static let shared = LifetimeFreePlaceGate()
     private init() {}
 
-    private let db = Firestore.firestore()
-
     enum GateError: LocalizedError {
         case alreadyUsed
-
         var errorDescription: String? {
             switch self {
             case .alreadyUsed:
-                return "This place already used the lifetime free gift."
+                return "Lifetime free gift already used for this place."
             }
         }
     }
 
-    /// Create a stable place key from normalized address + rounded geo (prevents spouse-phone bypass).
+    private let db = Firestore.firestore()
+    private let collectionName = "free_lifetime_place_gate"
+
+    /// Create a stable place key from normalized address + rounded geo.
     func makePlaceKey(normalizedAddress: String, coordinate: CLLocationCoordinate2D) -> String {
+        let addr = normalizedAddress
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased()
+
         let lat = round(coordinate.latitude * 10_000) / 10_000
         let lng = round(coordinate.longitude * 10_000) / 10_000
-        let raw = "addr:\(normalizedAddress)|lat:\(lat)|lng:\(lng)"
+
+        let raw = "addr:\(addr)|lat:\(lat)|lng:\(lng)"
         return sha256(raw)
     }
 
-    /// Returns true if lifetime free gift is NOT used for this placeKey.
-    func canUse(placeKey: String) async throws -> Bool {
-        let ref = db.collection("free_lifetime_place_gate").document(placeKey)
-        let snap = try await ref.getDocument()
-        return !snap.exists
-    }
+    /// ✅ Try to consume the gift (CREATE only). Never read.
+    /// If it fails -> treat as already used.
+    func consumeOrThrow(placeKey: String, payload: [String: Any]) async throws {
+        var data = payload
+        data["usedAt"] = FieldValue.serverTimestamp()
+        data["placeKey"] = placeKey
 
-    /// Mark as used (call only after successful submit).
-    func markUsed(placeKey: String, payload: [String: Any]) async throws {
-        try await db.collection("free_lifetime_place_gate").document(placeKey).setData([
-            "usedAt": FieldValue.serverTimestamp(),
-            "placeKey": placeKey
-        ].merging(payload) { _, new in new }, merge: true)
+        do {
+            // merge: false => if doc exists this is an UPDATE and your Rules will block it
+            try await db.collection(collectionName)
+                .document(placeKey)
+                .setData(data, merge: false)
+        } catch {
+            // Most common: "Missing or insufficient permissions" because UPDATE is blocked
+            throw GateError.alreadyUsed
+        }
     }
 
     // MARK: - Helpers

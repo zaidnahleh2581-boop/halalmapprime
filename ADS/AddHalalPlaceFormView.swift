@@ -28,6 +28,9 @@ struct AddHalalPlaceFormView: View {
     private let gateMode: PlaceSubmissionsStore.GateMode
     private let preset: Preset
 
+    // ✅ Control Close button (fix duplicate Close)
+    private let showsCloseButton: Bool
+
     // ✅ Callbacks (NO manual edits elsewhere)
     private let onGiftConsumedOrAttempted: (() -> Void)?
     private let onNeedPaidUpgrade: (() -> Void)?
@@ -35,11 +38,13 @@ struct AddHalalPlaceFormView: View {
     init(
         preset: Preset = .normal,
         gateMode: PlaceSubmissionsStore.GateMode = .communityMonthly(phone: nil),
+        showsCloseButton: Bool = true,
         onGiftConsumedOrAttempted: (() -> Void)? = nil,
         onNeedPaidUpgrade: (() -> Void)? = nil
     ) {
         self.preset = preset
         self.gateMode = gateMode
+        self.showsCloseButton = showsCloseButton
         self.onGiftConsumedOrAttempted = onGiftConsumedOrAttempted
         self.onNeedPaidUpgrade = onNeedPaidUpgrade
     }
@@ -128,8 +133,11 @@ struct AddHalalPlaceFormView: View {
         .navigationTitle(navTitle)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button(L("إغلاق", "Close")) { dismiss() }
+            // ✅ Close button shown only when requested (prevents duplicate Close)
+            if showsCloseButton {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(L("إغلاق", "Close")) { dismiss() }
+                }
             }
         }
         .onAppear { applyPresetOnceIfNeeded() }
@@ -142,18 +150,17 @@ struct AddHalalPlaceFormView: View {
         }
 
         // ✅ Gift-used alert with action to Paid
-        .alert(L("الهدية مستخدمة", "Gift already used"), isPresented: $showGiftUsedAlert) {
+        .alert(L("تم استخدام الإضافة المجانية", "Free add already used"), isPresented: $showGiftUsedAlert) {
             Button(L("إلغاء", "Cancel"), role: .cancel) { }
-            Button(L("انتقل للإعلان المدفوع", "Go to Paid Ads")) {
-                // Close this form then open paid flow from parent
+            Button(L("انتقل للإعلانات المدفوعة", "Go to Paid Ads")) {
                 dismiss()
                 onGiftConsumedOrAttempted?()
                 onNeedPaidUpgrade?()
             }
         } message: {
             Text(L(
-                "تم استخدام هدية التطبيق لهذا المحل/اللوكيشن سابقًا. يمكنك المتابعة بإعلان مدفوع.",
-                "This business/location already used the free gift. You can continue with a paid ad."
+                "تم استخدام الإضافة المجانية لهذا المحل/اللوكيشن سابقًا. يمكنك المتابعة بإعلان مدفوع لزيادة الظهور.",
+                "This business/location already used the free add. You can continue with a paid ad to boost visibility."
             ))
         }
     }
@@ -209,12 +216,11 @@ struct AddHalalPlaceFormView: View {
 
             alertTitle = L("تم الإرسال", "Submitted")
             alertMessage = L(
-                "تم إرسال طلبك بنجاح (Pending).",
-                "Your submission was sent successfully (Pending)."
+                "تم إرسال طلبك بنجاح (قيد المراجعة).",
+                "Your submission was sent successfully (Pending review)."
             )
             showAlert = true
 
-            // optional: auto close after success
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
                 dismiss()
             }
@@ -222,7 +228,6 @@ struct AddHalalPlaceFormView: View {
         } catch let e as PlaceSubmissionsStore.SubmitError {
             switch e {
             case .lifetimeGiftAlreadyUsed:
-                // ✅ show action alert to go paid
                 showGiftUsedAlert = true
             }
         } catch {
@@ -254,10 +259,14 @@ struct AddHalalPlaceFormView: View {
     private var navTitle: String {
         switch preset {
         case .foodTruck:
-            return L("أضف فود ترك", "Add Food Truck")
+            return L("أضف فود ترك حلال", "Add Halal Food Truck")
         case .halalPlace:
-            return L("أضف محلك الحلال", "Add Halal Place")
+            return L("أضف مكان حلال", "Add Halal Place")
         case .normal:
+            // ✅ If this is the free gift flow, make title map-focused
+            if case .adsLifetimeGift = gateMode {
+                return L("أضف موقعك على الخريطة", "Add your place to the map")
+            }
             return L("أضف مكان", "Add Place")
         }
     }
@@ -265,7 +274,7 @@ struct AddHalalPlaceFormView: View {
     private var submitButtonTitle: String {
         switch gateMode {
         case .adsLifetimeGift:
-            return L("إضافة المكان (هدية مرة واحدة)", "Add place (one-time gift)")
+            return L("إضافة إلى الخريطة (مرة واحدة)", "Add to map (one-time)")
         default:
             return L("إضافة المكان على الخريطة", "Add place to the map")
         }
@@ -275,8 +284,8 @@ struct AddHalalPlaceFormView: View {
         switch gateMode {
         case .adsLifetimeGift:
             return L(
-                "هذه هدية من التطبيق مرة واحدة للعُمر لكل محل/لوكيشن. إذا تم استخدامها سابقًا لنفس العنوان/الموقع سيتم منعها تلقائيًا.",
-                "This is a lifetime one-time gift per business/location. If already used for the same place, it will be blocked automatically."
+                "هذه إضافة مجانية مرة واحدة للعُمر لكل محل/لوكيشن. إذا تم استخدامها سابقًا لنفس العنوان/الموقع سيتم منعها تلقائيًا.",
+                "This is a lifetime one-time free add per business/location. If already used for the same place, it will be blocked automatically."
             )
         case .communityMonthly:
             return L(

@@ -34,6 +34,12 @@
 		153BA67B2F06BA7A000D22FD /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153BA67A2F06BA7A000D22FD /* PurchaseManager.swift */; };
 		153BA67D2F06BABB000D22FD /* PaidAdsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153BA67C2F06BABB000D22FD /* PaidAdsScreen.swift */; };
 		153BA67F2F06CEC4000D22FD /* LifetimeFreePlaceGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153BA67E2F06CEC4000D22FD /* LifetimeFreePlaceGate.swift */; };
+		155C3FE62F0A8F48009EEB95 /* FreeMonthlyAdFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 155C3FE52F0A8F48009EEB95 /* FreeMonthlyAdFormView.swift */; };
+		155C3FE92F0A95C4009EEB95 /* WeeklyAdInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 155C3FE82F0A95C4009EEB95 /* WeeklyAdInfoView.swift */; };
+		155C3FEB2F0A95E6009EEB95 /* MonthlyAdInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 155C3FEA2F0A95E6009EEB95 /* MonthlyAdInfoView.swift */; };
+		155C3FED2F0A9617009EEB95 /* PrimeAdInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 155C3FEC2F0A9617009EEB95 /* PrimeAdInfoView.swift */; };
+		155C3FEF2F0A9749009EEB95 /* PaidAdPlanDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 155C3FEE2F0A9749009EEB95 /* PaidAdPlanDetailView.swift */; };
+		155C3FF32F0A9E88009EEB95 /* AdPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 155C3FF22F0A9E88009EEB95 /* AdPlan.swift */; };
 		156016592F032F3D00ABC8BB /* EventTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156016582F032F3D00ABC8BB /* EventTemplate.swift */; };
 		1560165B2F032F6F00ABC8BB /* ContactUsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1560165A2F032F6F00ABC8BB /* ContactUsView.swift */; };
 		1560165D2F032F9500ABC8BB /* PrivacyPolicyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1560165C2F032F9500ABC8BB /* PrivacyPolicyView.swift */; };
@@ -110,6 +116,12 @@
 		153BA67A2F06BA7A000D22FD /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
 		153BA67C2F06BABB000D22FD /* PaidAdsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaidAdsScreen.swift; sourceTree = "<group>"; };
 		153BA67E2F06CEC4000D22FD /* LifetimeFreePlaceGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifetimeFreePlaceGate.swift; sourceTree = "<group>"; };
+		155C3FE52F0A8F48009EEB95 /* FreeMonthlyAdFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeMonthlyAdFormView.swift; sourceTree = "<group>"; };
+		155C3FE82F0A95C4009EEB95 /* WeeklyAdInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyAdInfoView.swift; sourceTree = "<group>"; };
+		155C3FEA2F0A95E6009EEB95 /* MonthlyAdInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyAdInfoView.swift; sourceTree = "<group>"; };
+		155C3FEC2F0A9617009EEB95 /* PrimeAdInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimeAdInfoView.swift; sourceTree = "<group>"; };
+		155C3FEE2F0A9749009EEB95 /* PaidAdPlanDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaidAdPlanDetailView.swift; sourceTree = "<group>"; };
+		155C3FF22F0A9E88009EEB95 /* AdPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdPlan.swift; sourceTree = "<group>"; };
 		156016582F032F3D00ABC8BB /* EventTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTemplate.swift; sourceTree = "<group>"; };
 		1560165A2F032F6F00ABC8BB /* ContactUsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactUsView.swift; sourceTree = "<group>"; };
 		1560165C2F032F9500ABC8BB /* PrivacyPolicyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyView.swift; sourceTree = "<group>"; };
@@ -196,6 +208,7 @@
 		151BD9EB2EE596C00065F10C /* ADS */ = {
 			isa = PBXGroup;
 			children = (
+				155C3FE72F0A956E009EEB95 /* Ads paid plan */,
 				153BA6762F06BA1B000D22FD /* IAPProducts.swift */,
 				151BD9E92EE528050065F10C /* AdsHomeScreen.swift */,
 				151BD9EC2EE596EC0065F10C /* AdsHomeView.swift */,
@@ -209,6 +222,7 @@
 				153BA6742F06A648000D22FD /*  FreeAdStateStore  .swift */,
 				153BA67C2F06BABB000D22FD /* PaidAdsScreen.swift */,
 				153BA67E2F06CEC4000D22FD /* LifetimeFreePlaceGate.swift */,
+				155C3FE52F0A8F48009EEB95 /* FreeMonthlyAdFormView.swift */,
 			);
 			path = ADS;
 			sourceTree = "<group>";
@@ -226,6 +240,18 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		155C3FE72F0A956E009EEB95 /* Ads paid plan */ = {
+			isa = PBXGroup;
+			children = (
+				155C3FE82F0A95C4009EEB95 /* WeeklyAdInfoView.swift */,
+				155C3FEA2F0A95E6009EEB95 /* MonthlyAdInfoView.swift */,
+				155C3FEC2F0A9617009EEB95 /* PrimeAdInfoView.swift */,
+				155C3FEE2F0A9749009EEB95 /* PaidAdPlanDetailView.swift */,
+				155C3FF22F0A9E88009EEB95 /* AdPlan.swift */,
+			);
+			path = "Ads paid plan";
 			sourceTree = "<group>";
 		};
 		156A32472F00B97600819D25 /* jobs */ = {
@@ -451,10 +477,12 @@
 				151BD9E62EE522760065F10C /* LanguageSelectionView.swift in Sources */,
 				15CEB20A2EE7CC780035A83D /* EventAdsBoardView.swift in Sources */,
 				15CEB2042EE7C5DF0035A83D /* NoticeBoardViews.swift in Sources */,
+				155C3FE62F0A8F48009EEB95 /* FreeMonthlyAdFormView.swift in Sources */,
 				151BD9E42EE5223D0065F10C /* LanguageManager.swift in Sources */,
 				15CEB1F82EE78AB00035A83D /* EventAdComposerView.swift in Sources */,
 				15B3D4BD2EFDB3DE00704BB6 /* AdhanReminderSettings.swift in Sources */,
 				151BD9EF2EE597260065F10C /* SelectAdPlanView.swift in Sources */,
+				155C3FEF2F0A9749009EEB95 /* PaidAdPlanDetailView.swift in Sources */,
 				15109F8D2EFD62510068DFE3 /* AppRouter.swift in Sources */,
 				15A0D79A2EE0605D0063ED79 /* PlaceRowView.swift in Sources */,
 				153BA5DC2F048082000D22FD /* PlaceSubmissionsStore.swift in Sources */,
@@ -466,6 +494,7 @@
 				15E162482EE0D50500A5C42C /* GooglePlacesService.swift in Sources */,
 				15B3D4C12EFDB6F800704BB6 /* RamadanImsakiyahViewModel.swift in Sources */,
 				151BD9ED2EE596EC0065F10C /* AdsHomeView.swift in Sources */,
+				155C3FF32F0A9E88009EEB95 /* AdPlan.swift in Sources */,
 				153BA5ED2F052E31000D22FD /* HomeEventsTickerView.swift in Sources */,
 				153BA5E32F0495ED000D22FD /* ActivePlacesStore.swift in Sources */,
 				153BA5E92F04AED8000D22FD /* MonthlyFreeGate.swift in Sources */,
@@ -480,9 +509,11 @@
 				15D014352F02BBCB00D34C64 /* JobAlertsSheet 2.swift in Sources */,
 				153BA67B2F06BA7A000D22FD /* PurchaseManager.swift in Sources */,
 				15B3D4C72EFDBBF200704BB6 /* AdhanSettingsSheet.swift in Sources */,
+				155C3FED2F0A9617009EEB95 /* PrimeAdInfoView.swift in Sources */,
 				15B48CF32EE1E50300A88AB7 /* GooglePlacesModelsswift.swift in Sources */,
 				1560165B2F032F6F00ABC8BB /* ContactUsView.swift in Sources */,
 				15A0D7A22EE07FE90063ED79 /* samplePlaces.swift in Sources */,
+				155C3FE92F0A95C4009EEB95 /* WeeklyAdInfoView.swift in Sources */,
 				15E1626F2EE121DC00A5C42C /* Place.swift in Sources */,
 				15A0D79C2EE060900063ED79 /* PlaceDetailView.swift in Sources */,
 				15F1CE5D2F035432007C72CA /* MonthlyEventPaywallView.swift in Sources */,
@@ -499,6 +530,7 @@
 				151BD9F12EE597570065F10C /* AddHalalPlaceFormView.swift in Sources */,
 				151BD9E22EE521030065F10C /* AppLanguage.swift in Sources */,
 				15B3D4C52EFDB94500704BB6 /* QiblaCompassViewModel.swift in Sources */,
+				155C3FEB2F0A95E6009EEB95 /* MonthlyAdInfoView.swift in Sources */,
 				15C0B4BB2EFC8F8600532F0F /* FiLocationManagerle.swift in Sources */,
 				153BA5F32F0532E8000D22FD /* MyEventsViewModel.swift in Sources */,
 				15A0D79E2EE0626B0063ED79 /* AddStoreScreen.swift in Sources */,

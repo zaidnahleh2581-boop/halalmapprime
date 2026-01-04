@@ -41,7 +41,7 @@ final class FreeAdStateStore: ObservableObject {
         }
     }
 
-    // MARK: - Gate Query (NO composite index needed)
+    // MARK: - Month Key
 
     private func monthKey(for date: Date = Date()) -> String {
         let c = Calendar.current
@@ -50,16 +50,37 @@ final class FreeAdStateStore: ObservableObject {
         return "\(y)-\(String(format: "%02d", m))"
     }
 
+    // MARK: - Gate Check (RULES FRIENDLY)
+    // Rules: /free_monthly_gate/{uid} read/write only by that uid
+    // So we MUST read document(uid) — NOT query the collection.
+
     private func didUseFreeThisMonth(uid: String) async throws -> Bool {
         let month = monthKey()
 
-        let snap = try await db.collection("free_monthly_gate")
-            .whereField("uid", isEqualTo: uid)
-            .whereField("month", isEqualTo: month)
-            .limit(to: 1)
-            .getDocuments()
+        let doc = try await db.collection("free_monthly_gate")
+            .document(uid)
+            .getDocument()
 
-        return !snap.documents.isEmpty
+        // If doc doesn't exist -> never used
+        guard doc.exists else { return false }
+
+        let lastMonth = doc.data()?["lastFreeMonth"] as? String
+        return lastMonth == month
+    }
+
+    // MARK: - Mark Used (call this after creating the free ad successfully)
+
+    func markUsedThisMonth() async throws {
+        let uid = try await ensureUID()
+        let month = monthKey()
+
+        try await db.collection("free_monthly_gate")
+            .document(uid)
+            .setData([
+                "uid": uid,
+                "lastFreeMonth": month,
+                "updatedAt": FieldValue.serverTimestamp()
+            ], merge: true)
     }
 
     // MARK: - Auth
