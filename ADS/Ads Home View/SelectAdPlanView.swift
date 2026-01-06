@@ -3,6 +3,7 @@
 //  Halal Map Prime
 //
 //  Created by Zaid Nahleh on 2026-01-04.
+//  Updated by Zaid Nahleh on 2026-01-05.
 //  Copyright © 2026 Zaid Nahleh.
 //  All rights reserved.
 //
@@ -58,7 +59,6 @@ struct SelectAdPlanView: View {
                         planDisplayTitleAR: planDisplayTitleAR(plan),
                         planDisplayTitleEN: planDisplayTitleEN(plan),
                         onSaved: { draft in
-                            // ✅ Creates and saves locally (AdsStore)
                             adsStore.createAdFromDraft(draft: draft, plan: plan)
                             adsStore.load()
                             showCreateForm = false
@@ -70,8 +70,6 @@ struct SelectAdPlanView: View {
             }
         }
     }
-
-    // MARK: - Row
 
     private func planRow(_ plan: HMPAdPlanKind) -> some View {
         Button {
@@ -111,8 +109,6 @@ struct SelectAdPlanView: View {
         }
         .buttonStyle(.plain)
     }
-
-    // MARK: - Titles for Form
 
     private func planDisplayTitleAR(_ plan: HMPAdPlanKind) -> String {
         switch plan {

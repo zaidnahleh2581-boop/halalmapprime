@@ -3,6 +3,7 @@
 //  Halal Map Prime
 //
 //  Created by Zaid Nahleh on 2026-01-04.
+//  Updated by Zaid Nahleh on 2026-01-05.
 //  Copyright © 2026 Zaid Nahleh.
 //  All rights reserved.
 //
@@ -18,6 +19,9 @@ struct AdDraft: Equatable {
     var website: String = ""
     var addressHint: String = ""
     var selectedAudience: AdAudience = .restaurants
+
+    // ✅ Saved images as Base64
+    var imageBase64s: [String] = []
 }
 
 struct CreateAdFormView: View {
@@ -41,9 +45,7 @@ struct CreateAdFormView: View {
     private let maxImages: Int = 4
 
     private func L(_ ar: String, _ en: String) -> String { lang.isArabic ? ar : en }
-
     private var planTitle: String { lang.isArabic ? planDisplayTitleAR : planDisplayTitleEN }
-
     private var remainingChars: Int { max(0, maxChars - draft.adText.count) }
 
     private var isValid: Bool {
@@ -72,9 +74,7 @@ struct CreateAdFormView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                Button { dismiss() } label: {
-                    Image(systemName: "xmark").imageScale(.medium)
-                }
+                Button { dismiss() } label: { Image(systemName: "xmark").imageScale(.medium) }
             }
         }
         .alert(L("تحقق من البيانات", "Check your info"), isPresented: $showValidationAlert) {
@@ -284,7 +284,6 @@ struct CreateAdFormView: View {
         .background(cardBG)
     }
 
-    // ✅ FIXED: this now calls onSaved(draft)
     private var primaryActions: some View {
         VStack(spacing: 10) {
             Button {
@@ -293,13 +292,16 @@ struct CreateAdFormView: View {
                     return
                 }
 
-                onSaved?(draft) // ✅ IMPORTANT
+                // ✅ Convert selected images -> Base64 & save into draft
+                draft.imageBase64s = imageDatas.map { $0.base64EncodedString() }
+
+                onSaved?(draft)
+
                 withAnimation(.spring()) { showSavedToast = true }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
                     withAnimation(.easeOut) { showSavedToast = false }
                     dismiss()
                 }
-
             } label: {
                 HStack {
                     Spacer()

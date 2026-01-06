@@ -3,7 +3,7 @@
 //  Halal Map Prime
 //
 //  Created by Zaid Nahleh on 2025-12-23.
-//  Updated by Zaid Nahleh on 2026-01-01.
+//  Updated by Zaid Nahleh on 2026-01-05.
 //  Copyright © 2026 Zaid Nahleh.
 //  All rights reserved.
 //
@@ -11,6 +11,7 @@
 import SwiftUI
 import FirebaseFirestore
 import Combine
+import UIKit
 
 struct HomeOverviewScreen: View {
 
@@ -19,6 +20,9 @@ struct HomeOverviewScreen: View {
 
     private let db = Firestore.firestore()
     private func L(_ ar: String, _ en: String) -> String { lang.isArabic ? ar : en }
+
+    // ✅ Local Ads
+    @StateObject private var adsStore = AdsStore()
 
     // Jobs preview (from Firebase jobAds)
     @State private var previewJobs: [JobAd] = []
@@ -36,63 +40,213 @@ struct HomeOverviewScreen: View {
     @State private var showMapSheet: Bool = false
     @State private var mapStartingCategory: PlaceCategory? = nil
 
-    // ✅ NEW: Prime Sponsored from Firestore (places/ad)
-    @State private var primeSponsored: [SponsoredPlace] = []
-    @State private var sponsoredLoading: Bool = false
+    // ✅ Ad Preview
+    @State private var selectedAd: HMPAd? = nil
+    @State private var showAdPreview: Bool = false
 
-    // Jobs ticker changes every 60 seconds
     private let tickerTimer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
 
     var body: some View {
-        ScrollView(showsIndicators: false) {
-            VStack(alignment: .leading, spacing: 16) {
+        ZStack {
+            IslamicPatternBackground()
 
-                // 1) Categories (visual)
-                HomeCategoriesGrid { cat in
-                    openMap(cat)
+            ScrollView(showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 16) {
+
+                    // 1) Categories
+                    HomeCategoriesGrid { cat in openMap(cat) }
+
+                    // 2) Jobs header
+                    jobsHeaderRow
+
+                    // 3) Job ticker
+                    jobsTicker
+
+                    // 3.5) Events ticker
+                    HomeEventsTickerView()
+                        .environmentObject(lang)
+                        .environmentObject(router)
+                        .padding(.horizontal, 16)
+                        .padding(.top, 2)
+
+                    // ✅ Ads on Home (distribution)
+                    homeAdsHeaderRow
+                    featuredSliderSection
+                    monthlySpotlightSection
+                    weeklyDealsSection
                 }
-
-                // 2) Core: Jobs (header row)
-                jobsHeaderRow
-
-                // 3) Core: One job ticker
-                jobsTicker
-
-                // ✅ 3.5) Events ticker (PAID ONLY) – opens Community
-                HomeEventsTickerView()
-                    .environmentObject(lang)
-                    .environmentObject(router)
-                    .padding(.horizontal, 16)
-                    .padding(.top, 2)
-
-                // ✅ 4) PRIME Sponsored Ads (REAL from Firestore)
-                primeSponsoredSection
+                .padding(.top, 8)
+                .padding(.bottom, 22)
             }
-            .padding(.top, 8)
-            .padding(.bottom, 22)
         }
-        .background(Color(.systemGroupedBackground))
         .onAppear {
+            adsStore.load()
             fetchJobsPreview()
-            fetchPrimeSponsored()
         }
         .onReceive(tickerTimer) { _ in
             guard !previewJobs.isEmpty else { return }
             tickerIndex = (tickerIndex + 1) % max(previewJobs.count, 1)
         }
-        .sheet(isPresented: $showDistancePicker) { distanceSheet }
-        .sheet(isPresented: $showJobAlerts) {
-            JobAlertsSheet()
-                .environmentObject(lang)
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+            adsStore.load()
         }
+        .sheet(isPresented: $showDistancePicker) { distanceSheet }
+        .sheet(isPresented: $showJobAlerts) { JobAlertsSheet().environmentObject(lang) }
         .sheet(isPresented: $showMapSheet) {
             MapScreen(startingCategory: mapStartingCategory, hideCategoryPicker: false)
                 .environmentObject(lang)
                 .environmentObject(router)
         }
+        .sheet(isPresented: $showAdPreview) {
+            if let ad = selectedAd {
+                NavigationStack { AdPreviewScreen(langIsArabic: lang.isArabic, ad: ad) }
+            }
+        }
     }
 
-    // MARK: - Jobs Header (bell + distance + see all)
+    // MARK: - Home Ads Header Row
+
+    private var homeAdsHeaderRow: some View {
+        HStack {
+            HStack(spacing: 8) {
+                Image(systemName: "megaphone.fill")
+                    .foregroundColor(.primary)
+                Text(L("إعلانات قريبة منك", "Ads near you"))
+                    .font(.headline)
+            }
+
+            Spacer()
+
+            Button {
+                adsStore.load()
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            } label: {
+                Image(systemName: "arrow.clockwise")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(.blue)
+            }
+            .buttonStyle(.plain)
+
+            Button {
+                router.selectedTab = 2
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            } label: {
+                Text(L("المزيد", "More"))
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundColor(.blue)
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(.horizontal, 16)
+        .padding(.top, 6)
+    }
+
+    // MARK: - Featured Slider (Prime + FreeOnce)
+
+    private var featuredSliderSection: some View {
+        let featured = adsStore.activeAds.filter { $0.plan == .prime || $0.plan == .freeOnce }
+
+        return Group {
+            if featured.isEmpty {
+                // silent
+                EmptyView()
+            } else {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 12) {
+                        ForEach(featured) { ad in
+                            FeaturedAdSliderCard(langIsArabic: lang.isArabic, ad: ad) {
+                                selectedAd = ad
+                                showAdPreview = true
+                                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                            }
+                            .frame(width: 320)
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 4)
+                }
+            }
+        }
+    }
+
+    // MARK: - Monthly Spotlight
+
+    private var monthlySpotlightSection: some View {
+        let monthly = adsStore.activeAds.filter { $0.plan == .monthly }
+
+        return Group {
+            if monthly.isEmpty {
+                EmptyView()
+            } else {
+                VStack(alignment: .leading, spacing: 10) {
+
+                    Text(L("إعلانات شهرية", "Monthly Spotlight"))
+                        .font(.headline)
+                        .padding(.horizontal, 16)
+
+                    VStack(spacing: 10) {
+                        ForEach(monthly.prefix(4)) { ad in
+                            Button {
+                                selectedAd = ad
+                                showAdPreview = true
+                                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                            } label: {
+                                MonthlySpotlightCard(langIsArabic: lang.isArabic, ad: ad)
+                            }
+                            .buttonStyle(.plain)
+                            .padding(.horizontal, 16)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // MARK: - Weekly Deals
+
+    private var weeklyDealsSection: some View {
+        let weekly = adsStore.activeAds.filter { $0.plan == .weekly }
+
+        return Group {
+            if weekly.isEmpty {
+                // if everything empty, show one empty state
+                if adsStore.activeAds.isEmpty {
+                    Text(L("لا توجد إعلانات حالياً.", "No ads right now."))
+                        .font(.footnote.weight(.semibold))
+                        .foregroundColor(.secondary)
+                        .padding(12)
+                        .background(Color(.systemBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                        .padding(.horizontal, 16)
+                } else {
+                    EmptyView()
+                }
+            } else {
+                VStack(alignment: .leading, spacing: 10) {
+
+                    Text(L("إعلانات أسبوعية", "Weekly Deals"))
+                        .font(.headline)
+                        .padding(.horizontal, 16)
+
+                    VStack(spacing: 10) {
+                        ForEach(weekly.prefix(8)) { ad in
+                            Button {
+                                selectedAd = ad
+                                showAdPreview = true
+                                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                            } label: {
+                                CompactAdCard(langIsArabic: lang.isArabic, ad: ad)
+                            }
+                            .buttonStyle(.plain)
+                            .padding(.horizontal, 16)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // MARK: - Jobs Header
 
     private var jobsHeaderRow: some View {
         HStack(spacing: 10) {
@@ -106,7 +260,6 @@ struct HomeOverviewScreen: View {
 
             Spacer()
 
-            // 🔔 Alerts
             Button {
                 showJobAlerts = true
                 UIImpactFeedbackGenerator(style: .light).impactOccurred()
@@ -120,7 +273,6 @@ struct HomeOverviewScreen: View {
             }
             .buttonStyle(.plain)
 
-            // 📍 Distance (visual now)
             Button { showDistancePicker = true } label: {
                 HStack(spacing: 6) {
                     Image(systemName: "mappin.and.ellipse")
@@ -135,7 +287,6 @@ struct HomeOverviewScreen: View {
             }
             .buttonStyle(.plain)
 
-            // ➜ Go to Jobs tab
             Button {
                 router.selectedTab = 1
                 UIImpactFeedbackGenerator(style: .medium).impactOccurred()
@@ -145,13 +296,12 @@ struct HomeOverviewScreen: View {
                     .foregroundColor(.blue)
             }
             .buttonStyle(.plain)
-            .accessibilityLabel(L("عرض كل الوظائف", "See all jobs"))
         }
         .padding(.horizontal, 16)
         .padding(.top, 6)
     }
 
-    // MARK: - Jobs Ticker (one card)
+    // MARK: - Jobs Ticker
 
     private var jobsTicker: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -180,9 +330,7 @@ struct HomeOverviewScreen: View {
             } else {
                 let ad = previewJobs[tickerIndex % max(previewJobs.count, 1)]
 
-                Button {
-                    router.selectedTab = 1
-                } label: {
+                Button { router.selectedTab = 1 } label: {
                     HStack(spacing: 12) {
 
                         ZStack {
@@ -197,7 +345,7 @@ struct HomeOverviewScreen: View {
                         }
 
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(headlineForAd(ad))
+                            Text(headlineForJob(ad))
                                 .font(.subheadline.weight(.semibold))
                                 .lineLimit(1)
 
@@ -231,7 +379,7 @@ struct HomeOverviewScreen: View {
         }
     }
 
-    private func headlineForAd(_ ad: JobAd) -> String {
+    private func headlineForJob(_ ad: JobAd) -> String {
         let cat = ad.category.trimmingCharacters(in: .whitespacesAndNewlines)
         if !cat.isEmpty {
             return ad.type == .hiring
@@ -242,100 +390,7 @@ struct HomeOverviewScreen: View {
         }
     }
 
-    // MARK: - ✅ PRIME Sponsored (Firestore -> Home)
-
-    private var primeSponsoredSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-
-            HStack {
-                Text(L("إعلانات مميزة", "Sponsored"))
-                    .font(.headline)
-                Spacer()
-
-                Button {
-                    fetchPrimeSponsored()
-                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                } label: {
-                    Image(systemName: "arrow.clockwise")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(.blue)
-                }
-                .buttonStyle(.plain)
-            }
-            .padding(.horizontal, 16)
-            .padding(.top, 6)
-
-            if sponsoredLoading {
-                HStack(spacing: 10) {
-                    ProgressView()
-                    Text(L("جاري تحميل الإعلانات…", "Loading sponsored…"))
-                        .font(.footnote)
-                        .foregroundColor(.secondary)
-                }
-                .padding(12)
-                .background(Color(.systemBackground))
-                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                .padding(.horizontal, 16)
-
-            } else if primeSponsored.isEmpty {
-                Text(L("لا توجد إعلانات مميزة حالياً.", "No sponsored ads right now."))
-                    .font(.footnote.weight(.semibold))
-                    .foregroundColor(.secondary)
-                    .padding(12)
-                    .background(Color(.systemBackground))
-                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                    .padding(.horizontal, 16)
-
-            } else {
-                // Carousel
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 12) {
-                        ForEach(primeSponsored) { item in
-                            SponsoredPrimeCard(
-                                langIsArabic: lang.isArabic,
-                                item: item
-                            ) {
-                                // Action on tap:
-                                // 1) افتح الخريطة لنفس الكاتيجوري (اختياري)
-                                // 2) أو افتح تفاصيل المكان (لو عندك شاشة تفاصيل)
-                                // الآن نخليه يفتح Tab "إعلانات" أو Map (اختيارك)
-                                router.selectedTab = 2
-                                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                            }
-                            .frame(width: 310)
-                        }
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 6)
-                }
-            }
-        }
-    }
-
-    private func fetchPrimeSponsored() {
-        sponsoredLoading = true
-
-        db.collection("places")
-            .whereField("ad.isActive", isEqualTo: true)
-            .whereField("ad.plan", isEqualTo: "prime") // ✅ Prime فقط
-            .order(by: "ad.priority", descending: true)
-            .limit(to: 15)
-            .getDocuments { snap, error in
-                DispatchQueue.main.async {
-                    self.sponsoredLoading = false
-
-                    guard error == nil, let docs = snap?.documents else {
-                        self.primeSponsored = []
-                        return
-                    }
-
-                    self.primeSponsored = docs.compactMap { SponsoredPlace.from(doc: $0) }
-                    self.primeSponsored.sort { ($0.adPriority) > ($1.adPriority) }
-                }
-            }
-    }
-
-    // MARK: - Map open (category-based)
+    // MARK: - Map open
 
     private func openMap(_ category: PlaceCategory) {
         mapStartingCategory = category
@@ -414,72 +469,11 @@ struct HomeOverviewScreen: View {
     }
 }
 
-// MARK: - SponsoredPlace (Firestore-safe model)
+// MARK: - Featured Slider Card (Prime + FreeOnce) with Images
 
-private struct SponsoredPlace: Identifiable {
-    let id: String
-
-    // place basics
-    let name: String
-    let address: String
-    let cityState: String
-    let category: String
-    let phone: String?
-    let notes: String?
-
-    // ad
-    let adPlan: String
-    let adPriority: Int
-    let adIsActive: Bool
-
-    // images (optional URLs)
-    let imageUrls: [String]
-
-    static func from(doc: QueryDocumentSnapshot) -> SponsoredPlace? {
-        let data = doc.data()
-
-        // basics
-        let name = (data["name"] as? String) ?? "Business"
-        let address = (data["address"] as? String) ?? ""
-        let cityState = (data["cityState"] as? String) ?? ""
-        let category = (data["category"] as? String) ?? ""
-        let phone = data["phone"] as? String
-        let notes = data["notes"] as? String
-
-        // ad map
-        let ad = (data["ad"] as? [String: Any]) ?? [:]
-        let plan = (ad["plan"] as? String) ?? ""
-        let isActive = (ad["isActive"] as? Bool) ?? false
-        let priority = (ad["priority"] as? Int) ?? 0
-
-        // optional images
-        let urls = (ad["images"] as? [String]) ?? (data["images"] as? [String]) ?? []
-
-        // must be prime + active
-        // (نخليها حماية إضافية)
-        guard isActive == true else { return nil }
-
-        return SponsoredPlace(
-            id: doc.documentID,
-            name: name,
-            address: address,
-            cityState: cityState,
-            category: category,
-            phone: phone,
-            notes: notes,
-            adPlan: plan,
-            adPriority: priority,
-            adIsActive: isActive,
-            imageUrls: urls
-        )
-    }
-}
-
-// MARK: - Prime Card UI
-
-private struct SponsoredPrimeCard: View {
+private struct FeaturedAdSliderCard: View {
     let langIsArabic: Bool
-    let item: SponsoredPlace
+    let ad: HMPAd
     let onTap: () -> Void
 
     private func L(_ ar: String, _ en: String) -> String { langIsArabic ? ar : en }
@@ -488,19 +482,21 @@ private struct SponsoredPrimeCard: View {
         Button(action: onTap) {
             VStack(alignment: .leading, spacing: 10) {
 
-                // Images (if available)
-                if !item.imageUrls.isEmpty {
+                // Images
+                if !ad.uiImages().isEmpty {
                     TabView {
-                        ForEach(item.imageUrls, id: \.self) { urlStr in
-                            RemoteImage(urlString: urlStr)
+                        ForEach(Array(ad.uiImages().enumerated()), id: \.offset) { _, img in
+                            Image(uiImage: img)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(height: 170)
+                                .clipped()
                                 .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                                .padding(.vertical, 4)
                         }
                     }
-                    .frame(height: 165)
+                    .frame(height: 170)
                     .tabViewStyle(.page(indexDisplayMode: .automatic))
                 } else {
-                    // fallback banner
                     ZStack {
                         RoundedRectangle(cornerRadius: 16, style: .continuous)
                             .fill(Color(.secondarySystemBackground))
@@ -512,11 +508,11 @@ private struct SponsoredPrimeCard: View {
                                 .foregroundColor(.yellow)
 
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(L("إعلان مميز", "Prime Sponsored"))
+                                Text(ad.plan == .prime ? L("إعلان مميز", "Featured Prime") : L("إعلان مجاني مميز", "Featured Free"))
                                     .font(.caption.weight(.bold))
                                     .foregroundColor(.secondary)
 
-                                Text(item.name)
+                                Text(ad.businessName)
                                     .font(.headline.weight(.bold))
                                     .lineLimit(1)
                             }
@@ -527,14 +523,12 @@ private struct SponsoredPrimeCard: View {
                     }
                 }
 
-                // Title + city
-                HStack(alignment: .top) {
+                HStack {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(item.name)
+                        Text(ad.businessName)
                             .font(.headline.weight(.bold))
                             .lineLimit(1)
-
-                        Text(displaySubline)
+                        Text(ad.headline)
                             .font(.caption)
                             .foregroundColor(.secondary)
                             .lineLimit(1)
@@ -542,89 +536,196 @@ private struct SponsoredPrimeCard: View {
 
                     Spacer()
 
-                    Text(L("مميز", "Prime"))
+                    Text(ad.plan == .prime ? L("PRIME", "PRIME") : L("هدية", "GIFT"))
                         .font(.caption2.weight(.bold))
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                         .padding(.horizontal, 10)
                         .padding(.vertical, 6)
-                        .background(Color.black.opacity(0.80))
+                        .background(Color.yellow.opacity(0.95))
                         .clipShape(Capsule())
                 }
 
-                // Offer / Notes (optional)
-                if let notes = item.notes, !notes.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                    Text(notes)
-                        .font(.subheadline)
-                        .foregroundColor(.primary)
-                        .lineLimit(2)
-                        .padding(.top, 2)
-                }
+                Text(ad.adText)
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
+                    .lineLimit(2)
 
-                // Footer
                 HStack {
-                    Text(item.category.isEmpty ? L("نشاط تجاري", "Business") : item.category)
+                    Text(ad.remainingText(langIsArabic: langIsArabic))
                         .font(.caption.weight(.semibold))
                         .foregroundColor(.secondary)
-
                     Spacer()
-
-                    Image(systemName: "chevron.right")
-                        .foregroundColor(.secondary)
+                    Image(systemName: "chevron.right").foregroundColor(.secondary)
                 }
             }
             .padding(12)
             .background(Color(.systemBackground))
             .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-            .shadow(color: Color.black.opacity(0.08), radius: 12, x: 0, y: 8)
+            .overlay(
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    .stroke(Color.yellow.opacity(0.35), lineWidth: 1)
+            )
+            .shadow(color: Color.black.opacity(0.09), radius: 14, x: 0, y: 10)
         }
         .buttonStyle(.plain)
     }
+}
 
-    private var displaySubline: String {
-        if !item.cityState.isEmpty { return item.cityState }
-        if !item.address.isEmpty { return item.address }
-        return L("قريب منك", "Near you")
+// MARK: - Monthly Spotlight Card (bigger)
+
+private struct MonthlySpotlightCard: View {
+    let langIsArabic: Bool
+    let ad: HMPAd
+
+    private func L(_ ar: String, _ en: String) -> String { langIsArabic ? ar : en }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(ad.businessName)
+                        .font(.headline.weight(.bold))
+                        .lineLimit(1)
+                    Text(ad.headline)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundColor(.secondary)
+                        .lineLimit(1)
+                }
+
+                Spacer()
+
+                Text(L("شهري", "MONTHLY"))
+                    .font(.caption2.weight(.bold))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(Color.blue.opacity(0.9))
+                    .clipShape(Capsule())
+            }
+
+            if let first = ad.uiImages().first {
+                Image(uiImage: first)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(height: 150)
+                    .clipped()
+                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            }
+
+            Text(ad.adText)
+                .font(.subheadline)
+                .foregroundColor(.primary)
+                .lineLimit(2)
+
+            HStack {
+                Text(ad.remainingText(langIsArabic: langIsArabic))
+                    .font(.caption.weight(.semibold))
+                    .foregroundColor(.secondary)
+                Spacer()
+                Image(systemName: "chevron.right").foregroundColor(.secondary)
+            }
+        }
+        .padding(14)
+        .background(Color(.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .shadow(color: Color.black.opacity(0.08), radius: 12, x: 0, y: 8)
     }
 }
 
-// MARK: - Remote Image (simple)
+// MARK: - Weekly Compact Card
 
-private struct RemoteImage: View {
-    let urlString: String
+private struct CompactAdCard: View {
+    let langIsArabic: Bool
+    let ad: HMPAd
 
     var body: some View {
-        if let url = URL(string: urlString) {
-            AsyncImage(url: url) { phase in
-                switch phase {
-                case .empty:
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .fill(Color(.secondarySystemBackground))
-                        ProgressView()
+        HStack(spacing: 12) {
+
+            if let img = ad.uiImages().first {
+                Image(uiImage: img)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 64, height: 64)
+                    .clipped()
+                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            } else {
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .fill(Color(.secondarySystemBackground))
+                    .frame(width: 64, height: 64)
+                    .overlay(Image(systemName: "photo").foregroundColor(.secondary))
+            }
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(ad.businessName)
+                    .font(.subheadline.weight(.bold))
+                    .lineLimit(1)
+                Text(ad.headline)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .lineLimit(1)
+                Text(ad.adText)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .lineLimit(1)
+            }
+
+            Spacer()
+
+            Image(systemName: "chevron.right")
+                .foregroundColor(.secondary)
+        }
+        .padding(12)
+        .background(Color(.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 6)
+    }
+}
+
+
+// MARK: - Islamic Pattern Background (subtle)
+
+private struct IslamicPatternBackground: View {
+    var body: some View {
+        ZStack {
+            LinearGradient(
+                colors: [
+                    Color(.systemGroupedBackground),
+                    Color(.systemGroupedBackground).opacity(0.94),
+                    Color(.systemGroupedBackground)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
+
+            Canvas { context, size in
+                let step: CGFloat = 60
+                let dotSize: CGFloat = 2.0
+
+                for y in stride(from: 0, through: size.height + step, by: step) {
+                    for x in stride(from: 0, through: size.width + step, by: step) {
+                        let center = CGPoint(x: x, y: y)
+
+                        let dot = Path(ellipseIn: CGRect(x: center.x - dotSize/2, y: center.y - dotSize/2, width: dotSize, height: dotSize))
+                        context.fill(dot, with: .color(Color.black.opacity(0.045)))
+
+                        var star = Path()
+                        let r1: CGFloat = 11
+                        let r2: CGFloat = 5
+                        let points = 16
+                        for i in 0..<points {
+                            let angle = (CGFloat(i) * (2 * .pi / CGFloat(points))) - .pi/2
+                            let r = (i % 2 == 0) ? r1 : r2
+                            let p = CGPoint(x: center.x + cos(angle)*r, y: center.y + sin(angle)*r)
+                            if i == 0 { star.move(to: p) } else { star.addLine(to: p) }
+                        }
+                        star.closeSubpath()
+                        context.stroke(star, with: .color(Color.black.opacity(0.03)), lineWidth: 1)
                     }
-                case .success(let img):
-                    img.resizable()
-                        .scaledToFill()
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .clipped()
-                case .failure:
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .fill(Color(.secondarySystemBackground))
-                        Image(systemName: "photo")
-                            .foregroundColor(.secondary)
-                    }
-                @unknown default:
-                    EmptyView()
                 }
             }
-        } else {
-            ZStack {
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(Color(.secondarySystemBackground))
-                Image(systemName: "photo")
-                    .foregroundColor(.secondary)
-            }
+            .ignoresSafeArea()
         }
     }
 }

@@ -3,6 +3,7 @@
 //  Halal Map Prime
 //
 //  Created by Zaid Nahleh on 2026-01-04.
+//  Updated by Zaid Nahleh on 2026-01-05.
 //  Copyright © 2026 Zaid Nahleh.
 //  All rights reserved.
 //
@@ -69,33 +70,33 @@ enum HMPAdPlanKind: String, Identifiable, CaseIterable, Codable {
     var placementTextEN: String {
         switch self {
         case .freeOnce:
-            return "Featured like Prime • Appears on Home, Ads & Map"
+            return "Appears on Home like a normal ad (30 days)"
         case .weekly:
-            return "Appears in Ads list + Map"
+            return "Short campaign • 7 days"
         case .monthly:
-            return "Higher priority in Ads list + Map"
+            return "Standard campaign • 30 days"
         case .prime:
-            return "Top placement • Home banner + Ads + Map"
+            return "Top placement • Featured slider on Home (30 days)"
         }
     }
 
     var placementTextAR: String {
         switch self {
         case .freeOnce:
-            return "مميز مثل Prime • يظهر في الرئيسية والإعلانات والخريطة"
+            return "يظهر في الرئيسية كإعلان عادي (30 يوم)"
         case .weekly:
-            return "يظهر في صفحة الإعلانات + الخريطة"
+            return "حملة قصيرة • 7 أيام"
         case .monthly:
-            return "أولوية أعلى في الإعلانات + الخريطة"
+            return "حملة قياسية • 30 يوم"
         case .prime:
-            return "أعلى ظهور • بانر رئيسي + إعلانات + خريطة"
+            return "أعلى ظهور • سلايدر الإعلانات المميزة في الرئيسية (30 يوم)"
         }
     }
 
     // MARK: - Featured
     var isFeatured: Bool {
         switch self {
-        case .freeOnce: return true   // لجذب المستخدم
+        case .freeOnce: return false
         case .weekly:   return false
         case .monthly:  return false
         case .prime:    return true

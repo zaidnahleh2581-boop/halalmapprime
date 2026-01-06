@@ -3,8 +3,8 @@
 //  Halal Map Prime
 //
 //  Created by Zaid Nahleh on 2025-12-23.
-//  Updated by Zaid Nahleh on 2025-12-29.
-//  Copyright © 2025 Zaid Nahleh.
+//  Updated by Zaid Nahleh on 2026-01-05.
+//  Copyright © 2026 Zaid Nahleh.
 //  All rights reserved.
 //
 
@@ -15,6 +15,8 @@ struct MainTabView: View {
     @EnvironmentObject var lang: LanguageManager
     @EnvironmentObject var router: AppRouter
 
+    @StateObject private var adsStore = AdsStore()   // ✅ Shared store for Home + Ads
+
     private func L(_ ar: String, _ en: String) -> String { lang.isArabic ? ar : en }
 
     var body: some View {
@@ -23,6 +25,7 @@ struct MainTabView: View {
             // 0) Home
             NavigationStack {
                 HomeOverviewScreen()
+                    .environmentObject(adsStore) // ✅ inject
             }
             .tabItem {
                 Label(L("الرئيسية", "Home"), systemImage: "house.fill")
@@ -41,6 +44,7 @@ struct MainTabView: View {
             // 2) Ads
             NavigationStack {
                 AdsHomeView()
+                    .environmentObject(adsStore) // ✅ inject
             }
             .tabItem {
                 Label(L("إعلانات", "Ads"), systemImage: "megaphone.fill")

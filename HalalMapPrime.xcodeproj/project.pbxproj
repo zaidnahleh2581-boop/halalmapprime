@@ -29,7 +29,7 @@
 		153BA5F12F0532C5000D22FD /* MyEventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153BA5F02F0532C5000D22FD /* MyEventsView.swift */; };
 		153BA5F32F0532E8000D22FD /* MyEventsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153BA5F22F0532E8000D22FD /* MyEventsViewModel.swift */; };
 		153BA6552F05677E000D22FD /* AdsPrivacyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153BA6542F05677E000D22FD /* AdsPrivacyView.swift */; };
-		153BA6752F06A648000D22FD /*  FreeAdStateStore  .swift in Sources */ = {isa = PBXBuildFile; fileRef = 153BA6742F06A648000D22FD /*  FreeAdStateStore  .swift */; };
+		153BA6752F06A648000D22FD /* FreeAdStateStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153BA6742F06A648000D22FD /* FreeAdStateStore.swift */; };
 		153BA6772F06BA1B000D22FD /* IAPProducts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153BA6762F06BA1B000D22FD /* IAPProducts.swift */; };
 		153BA67B2F06BA7A000D22FD /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153BA67A2F06BA7A000D22FD /* PurchaseManager.swift */; };
 		153BA67D2F06BABB000D22FD /* PaidAdsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153BA67C2F06BABB000D22FD /* PaidAdsScreen.swift */; };
@@ -81,7 +81,9 @@
 		15B48CF32EE1E50300A88AB7 /* GooglePlacesModelsswift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B48CF22EE1E50300A88AB7 /* GooglePlacesModelsswift.swift */; };
 		15C0B4BB2EFC8F8600532F0F /* FiLocationManagerle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15C0B4BA2EFC8F8600532F0F /* FiLocationManagerle.swift */; };
 		15C0B4BD2EFC8FC200532F0F /* LocationPermissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15C0B4BC2EFC8FC200532F0F /* LocationPermissionView.swift */; };
-		15C0B4C02EFCA2FC00532F0F /* AppLocationManager .swift in Sources */ = {isa = PBXBuildFile; fileRef = 15C0B4BF2EFCA2FC00532F0F /* AppLocationManager .swift */; };
+		15C0B4C02EFCA2FC00532F0F /* AppLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15C0B4BF2EFCA2FC00532F0F /* AppLocationManager.swift */; };
+		15C62E132F0D3DBC00702399 /* AddAddressPremiumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15C62E122F0D3DBC00702399 /* AddAddressPremiumView.swift */; };
+		15C62E152F0D416F00702399 /* AdPreviewScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15C62E142F0D416F00702399 /* AdPreviewScreen.swift */; };
 		15CEB1F62EE78A810035A83D /* EventAdsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15CEB1F52EE78A810035A83D /* EventAdsService.swift */; };
 		15CEB1F82EE78AB00035A83D /* EventAdComposerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15CEB1F72EE78AB00035A83D /* EventAdComposerView.swift */; };
 		15CEB2042EE7C5DF0035A83D /* NoticeBoardViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15CEB2032EE7C5DF0035A83D /* NoticeBoardViews.swift */; };
@@ -117,7 +119,7 @@
 		153BA5F02F0532C5000D22FD /* MyEventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyEventsView.swift; sourceTree = "<group>"; };
 		153BA5F22F0532E8000D22FD /* MyEventsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyEventsViewModel.swift; sourceTree = "<group>"; };
 		153BA6542F05677E000D22FD /* AdsPrivacyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdsPrivacyView.swift; sourceTree = "<group>"; };
-		153BA6742F06A648000D22FD /*  FreeAdStateStore  .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = " FreeAdStateStore  .swift"; sourceTree = "<group>"; };
+		153BA6742F06A648000D22FD /* FreeAdStateStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeAdStateStore.swift; sourceTree = "<group>"; };
 		153BA6762F06BA1B000D22FD /* IAPProducts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPProducts.swift; sourceTree = "<group>"; };
 		153BA67A2F06BA7A000D22FD /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
 		153BA67C2F06BABB000D22FD /* PaidAdsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaidAdsScreen.swift; sourceTree = "<group>"; };
@@ -162,7 +164,9 @@
 		15B48CF22EE1E50300A88AB7 /* GooglePlacesModelsswift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GooglePlacesModelsswift.swift; sourceTree = SOURCE_ROOT; };
 		15C0B4BA2EFC8F8600532F0F /* FiLocationManagerle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiLocationManagerle.swift; sourceTree = SOURCE_ROOT; };
 		15C0B4BC2EFC8FC200532F0F /* LocationPermissionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPermissionView.swift; sourceTree = SOURCE_ROOT; };
-		15C0B4BF2EFCA2FC00532F0F /* AppLocationManager .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppLocationManager .swift"; sourceTree = "<group>"; };
+		15C0B4BF2EFCA2FC00532F0F /* AppLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLocationManager.swift; sourceTree = "<group>"; };
+		15C62E122F0D3DBC00702399 /* AddAddressPremiumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAddressPremiumView.swift; sourceTree = "<group>"; };
+		15C62E142F0D416F00702399 /* AdPreviewScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdPreviewScreen.swift; sourceTree = "<group>"; };
 		15CEB1F52EE78A810035A83D /* EventAdsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventAdsService.swift; sourceTree = "<group>"; };
 		15CEB1F72EE78AB00035A83D /* EventAdComposerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventAdComposerView.swift; sourceTree = "<group>"; };
 		15CEB2032EE7C5DF0035A83D /* NoticeBoardViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeBoardViews.swift; sourceTree = "<group>"; };
@@ -262,7 +266,7 @@
 				153BA5E82F04AED8000D22FD /* MonthlyFreeGate.swift */,
 				153BA67E2F06CEC4000D22FD /* LifetimeFreePlaceGate.swift */,
 				155C3FE52F0A8F48009EEB95 /* FreeMonthlyAdFormView.swift */,
-				153BA6742F06A648000D22FD /*  FreeAdStateStore  .swift */,
+				153BA6742F06A648000D22FD /* FreeAdStateStore.swift */,
 				155C40052F0B21B4009EEB95 /* FreeOnceGateStore.swift */,
 			);
 			path = "Free Ads";
@@ -293,6 +297,8 @@
 			isa = PBXGroup;
 			children = (
 				155C40032F0B1424009EEB95 /* HMPAd.swift */,
+				15C62E122F0D3DBC00702399 /* AddAddressPremiumView.swift */,
+				15C62E142F0D416F00702399 /* AdPreviewScreen.swift */,
 			);
 			path = "HMP ads";
 			sourceTree = "<group>";
@@ -336,7 +342,7 @@
 				15B3D4B92EFDAF0100704BB6 /* deen */,
 				15A0D7A32EE0BBD90063ED79 /* GoogleService-Info.plist */,
 				15A0D7752EE055040063ED79 /* HalalMapPrime */,
-				15C0B4BE2EFCA1F500532F0F /* 	Managers */,
+				15C0B4BE2EFCA1F500532F0F /* Managers */,
 				151BD9EB2EE596C00065F10C /* ADS */,
 				15A0D7832EE059E60063ED79 /* services */,
 				151BD9E02EE520AA0065F10C /* language */,
@@ -407,18 +413,18 @@
 			path = deen;
 			sourceTree = "<group>";
 		};
-		15C0B4BE2EFCA1F500532F0F /* 	Managers */ = {
+		15C0B4BE2EFCA1F500532F0F /* Managers */ = {
 			isa = PBXGroup;
 			children = (
 				15109F8C2EFD62510068DFE3 /* AppRouter.swift */,
-				15C0B4BF2EFCA2FC00532F0F /* AppLocationManager .swift */,
+				15C0B4BF2EFCA2FC00532F0F /* AppLocationManager.swift */,
 				15F1CE5C2F035432007C72CA /* MonthlyEventPaywallView.swift */,
 				153BA67A2F06BA7A000D22FD /* PurchaseManager.swift */,
 				153BA5C62F04084F000D22FD /* IAPManager.swift */,
 				153BA6762F06BA1B000D22FD /* IAPProducts.swift */,
 				153BA5D52F046828000D22FD /* StoreKit 2 */,
 			);
-			path = "\tManagers";
+			path = Managers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -513,12 +519,13 @@
 				153BA5F12F0532C5000D22FD /* MyEventsView.swift in Sources */,
 				156A32422F00940E00819D25 /* AddPlaceCategory.swift in Sources */,
 				15A0D7882EE05AF00063ED79 /* MapScreen.swift in Sources */,
-				153BA6752F06A648000D22FD /*  FreeAdStateStore  .swift in Sources */,
+				153BA6752F06A648000D22FD /* FreeAdStateStore.swift in Sources */,
 				151BD9EA2EE528050065F10C /* AdsHomeScreen.swift in Sources */,
 				15CEB1F62EE78A810035A83D /* EventAdsService.swift in Sources */,
 				151BD9E62EE522760065F10C /* LanguageSelectionView.swift in Sources */,
 				15CEB20A2EE7CC780035A83D /* EventAdsBoardView.swift in Sources */,
 				15CEB2042EE7C5DF0035A83D /* NoticeBoardViews.swift in Sources */,
+				15C62E132F0D3DBC00702399 /* AddAddressPremiumView.swift in Sources */,
 				155C40012F0B0D32009EEB95 /* AdsStore.swift in Sources */,
 				155C40062F0B21B4009EEB95 /* FreeOnceGateStore.swift in Sources */,
 				155C3FE62F0A8F48009EEB95 /* FreeMonthlyAdFormView.swift in Sources */,
@@ -536,6 +543,7 @@
 				151BD9F32EE597800065F10C /* MyAdsView.swift in Sources */,
 				1560165F2F03305000ABC8BB /* EventAdsBoardViewModel.swift in Sources */,
 				15A0D7A02EE068740063ED79 /* BannerAd.swift in Sources */,
+				15C62E152F0D416F00702399 /* AdPreviewScreen.swift in Sources */,
 				15E162482EE0D50500A5C42C /* GooglePlacesService.swift in Sources */,
 				15B3D4C12EFDB6F800704BB6 /* RamadanImsakiyahViewModel.swift in Sources */,
 				151BD9ED2EE596EC0065F10C /* AdsHomeView.swift in Sources */,
@@ -571,7 +579,7 @@
 				153BA5C72F04084F000D22FD /* IAPManager.swift in Sources */,
 				15C0B4BD2EFC8FC200532F0F /* LocationPermissionView.swift in Sources */,
 				15D014372F02C07500D34C64 /* jobLegacyBoard.swift in Sources */,
-				15C0B4C02EFCA2FC00532F0F /* AppLocationManager .swift in Sources */,
+				15C0B4C02EFCA2FC00532F0F /* AppLocationManager.swift in Sources */,
 				15E1624A2EE0D5D600A5C42C /* MapScreenViewModel.swift in Sources */,
 				15109F9A2EFD82B90068DFE3 /* PlaceDetailsSheet.swift in Sources */,
 				151BD9F12EE597570065F10C /* AddHalalPlaceFormView.swift in Sources */,
