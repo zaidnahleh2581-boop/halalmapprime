@@ -3,13 +3,14 @@
 //  Halal Map Prime
 //
 //  Created by Zaid Nahleh on 2026-01-04.
-//  Updated by Zaid Nahleh on 2026-01-05.
+//  Updated by Zaid Nahleh on 2026-01-09.
 //  Copyright © 2026 Zaid Nahleh.
 //  All rights reserved.
 //
 
 import SwiftUI
 import PhotosUI
+import UIKit
 
 struct AdDraft: Equatable {
     var businessName: String = ""
@@ -20,7 +21,7 @@ struct AdDraft: Equatable {
     var addressHint: String = ""
     var selectedAudience: AdAudience = .restaurants
 
-    // ✅ Saved images as Base64
+    // ✅ Saved images as Base64 (Compressed JPEG)
     var imageBase64s: [String] = []
 }
 
@@ -43,6 +44,7 @@ struct CreateAdFormView: View {
 
     private let maxChars: Int = 150
     private let maxImages: Int = 4
+    private let jpegQuality: CGFloat = 0.65
 
     private func L(_ ar: String, _ en: String) -> String { lang.isArabic ? ar : en }
     private var planTitle: String { lang.isArabic ? planDisplayTitleAR : planDisplayTitleEN }
@@ -292,8 +294,12 @@ struct CreateAdFormView: View {
                     return
                 }
 
-                // ✅ Convert selected images -> Base64 & save into draft
-                draft.imageBase64s = []   // مؤقتاً: بدون صور
+                // ✅ Convert selected images -> Base64 (compressed)
+                draft.imageBase64s = imageDatas.compactMap { data in
+                    guard let ui = UIImage(data: data) else { return nil }
+                    guard let jpeg = ui.jpegData(compressionQuality: jpegQuality) else { return nil }
+                    return jpeg.base64EncodedString()
+                }
 
                 onSaved?(draft)
 
