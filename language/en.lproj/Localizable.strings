@@ -1,0 +1,82 @@
+/* 
+  Localizable.strings
+  HalalMapPrime
+
+  Created by zaid nahleh on 1/10/26.
+  
+*/
+"common_more" = "More";
+"common_ok" = "OK";
+"common_done" = "Done";
+"common_distance" = "Distance";
+"common_save" = "Save";
+"common_close" = "Close";
+"common_delete" = "Delete";
+
+"home_ads_near_you" = "Ads near you";
+"home_monthly_spotlight" = "Monthly Spotlight";
+"home_weekly_deals" = "Weekly Deals";
+"home_no_ads_now" = "No ads right now.";
+"home_jobs_near_you" = "Jobs near you";
+"home_loading_jobs" = "Loading jobs…";
+"home_no_jobs_now" = "No jobs right now.";
+"home_near_you" = "Near you";
+"home_new_badge" = "New";
+"home_choose_distance_range" = "Choose distance range";
+"home_job_headline_hiring_cat" = "Hiring • %@";
+"home_job_headline_seeking_cat" = "Seeking • %@";
+"home_job_headline_hiring" = "Hiring";
+"home_job_headline_seeking" = "Seeking";
+
+"ads_title" = "Ads";
+"ads_add_address" = "Add your address";
+"ads_free_ad" = "Free Ad";
+"ads_paid" = "Paid";
+"ads_profile_title" = "Ads Profile";
+"ads_profile_subtitle" = "Create an ad to show your info here";
+"ads_public" = "Public";
+"ads_my_active" = "My Active";
+"ads_community_ads" = "Community Ads";
+"ads_no_public_ads" = "No public ads yet";
+"ads_your_ads" = "Your Ads";
+"ads_no_active_ads" = "No active ads yet";
+"ads_expired_ads" = "Expired Ads";
+"ads_expired" = "Expired";
+"ads_free_used_title" = "Free gift already used";
+"ads_free_used_message" = "You already used your free ad once. Please choose a paid plan.";
+"ads_plan_month" = "MONTH";
+"ads_plan_week" = "WEEK";
+"ads_plan_gift" = "GIFT";
+
+"address_your_address" = "Your Address";
+"address_enter" = "Enter address";
+"address_add_title" = "Add Address";
+
+"jobs_title" = "Jobs";
+"jobs_add_ad_accessibility" = "Add Ad";
+"jobs_search_placeholder" = "Search (city/category/text/phone)";
+"jobs_filter_all" = "All";
+"jobs_filter_looking" = "Looking";
+"jobs_filter_hiring" = "Hiring";
+"jobs_empty_title" = "No ads right now";
+"jobs_empty_subtitle" = "Tap + to add a new ad.";
+"job_type_looking" = "Looking for job";
+"job_type_hiring" = "Hiring";
+"jobs_this_is_your_ad" = "This is your ad — you can delete it.";
+"jobs_delete_ad" = "Delete Ad";
+
+"composer_title" = "Create Job Ad";
+"composer_close" = "Close";
+"composer_ad_type" = "Ad Type";
+"composer_details" = "Details";
+"composer_name" = "Name";
+"composer_city" = "City";
+"composer_phone" = "Phone";
+"composer_category" = "Category";
+"composer_choose_category" = "Choose category";
+"composer_preview" = "Preview";
+"composer_post" = "Post Ad";
+"composer_auto_hide_note" = "Ads auto-hide after 7 days.";
+"composer_error_post" = "Failed to post. Please try again.";
+
+

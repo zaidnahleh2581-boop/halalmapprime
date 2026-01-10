@@ -1,3 +1,13 @@
+//
+//  AdsHomeView.swift
+//  Halal Map Prime
+//
+//  Created by Zaid Nahleh on 2026-01-04.
+//  Updated by Zaid Nahleh on 2026-01-08.
+//  Copyright © 2026 Zaid Nahleh.
+//  All rights reserved.
+//
+
 import SwiftUI
 import UIKit
 
@@ -6,7 +16,9 @@ struct AdsHomeView: View {
     @EnvironmentObject var lang: LanguageManager
     @StateObject private var adsStore = AdsStore()
 
-    @State private var showAddressSheet = false
+    // ✅ Verification Sheet
+    @State private var showVerifySheet = false
+
     @State private var showFreeAdSheet = false
     @State private var showPaidSheet = false
     @State private var showFreeLimitAlert = false
@@ -22,7 +34,7 @@ struct AdsHomeView: View {
                     topButtonsRow
                     profileCard
 
-                    publicAdsSection   // ✅ NEW
+                    publicAdsSection
                     myAdsSection
                     expiredSection
                 }
@@ -31,7 +43,7 @@ struct AdsHomeView: View {
             }
             .navigationTitle(L("الإعلانات", "Ads"))
             .navigationBarTitleDisplayMode(.inline)
-            .onAppear { adsStore.load() } // ✅ now loads public + my
+            .onAppear { adsStore.load() }
         }
         .sheet(isPresented: $showPaidSheet) {
             NavigationStack {
@@ -54,9 +66,19 @@ struct AdsHomeView: View {
                 .environmentObject(lang)
             }
         }
-        .sheet(isPresented: $showAddressSheet) {
-            NavigationStack { HMPAddressSheet().environmentObject(lang) }
+
+        // ✅ NEW: Verify Sheet
+        .sheet(isPresented: $showVerifySheet) {
+            NavigationStack {
+                VerifyBusinessSheet(
+                    langIsArabic: lang.isArabic,
+                    defaultBusinessName: adsStore.profileBusinessName ?? "",
+                    defaultCategory: "",
+                    defaultAddress: ""
+                )
+            }
         }
+
         .sheet(isPresented: $showAdPreview) {
             if let ad = selectedAd {
                 NavigationStack { AdPreviewScreen(langIsArabic: lang.isArabic, ad: ad) }
@@ -71,13 +93,18 @@ struct AdsHomeView: View {
         }
     }
 
+    // MARK: - Top Buttons
+
     private var topButtonsRow: some View {
         HStack(spacing: 10) {
 
-            Button { showAddressSheet = true } label: {
-                topPill(title: L("أضف عنوانك", "Add your address"),
-                        systemImage: "mappin.and.ellipse",
-                        tint: .blue)
+            // ✅ بدل "أضف عنوانك" صار "توثيق المحل"
+            Button { showVerifySheet = true } label: {
+                topPill(
+                    title: L("توثيق المحل", "Get Verified"),
+                    systemImage: "checkmark.seal.fill",
+                    tint: .blue
+                )
             }
             .buttonStyle(.plain)
 
@@ -104,6 +131,8 @@ struct AdsHomeView: View {
         }
         .padding(.horizontal, 14)
     }
+
+    // MARK: - Profile Card
 
     private var profileCard: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -144,7 +173,8 @@ struct AdsHomeView: View {
         .padding(.horizontal, 14)
     }
 
-    // ✅ NEW: Public Ads
+    // MARK: - Public Ads
+
     private var publicAdsSection: some View {
         VStack(alignment: .leading, spacing: 10) {
 
@@ -167,7 +197,7 @@ struct AdsHomeView: View {
                             selectedAd = ad
                             showAdPreview = true
                         } label: {
-                            adsDashboardCard(ad) // reuse same card UI
+                            adsDashboardCard(ad)
                         }
                         .buttonStyle(.plain)
                     }
@@ -177,6 +207,8 @@ struct AdsHomeView: View {
             }
         }
     }
+
+    // MARK: - My Ads
 
     private var myAdsSection: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -211,6 +243,8 @@ struct AdsHomeView: View {
         }
     }
 
+    // MARK: - Expired
+
     private var expiredSection: some View {
         VStack(alignment: .leading, spacing: 10) {
             if adsStore.expiredMyAds.isEmpty { return AnyView(EmptyView()) }
@@ -233,7 +267,8 @@ struct AdsHomeView: View {
         }
     }
 
-    // same cards (you already have them)
+    // MARK: - Cards
+
     private func adsDashboardCard(_ ad: HMPAd) -> some View {
         VStack(alignment: .leading, spacing: 10) {
 
@@ -292,6 +327,8 @@ struct AdsHomeView: View {
         .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(Color(.secondarySystemBackground)))
     }
 
+    // MARK: - UI Helpers
+
     private func planBadge(_ plan: HMPAdPlanKind) -> some View {
         let title: String
         let bg: Color
@@ -341,27 +378,83 @@ struct AdsHomeView: View {
     private func L(_ ar: String, _ en: String) -> String { lang.isArabic ? ar : en }
 }
 
-// Address Sheet (same)
-private struct HMPAddressSheet: View {
-    @EnvironmentObject var lang: LanguageManager
+// MARK: - Verify Business Sheet (NEW)
+
+private struct VerifyBusinessSheet: View {
+
     @Environment(\.dismiss) private var dismiss
-    @State private var addressText: String = ""
+
+    let langIsArabic: Bool
+    let defaultBusinessName: String
+    let defaultCategory: String
+    let defaultAddress: String
+
+    @State private var businessName: String = ""
+    @State private var categoryName: String = ""
+    @State private var addressLine: String = ""
+
+    private func L(_ ar: String, _ en: String) -> String { langIsArabic ? ar : en }
 
     var body: some View {
-        Form {
-            Section(header: Text(lang.isArabic ? "عنوانك" : "Your Address")) {
-                TextField(lang.isArabic ? "اكتب العنوان" : "Enter address", text: $addressText)
-            }
-            Section {
-                Button(lang.isArabic ? "حفظ" : "Save") { dismiss() }
+        VStack(spacing: 14) {
+
+            Image(systemName: "checkmark.seal.fill")
+                .font(.system(size: 46, weight: .semibold))
+                .foregroundStyle(.blue)
+                .padding(.top, 8)
+
+            Text(L("توثيق المحل", "Get Verified"))
+                .font(.title2.bold())
+
+            Text(L(
+                "لتفعيل شارة (Verified) وزيادة ثقة العملاء، أرسل لنا مستند يثبت أن منتجاتك حلال (مثل فاتورة مورد/شهادة).",
+                "To get a Verified badge and build customer trust, please send a document proving halal sourcing (invoice/certificate)."
+            ))
+            .font(.footnote)
+            .foregroundStyle(.secondary)
+            .multilineTextAlignment(.center)
+            .padding(.horizontal, 18)
+
+            Form {
+                Section(header: Text(L("بيانات المحل", "Business Details"))) {
+                    TextField(L("اسم المحل", "Business name"), text: $businessName)
+                    TextField(L("التصنيف", "Category"), text: $categoryName)
+                    TextField(L("العنوان", "Address"), text: $addressLine)
+                }
+
+                Section {
+                    Button {
+                        WhatsAppHelper.openVerifyChat(
+                            langIsArabic: langIsArabic,
+                            placeName: businessName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                                ? (langIsArabic ? "غير محدد" : "Not specified")
+                                : businessName,
+                            categoryName: categoryName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                                ? (langIsArabic ? "غير محدد" : "Not specified")
+                                : categoryName,
+                            addressLine: addressLine.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                                ? (langIsArabic ? "غير محدد" : "Not specified")
+                                : addressLine
+                        )
+                    } label: {
+                        HStack {
+                            Image(systemName: "message.fill")
+                            Text(L("إرسال عبر واتساب", "Send via WhatsApp"))
+                        }
+                    }
+
+                    Button(role: .cancel) {
+                        dismiss()
+                    } label: {
+                        Text(L("إغلاق", "Close"))
+                    }
+                }
             }
         }
-        .navigationTitle(lang.isArabic ? "أضف عنوانك" : "Add Address")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button(lang.isArabic ? "إغلاق" : "Close") { dismiss() }
-            }
+        .onAppear {
+            businessName = defaultBusinessName
+            categoryName = defaultCategory
+            addressLine = defaultAddress
         }
     }
 }

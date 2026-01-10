@@ -1,0 +1,35 @@
+/* 
+  Localizable.strings
+  HalalMapPrime
+
+  Created by zaid nahleh on 1/10/26.
+  
+*/
+"common_more" = "Plus";
+"common_ok" = "OK";
+"common_done" = "Terminé";
+"common_distance" = "Distance";
+"common_save" = "Enregistrer";
+"common_close" = "Fermer";
+"common_delete" = "Supprimer";
+
+"home_ads_near_you" = "Annonces près de vous";
+"home_monthly_spotlight" = "À la une mensuelle";
+"home_weekly_deals" = "Offres hebdomadaires";
+"home_no_ads_now" = "Aucune annonce pour le moment";
+"home_jobs_near_you" = "Emplois près de vous";
+"home_loading_jobs" = "Chargement des emplois…";
+"home_no_jobs_now" = "Aucun emploi pour le moment";
+"home_near_you" = "Près de vous";
+"home_new_badge" = "Nouveau";
+"home_choose_distance_range" = "Choisir la distance";
+"home_job_headline_hiring_cat" = "Recrutement • %@";
+"home_job_headline_seeking_cat" = "Recherche • %@";
+"home_job_headline_hiring" = "Recrutement";
+"home_job_headline_seeking" = "Recherche";
+
+"ads_title" = "Annonces";
+"ads_add_address" = "Ajouter votre adresse";
+"ads_free_ad" = "Annonce gratuite";
+"ads_paid" = "Payant";
+"ads_profile_title" = "Profil publicitaire";

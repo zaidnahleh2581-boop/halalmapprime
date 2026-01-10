@@ -1,0 +1,80 @@
+/* 
+  Localizable.strings
+  HalalMapPrime
+
+  Created by zaid nahleh on 1/10/26.
+  
+*/
+"common_more" = "المزيد";
+"common_ok" = "موافق";
+"common_done" = "تم";
+"common_distance" = "المسافة";
+"common_save" = "حفظ";
+"common_close" = "إغلاق";
+"common_delete" = "حذف";
+
+"home_ads_near_you" = "إعلانات قريبة منك";
+"home_monthly_spotlight" = "إعلانات شهرية";
+"home_weekly_deals" = "إعلانات أسبوعية";
+"home_no_ads_now" = "لا توجد إعلانات حالياً.";
+"home_jobs_near_you" = "وظائف قريبة منك";
+"home_loading_jobs" = "جاري تحميل الوظائف…";
+"home_no_jobs_now" = "لا توجد وظائف حالياً.";
+"home_near_you" = "قريب منك";
+"home_new_badge" = "جديد";
+"home_choose_distance_range" = "حدد نطاق المسافة";
+"home_job_headline_hiring_cat" = "مطلوب موظف • %@";
+"home_job_headline_seeking_cat" = "أبحث عن عمل • %@";
+"home_job_headline_hiring" = "مطلوب موظف";
+"home_job_headline_seeking" = "أبحث عن عمل";
+
+"ads_title" = "الإعلانات";
+"ads_add_address" = "أضف عنوانك";
+"ads_free_ad" = "إعلان مجاني";
+"ads_paid" = "مدفوع";
+"ads_profile_title" = "حساب الإعلانات";
+"ads_profile_subtitle" = "أنشئ إعلان لتظهر بياناتك هنا";
+"ads_public" = "مجتمع";
+"ads_my_active" = "نشط";
+"ads_community_ads" = "إعلانات المجتمع";
+"ads_no_public_ads" = "لا يوجد إعلانات عامة الآن";
+"ads_your_ads" = "إعلاناتك";
+"ads_no_active_ads" = "لا يوجد إعلانات نشطة بعد";
+"ads_expired_ads" = "إعلانات منتهية";
+"ads_expired" = "منتهي";
+"ads_free_used_title" = "تم استخدام الهدية المجانية";
+"ads_free_used_message" = "لقد استخدمت إعلانك المجاني مرة واحدة. الآن يمكنك اختيار خطة مدفوعة.";
+"ads_plan_month" = "شهري";
+"ads_plan_week" = "أسبوعي";
+"ads_plan_gift" = "هدية";
+
+"address_your_address" = "عنوانك";
+"address_enter" = "اكتب العنوان";
+"address_add_title" = "أضف عنوانك";
+
+"jobs_title" = "الوظائف";
+"jobs_add_ad_accessibility" = "إضافة إعلان";
+"jobs_search_placeholder" = "ابحث (مدينة/تصنيف/نص/هاتف)";
+"jobs_filter_all" = "الكل";
+"jobs_filter_looking" = "أبحث عن عمل";
+"jobs_filter_hiring" = "أبحث عن موظف";
+"jobs_empty_title" = "لا يوجد إعلانات حالياً";
+"jobs_empty_subtitle" = "اضغط + لإضافة إعلان جديد.";
+"job_type_looking" = "أبحث عن عمل";
+"job_type_hiring" = "أبحث عن موظف";
+"jobs_this_is_your_ad" = "هذا إعلانك — يمكنك حذفه.";
+"jobs_delete_ad" = "حذف الإعلان";
+
+"composer_title" = "إضافة إعلان وظيفة";
+"composer_close" = "إغلاق";
+"composer_ad_type" = "نوع الإعلان";
+"composer_details" = "المعلومات";
+"composer_name" = "الاسم";
+"composer_city" = "المدينة";
+"composer_phone" = "رقم الهاتف";
+"composer_category" = "التصنيف";
+"composer_choose_category" = "اختر التصنيف";
+"composer_preview" = "معاينة الإعلان";
+"composer_post" = "نشر الإعلان";
+"composer_auto_hide_note" = "سيتم حذف الإعلانات تلقائياً من العرض بعد ٧ أيام.";
+"composer_error_post" = "حصل خطأ أثناء النشر. حاول مرة ثانية.";

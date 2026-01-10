@@ -1,0 +1,73 @@
+/* 
+  Localizable.strings
+  HalalMapPrime
+
+  Created by zaid nahleh on 1/10/26.
+  
+*/
+/* Localizable.strings (Spanish) */
+
+"common_more" = "Más";
+"common_ok" = "Aceptar";
+"common_done" = "Listo";
+"common_distance" = "Distancia";
+"common_save" = "Guardar";
+"common_close" = "Cerrar";
+"common_delete" = "Eliminar";
+
+"home_ads_near_you" = "Anuncios cerca de ti";
+"home_monthly_spotlight" = "Destacado mensual";
+"home_weekly_deals" = "Ofertas semanales";
+"home_no_ads_now" = "No hay anuncios ahora.";
+"home_jobs_near_you" = "Trabajos cerca de ti";
+"home_loading_jobs" = "Cargando trabajos…";
+"home_no_jobs_now" = "No hay trabajos ahora.";
+"home_near_you" = "Cerca de ti";
+"home_new_badge" = "Nuevo";
+"home_choose_distance_range" = "Elige el rango de distancia";
+"home_job_headline_hiring_cat" = "Contratando • %@";
+"home_job_headline_seeking_cat" = "Buscando • %@";
+"home_job_headline_hiring" = "Contratando";
+"home_job_headline_seeking" = "Buscando";
+
+"ads_title" = "Anuncios";
+"ads_add_address" = "Agregar tu dirección";
+"ads_free_ad" = "Anuncio gratis";
+"ads_paid" = "De pago";
+"ads_profile_title" = "Perfil de anuncios";
+
+"ads_free_gift_used_title" = "Regalo gratis ya usado";
+"ads_free_gift_used_message" = "Ya usaste tu anuncio gratis una vez. Elige un plan de pago.";
+
+"ads_public_section_title" = "Anuncios de la comunidad";
+"ads_my_section_title" = "Tus anuncios";
+"ads_expired_section_title" = "Anuncios vencidos";
+"ads_no_public_ads" = "Aún no hay anuncios públicos";
+"ads_no_active_ads" = "Aún no hay anuncios activos";
+"ads_expired_badge" = "Vencido";
+
+"jobs_title" = "Trabajos";
+"jobs_search_placeholder" = "Buscar (ciudad/categoría/texto/teléfono)";
+"jobs_filter_all" = "Todos";
+"jobs_filter_looking" = "Buscando";
+"jobs_filter_hiring" = "Contratando";
+"jobs_empty_title" = "No hay anuncios ahora";
+"jobs_empty_subtitle" = "Pulsa + para agregar un nuevo anuncio.";
+"jobs_add_ad_accessibility" = "Agregar anuncio";
+"jobs_delete" = "Eliminar";
+"jobs_delete_ad" = "Eliminar anuncio";
+"jobs_this_is_your_ad" = "Este es tu anuncio — puedes eliminarlo.";
+
+"composer_title" = "Crear anuncio de trabajo";
+"composer_close" = "Cerrar";
+"composer_ad_type" = "Tipo de anuncio";
+"composer_details" = "Detalles";
+"composer_name" = "Nombre";
+"composer_city" = "Ciudad";
+"composer_phone" = "Teléfono";
+"composer_category" = "Categoría";
+"composer_choose_category" = "Elige una categoría";
+"composer_preview" = "Vista previa";
+"composer_post" = "Publicar anuncio";
+"composer_auto_hide_note" = "Los anuncios se ocultan automáticamente después de 7 días.";
+"composer_error_post" = "No se pudo publicar. Inténtalo de nuevo.";

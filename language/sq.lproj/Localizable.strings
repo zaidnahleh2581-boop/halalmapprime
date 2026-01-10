@@ -1,0 +1,35 @@
+/* 
+  Localizable.strings
+  HalalMapPrime
+
+  Created by zaid nahleh on 1/10/26.
+  
+*/
+"common_more" = "Më shumë";
+"common_ok" = "OK";
+"common_done" = "U krye";
+"common_distance" = "Distanca";
+"common_save" = "Ruaj";
+"common_close" = "Mbyll";
+"common_delete" = "Fshi";
+
+"home_ads_near_you" = "Reklama pranë jush";
+"home_monthly_spotlight" = "Në fokus mujor";
+"home_weekly_deals" = "Oferta javore";
+"home_no_ads_now" = "Nuk ka reklama tani";
+"home_jobs_near_you" = "Punë pranë jush";
+"home_loading_jobs" = "Duke ngarkuar punët…";
+"home_no_jobs_now" = "Nuk ka punë tani";
+"home_near_you" = "Pranë jush";
+"home_new_badge" = "E re";
+"home_choose_distance_range" = "Zgjidh distancën";
+"home_job_headline_hiring_cat" = "Punësim • %@";
+"home_job_headline_seeking_cat" = "Kërkon punë • %@";
+"home_job_headline_hiring" = "Punësim";
+"home_job_headline_seeking" = "Kërkon punë";
+
+"ads_title" = "Reklama";
+"ads_add_address" = "Shto adresën";
+"ads_free_ad" = "Reklamë falas";
+"ads_paid" = "Me pagesë";
+"ads_profile_title" = "Profili i reklamave";
