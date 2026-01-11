@@ -3,8 +3,8 @@
 //  Halal Map Prime
 //
 //  Created by Zaid Nahleh on 2025-12-23.
-//  Updated by Zaid Nahleh on 2025-12-25.
-//  Copyright © 2025 Zaid Nahleh.
+//  Updated by Zaid Nahleh on 2026-01-11.
+//  Copyright © 2026 Zaid Nahleh.
 //  All rights reserved.
 //
 
@@ -29,7 +29,7 @@ struct FaithToolsScreen: View {
         NavigationStack {
             List {
 
-                // 1) Prayer Times (already working)
+                // 1) Prayer Times
                 Section(header: Text(L("أوقات الصلاة", "Prayer times"))) {
                     VStack(alignment: .leading, spacing: 10) {
 
@@ -45,15 +45,19 @@ struct FaithToolsScreen: View {
                             Button {
                                 prayerVM.refresh(from: locationManager.lastLocation, isArabic: lang.isArabic)
                             } label: {
-                                if prayerVM.isLoading { ProgressView().scaleEffect(0.9) }
-                                else { Image(systemName: "arrow.clockwise") }
+                                if prayerVM.isLoading {
+                                    ProgressView().scaleEffect(0.9)
+                                } else {
+                                    Image(systemName: "arrow.clockwise")
+                                }
                             }
                             .buttonStyle(.plain)
                             .disabled(prayerVM.isLoading)
                         }
 
                         if let updated = prayerVM.lastUpdated {
-                            Text(L("آخر تحديث: \(formatTime(updated))", "Last updated: \(formatTime(updated))"))
+                            Text(L("آخر تحديث: \(formatTime(updated))",
+                                   "Last updated: \(formatTime(updated))"))
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
@@ -67,7 +71,8 @@ struct FaithToolsScreen: View {
                                 HStack {
                                     Text(p.name)
                                     Spacer()
-                                    Text(p.time).foregroundColor(.secondary)
+                                    Text(p.time)
+                                        .foregroundColor(.secondary)
                                 }
                                 .font(.footnote)
                             }
@@ -76,36 +81,46 @@ struct FaithToolsScreen: View {
                     .padding(.vertical, 4)
                 }
 
-                // 2) Adhan & reminders (already working)
+                // 2) Adhan
                 Section(header: Text(L("الأذان والتنبيهات", "Adhan & reminders"))) {
                     Button {
                         showAdhanInfo = true
                     } label: {
                         HStack(spacing: 10) {
-                            Image(systemName: "bell.badge.fill").foregroundColor(.orange)
+                            Image(systemName: "bell.badge.fill")
+                                .foregroundColor(.orange)
+
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(L("إعدادات الأذان", "Adhan settings")).font(.headline)
+                                Text(L("إعدادات الأذان", "Adhan settings"))
+                                    .font(.headline)
+
                                 Text(L("فعّل تنبيهات الصلاة واختر الصلوات ووقت التذكير.",
                                        "Enable prayer reminders, choose prayers and reminder time."))
-                                .font(.caption).foregroundColor(.secondary)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
                             }
                         }
                         .padding(.vertical, 4)
                     }
                 }
 
-                // ✅ 3) Ramadan & Imsakiyah (NOW REAL)
+                // 3) Ramadan
                 Section(header: Text(L("رمضان والإمساكية", "Ramadan & Imsakiyah"))) {
                     Button {
                         showRamadanInfo = true
                     } label: {
                         HStack(spacing: 10) {
-                            Image(systemName: "moonphase.waning.crescent").foregroundColor(.teal)
+                            Image(systemName: "moonphase.waning.crescent")
+                                .foregroundColor(.teal)
+
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(L("إمساكية رمضان", "Ramadan Imsakiyah")).font(.headline)
+                                Text(L("إمساكية رمضان", "Ramadan Imsakiyah"))
+                                    .font(.headline)
+
                                 Text(L("جدول كامل: إمساك / فجر / إفطار حسب موقعك.",
                                        "Full schedule: Imsak / Fajr / Iftar based on your location."))
-                                .font(.caption).foregroundColor(.secondary)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
                             }
                         }
                         .padding(.vertical, 4)
@@ -116,12 +131,17 @@ struct FaithToolsScreen: View {
                 Section(header: Text(L("اتجاه القبلة", "Qibla direction"))) {
                     Button { showQiblaInfo = true } label: {
                         HStack(spacing: 10) {
-                            Image(systemName: "location.north.line.fill").foregroundColor(.green)
+                            Image(systemName: "location.north.line.fill")
+                                .foregroundColor(.green)
+
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(L("بوصلة القبلة", "Qibla compass")).font(.headline)
+                                Text(L("بوصلة القبلة", "Qibla compass"))
+                                    .font(.headline)
+
                                 Text(L("قريباً بوصلة تفاعلية دقيقة.",
                                        "Soon: an accurate interactive compass."))
-                                .font(.caption).foregroundColor(.secondary)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
                             }
                         }
                         .padding(.vertical, 4)
@@ -132,24 +152,21 @@ struct FaithToolsScreen: View {
                 Section(header: Text(L("زكاة المال", "Zakat calculator"))) {
                     Button { showZakatCalculator = true } label: {
                         HStack(spacing: 10) {
-                            Image(systemName: "percent").foregroundColor(.yellow)
+                            Image(systemName: "percent")
+                                .foregroundColor(.yellow)
+
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(L("حاسبة الزكاة", "Zakat calculator")).font(.headline)
+                                Text(L("حاسبة الزكاة", "Zakat calculator"))
+                                    .font(.headline)
+
                                 Text(L("قريباً: حساب دقيق وسهل.",
                                        "Soon: easy and accurate calculation."))
-                                .font(.caption).foregroundColor(.secondary)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
                             }
                         }
                         .padding(.vertical, 4)
                     }
-                }
-
-                // 6) More tools
-                Section(header: Text(L("أدوات إضافية", "More tools"))) {
-                    Label(L("التقويم الهجري والمواسم", "Hijri calendar & seasons"), systemImage: "calendar")
-                        .foregroundColor(.secondary)
-                    Label(L("تنبيهات العشر الأواخر", "Last 10 nights reminders"), systemImage: "sparkles")
-                        .foregroundColor(.secondary)
                 }
             }
             .navigationTitle(L("أدوات المسلم", "Faith tools"))
@@ -162,9 +179,6 @@ struct FaithToolsScreen: View {
             .onChange(of: locationManager.lastLocation) { newLoc in
                 prayerVM.loadIfPossible(from: newLoc, isArabic: lang.isArabic)
             }
-            .onChange(of: lang.current) { _ in
-                prayerVM.refresh(from: locationManager.lastLocation, isArabic: lang.isArabic)
-            }
             .sheet(isPresented: $showAdhanInfo) {
                 AdhanSettingsSheet()
                     .environmentObject(lang)
@@ -175,10 +189,16 @@ struct FaithToolsScreen: View {
                     .environmentObject(lang)
                     .environmentObject(locationManager)
             }
-            .sheet(isPresented: $showQiblaInfo) { QiblaInfoSheet().environmentObject(lang) }
-            .sheet(isPresented: $showZakatCalculator) { ZakatInfoSheet().environmentObject(lang) }
+            .sheet(isPresented: $showQiblaInfo) {
+                QiblaInfoSheet().environmentObject(lang)
+            }
+            .sheet(isPresented: $showZakatCalculator) {
+                ZakatInfoSheet().environmentObject(lang)
+            }
         }
     }
+
+    // MARK: - Sample data
 
     private var samplePrayerTimes: [PrayerTime] {
         [
@@ -199,116 +219,68 @@ struct FaithToolsScreen: View {
     }
 }
 
-// MARK: - ✅ Ramadan Imsakiyah Sheet (NEW REAL UI)
+// MARK: - Ramadan Imsakiyah Sheet
 
 struct RamadanImsakiyahSheet: View {
 
     @EnvironmentObject var lang: LanguageManager
     @EnvironmentObject var locationManager: AppLocationManager
-
     @StateObject private var vm = RamadanImsakiyahViewModel()
 
     private func L(_ ar: String, _ en: String) -> String { lang.isArabic ? ar : en }
 
+    /// ✅ التحويل من 24 ساعة إلى AM/PM
+    private func toAmPm(_ hhmm: String) -> String {
+        let inF = DateFormatter()
+        inF.locale = Locale(identifier: "en_US_POSIX")
+        inF.dateFormat = "HH:mm"
+
+        let outF = DateFormatter()
+        outF.locale = Locale(identifier: lang.isArabic ? "ar" : "en_US_POSIX")
+        outF.dateFormat = "h:mm a"
+
+        guard let date = inF.date(from: hhmm) else { return hhmm }
+        return outF.string(from: date)
+    }
+
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
+            List {
+                Section(header: Text(L("الجدول", "Schedule"))) {
+                    ForEach(vm.days) { d in
+                        VStack(alignment: .leading, spacing: 6) {
 
-                // Header
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Image(systemName: "moonphase.waning.crescent")
-                            .foregroundColor(.teal)
+                            HStack {
+                                Text(lang.isArabic ? d.hijriDateAr : d.hijriDateEn)
+                                    .font(.subheadline.weight(.semibold))
+                                Spacer()
+                                Text(d.gregorianDate)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
 
-                        Text(L("إمساكية رمضان", "Ramadan Imsakiyah"))
-                            .font(.headline)
+                            HStack {
+                                Text(L("إمساك", "Imsak"))
+                                Spacer()
+                                Text(toAmPm(d.imsak))
+                                    .foregroundColor(.secondary)
+                            }
 
-                        Spacer()
+                            HStack {
+                                Text(L("الفجر", "Fajr"))
+                                Spacer()
+                                Text(toAmPm(d.fajr))
+                                    .foregroundColor(.secondary)
+                            }
 
-                        Button {
-                            vm.refresh(from: locationManager.lastLocation)
-                        } label: {
-                            if vm.isLoading { ProgressView().scaleEffect(0.9) }
-                            else { Image(systemName: "arrow.clockwise") }
-                        }
-                        .buttonStyle(.plain)
-                        .disabled(vm.isLoading || locationManager.lastLocation == nil)
-                    }
-
-                    Text(vm.cityLabel ?? L("حسب موقعك", "Based on your location"))
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-
-                    if let updated = vm.lastUpdated {
-                        Text(L("آخر تحديث: \(formatTime(updated))", "Last updated: \(formatTime(updated))"))
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-
-                    if let err = vm.errorMessage {
-                        Text(err)
-                            .font(.footnote)
-                            .foregroundColor(.red)
-                    }
-
-                    if locationManager.lastLocation == nil {
-                        Text(L("لا يوجد موقع بعد. فعّل الموقع أو افتح الخريطة مرة واحدة.", "No location yet. Enable location or open the Map once."))
-                            .font(.footnote)
-                            .foregroundColor(.secondary)
-                    }
-                }
-                .padding()
-
-                Divider()
-
-                // Content
-                if vm.isLoading && vm.days.isEmpty {
-                    VStack(spacing: 12) {
-                        ProgressView()
-                        Text(L("جاري تحميل إمساكية رمضان…", "Loading Ramadan schedule…"))
-                            .font(.footnote)
-                            .foregroundColor(.secondary)
-                    }
-                    .padding(.top, 30)
-                    Spacer()
-                } else {
-                    List {
-                        Section(header: Text(L("الجدول", "Schedule"))) {
-                            ForEach(vm.days) { d in
-                                VStack(alignment: .leading, spacing: 6) {
-                                    HStack {
-                                        Text(d.hijriDate)
-                                            .font(.subheadline.weight(.semibold))
-                                        Spacer()
-                                        Text(d.gregorianDate)
-                                            .font(.caption)
-                                            .foregroundColor(.secondary)
-                                    }
-
-                                    HStack {
-                                        Text(L("إمساك", "Imsak"))
-                                        Spacer()
-                                        Text(d.imsak).foregroundColor(.secondary)
-                                    }
-                                    .font(.footnote)
-
-                                    HStack {
-                                        Text(L("الفجر", "Fajr"))
-                                        Spacer()
-                                        Text(d.fajr).foregroundColor(.secondary)
-                                    }
-                                    .font(.footnote)
-
-                                    HStack {
-                                        Text(L("الإفطار", "Iftar (Maghrib)"))
-                                        Spacer()
-                                        Text(d.maghrib).foregroundColor(.secondary)
-                                    }
-                                    .font(.footnote)
-                                }
-                                .padding(.vertical, 4)
+                            HStack {
+                                Text(L("الإفطار", "Iftar (Maghrib)"))
+                                Spacer()
+                                Text(toAmPm(d.maghrib))
+                                    .foregroundColor(.secondary)
                             }
                         }
+                        .padding(.vertical, 4)
                     }
                 }
             }
@@ -323,12 +295,5 @@ struct RamadanImsakiyahSheet: View {
                 vm.loadIfNeeded(from: newLoc)
             }
         }
-    }
-
-    private func formatTime(_ date: Date) -> String {
-        let f = DateFormatter()
-        f.locale = Locale(identifier: "en_US_POSIX")
-        f.dateFormat = "h:mm a"
-        return f.string(from: date)
     }
 }

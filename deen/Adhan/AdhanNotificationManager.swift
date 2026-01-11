@@ -3,25 +3,28 @@
 //  Halal Map Prime
 //
 //  Created by Zaid Nahleh on 2025-12-25.
-//  Copyright © 2025 Zaid Nahleh.
+//  Updated by Zaid Nahleh on 2026-01-11.
+//  Copyright © 2026 Zaid Nahleh.
 //  All rights reserved.
 //
 
 import Foundation
 import CoreLocation
 import UserNotifications
-import Combine   // ✅ هذا كان ناقص
+import Combine
 
 @MainActor
 final class AdhanNotificationManager: ObservableObject {
 
     static let shared = AdhanNotificationManager()
+    private init() {}
 
     // MARK: - Published
     @Published var permissionGranted: Bool = false
     @Published var lastScheduleMessage: String? = nil
 
-    private init() {}
+    // MARK: - Constants
+    private let adhanIdPrefix = "adhan_"
 
     // MARK: - Permission
 
@@ -45,7 +48,7 @@ final class AdhanNotificationManager: ObservableObject {
         }
     }
 
-    // MARK: - Scheduling
+    // MARK: - Public scheduling entry
 
     func scheduleTodayAndTomorrow(
         location: CLLocation,
@@ -73,35 +76,70 @@ final class AdhanNotificationManager: ObservableObject {
             let today = Date()
             let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today) ?? today
 
-            let t1 = try await fetchTimings(date: today, coordinate: location.coordinate)
-            let t2 = try await fetchTimings(date: tomorrow, coordinate: location.coordinate)
+            let t1 = try await fetchTimings(
+                date: today,
+                coordinate: location.coordinate,
+                method: settings.method
+            )
+
+            let t2 = try await fetchTimings(
+                date: tomorrow,
+                coordinate: location.coordinate,
+                method: settings.method
+            )
 
             await removeAllAdhanNotifications()
 
             var count = 0
-            count += await schedule(for: today, timings: t1, langIsArabic: langIsArabic, settings: settings)
-            count += await schedule(for: tomorrow, timings: t2, langIsArabic: langIsArabic, settings: settings)
+            count += await scheduleDay(
+                date: today,
+                timings: t1,
+                langIsArabic: langIsArabic,
+                settings: settings
+            )
+
+            count += await scheduleDay(
+                date: tomorrow,
+                timings: t2,
+                langIsArabic: langIsArabic,
+                settings: settings
+            )
 
             lastScheduleMessage = langIsArabic
                 ? "تمت جدولة \(count) تنبيه."
                 : "Scheduled \(count) reminders."
 
         } catch {
-            lastScheduleMessage = (langIsArabic ? "فشل الجدولة: " : "Scheduling failed: ")
+            lastScheduleMessage =
+                (langIsArabic ? "فشل الجدولة: " : "Scheduling failed: ")
                 + error.localizedDescription
         }
     }
 
+    // MARK: - Remove only adhan notifications
+
     func removeAllAdhanNotifications() async {
         let center = UNUserNotificationCenter.current()
-        center.removeAllPendingNotificationRequests()
-        center.removeAllDeliveredNotifications()
+
+        let pending = await center.pendingNotificationRequests()
+        let adhanPendingIDs = pending
+            .filter { $0.identifier.hasPrefix(adhanIdPrefix) }
+            .map { $0.identifier }
+
+        center.removePendingNotificationRequests(withIdentifiers: adhanPendingIDs)
+
+        let delivered = await center.deliveredNotifications()
+        let adhanDeliveredIDs = delivered
+            .map { $0.request.identifier }
+            .filter { $0.hasPrefix(adhanIdPrefix) }
+
+        center.removeDeliveredNotifications(withIdentifiers: adhanDeliveredIDs)
     }
 
-    // MARK: - Helpers
+    // MARK: - Schedule one day
 
-    private func schedule(
-        for date: Date,
+    private func scheduleDay(
+        date: Date,
         timings: TimingsDTO,
         langIsArabic: Bool,
         settings: AdhanReminderSettings
@@ -121,23 +159,38 @@ final class AdhanNotificationManager: ObservableObject {
         var scheduled = 0
 
         for (isOn, title, hhmm) in items where isOn {
+
             guard let fireDate = combine(date: date, hhmm: hhmm, minusMinutes: minutesBefore),
                   fireDate > Date()
             else { continue }
 
             let content = UNMutableNotificationContent()
             content.title = title
-            content.body = minutesBefore == 0
+            content.body =
+                minutesBefore == 0
                 ? (langIsArabic ? "حان وقت الصلاة" : "It's time to pray")
-                : (langIsArabic ? "تبقّى \(minutesBefore) دقيقة على الصلاة"
-                                : "\(minutesBefore) minutes before prayer")
-            content.sound = settings.useSound ? .default : nil
+                : (langIsArabic
+                    ? "تبقّى \(minutesBefore) دقيقة على الصلاة"
+                    : "\(minutesBefore) minutes before prayer")
 
-            let comps = Calendar.current.dateComponents([.year,.month,.day,.hour,.minute], from: fireDate)
-            let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
+            content.sound = makeSound(settings: settings)
 
-            let id = UUID().uuidString
-            let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
+            let comps = Calendar.current.dateComponents(
+                [.year, .month, .day, .hour, .minute],
+                from: fireDate
+            )
+
+            let trigger = UNCalendarNotificationTrigger(
+                dateMatching: comps,
+                repeats: false
+            )
+
+            let id = "\(adhanIdPrefix)\(title)_\(fireDate.timeIntervalSince1970)"
+            let request = UNNotificationRequest(
+                identifier: id,
+                content: content,
+                trigger: trigger
+            )
 
             try? await center.add(request)
             scheduled += 1
@@ -146,13 +199,32 @@ final class AdhanNotificationManager: ObservableObject {
         return scheduled
     }
 
-    private func combine(date: Date, hhmm: String, minusMinutes: Int) -> Date? {
+    // MARK: - Helpers
+
+    private func makeSound(settings: AdhanReminderSettings) -> UNNotificationSound? {
+        guard settings.useSound else { return nil }
+
+        if settings.soundName == "default" {
+            return .default
+        } else {
+            return UNNotificationSound(
+                named: UNNotificationSoundName(rawValue: settings.soundName)
+            )
+        }
+    }
+
+    private func combine(
+        date: Date,
+        hhmm: String,
+        minusMinutes: Int
+    ) -> Date? {
+
         let parts = hhmm.split(separator: ":")
         guard parts.count == 2,
               let h = Int(parts[0]),
               let m = Int(parts[1]) else { return nil }
 
-        var comps = Calendar.current.dateComponents([.year,.month,.day], from: date)
+        var comps = Calendar.current.dateComponents([.year, .month, .day], from: date)
         comps.hour = h
         comps.minute = m
 
@@ -162,17 +234,24 @@ final class AdhanNotificationManager: ObservableObject {
 
     // MARK: - API
 
-    private func fetchTimings(date: Date, coordinate: CLLocationCoordinate2D) async throws -> TimingsDTO {
+    private func fetchTimings(
+        date: Date,
+        coordinate: CLLocationCoordinate2D,
+        method: Int
+    ) async throws -> TimingsDTO {
 
         let f = DateFormatter()
         f.dateFormat = "dd-MM-yyyy"
         let dateStr = f.string(from: date)
 
-        var comps = URLComponents(string: "https://api.aladhan.com/v1/timings/\(dateStr)")!
+        var comps = URLComponents(
+            string: "https://api.aladhan.com/v1/timings/\(dateStr)"
+        )!
+
         comps.queryItems = [
             .init(name: "latitude", value: "\(coordinate.latitude)"),
             .init(name: "longitude", value: "\(coordinate.longitude)"),
-            .init(name: "method", value: "2")
+            .init(name: "method", value: "\(method)")
         ]
 
         let (data, _) = try await URLSession.shared.data(from: comps.url!)
@@ -193,7 +272,7 @@ final class AdhanNotificationManager: ObservableObject {
     }
 }
 
-// MARK: - DTO & API Models
+// MARK: - DTOs
 
 private struct TimingsDTO {
     let fajr: String
@@ -203,12 +282,16 @@ private struct TimingsDTO {
     let isha: String
 }
 
+// MARK: - API Models
+
 private struct AlAdhanByDateResponse: Codable {
     let data: AlAdhanByDateData
 }
+
 private struct AlAdhanByDateData: Codable {
     let timings: AlAdhanByDateTimings
 }
+
 private struct AlAdhanByDateTimings: Codable {
     let Fajr: String
     let Dhuhr: String

@@ -53,6 +53,11 @@
 		156A32352F00940E00819D25 /* CommunityStubScreens.swif in Resources */ = {isa = PBXBuildFile; fileRef = 156A322D2F00940E00819D25 /* CommunityStubScreens.swif */; };
 		156A32362F00940E00819D25 /* CommunityHubScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156A322C2F00940E00819D25 /* CommunityHubScreen.swift */; };
 		156A32422F00940E00819D25 /* AddPlaceCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156A323D2F00940E00819D25 /* AddPlaceCategory.swift */; };
+		1580D02F2F1361A900337580 /* RamadanImsakiyahService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1580D02E2F1361A900337580 /* RamadanImsakiyahService.swift */; };
+		1580D0312F1361EC00337580 /* RamadanImsakiyahDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1580D0302F1361EC00337580 /* RamadanImsakiyahDay.swift */; };
+		1580D0332F13652400337580 /* ZakatInfoSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1580D0322F13652400337580 /* ZakatInfoSheet.swift */; };
+		1580D03C2F1377AC00337580 /* adhan.caf in Resources */ = {isa = PBXBuildFile; fileRef = 1580D03B2F1377AC00337580 /* adhan.caf */; };
+		1580D03E2F13783000337580 /* AdhanPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1580D03D2F13783000337580 /* AdhanPlayer.swift */; };
 		15A0D7882EE05AF00063ED79 /* MapScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A0D7872EE05AF00063ED79 /* MapScreen.swift */; };
 		15A0D7922EE05E4C0063ED79 /* PrayerTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A0D7912EE05E4C0063ED79 /* PrayerTime.swift */; };
 		15A0D79A2EE0605D0063ED79 /* PlaceRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A0D7992EE0605D0063ED79 /* PlaceRowView.swift */; };
@@ -145,6 +150,11 @@
 		156A322C2F00940E00819D25 /* CommunityHubScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityHubScreen.swift; sourceTree = "<group>"; };
 		156A322D2F00940E00819D25 /* CommunityStubScreens.swif */ = {isa = PBXFileReference; lastKnownFileType = text; path = CommunityStubScreens.swif; sourceTree = "<group>"; };
 		156A323D2F00940E00819D25 /* AddPlaceCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlaceCategory.swift; sourceTree = "<group>"; };
+		1580D02E2F1361A900337580 /* RamadanImsakiyahService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RamadanImsakiyahService.swift; sourceTree = "<group>"; };
+		1580D0302F1361EC00337580 /* RamadanImsakiyahDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RamadanImsakiyahDay.swift; sourceTree = "<group>"; };
+		1580D0322F13652400337580 /* ZakatInfoSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZakatInfoSheet.swift; sourceTree = "<group>"; };
+		1580D03B2F1377AC00337580 /* adhan.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = adhan.caf; sourceTree = "<group>"; };
+		1580D03D2F13783000337580 /* AdhanPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdhanPlayer.swift; sourceTree = "<group>"; };
 		15A0D7732EE055040063ED79 /* HalalMapPrime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HalalMapPrime.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		15A0D7872EE05AF00063ED79 /* MapScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapScreen.swift; sourceTree = "<group>"; };
 		15A0D7912EE05E4C0063ED79 /* PrayerTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTime.swift; sourceTree = "<group>"; };
@@ -351,6 +361,54 @@
 			path = Community;
 			sourceTree = "<group>";
 		};
+		1580D0362F1365E900337580 /* Prayer */ = {
+			isa = PBXGroup;
+			children = (
+				15B3D4BA2EFDAF6C00704BB6 /* PrayerTimesViewModel.swift */,
+				15A0D7912EE05E4C0063ED79 /* PrayerTime.swift */,
+			);
+			path = Prayer;
+			sourceTree = "<group>";
+		};
+		1580D0372F13661100337580 /* faith */ = {
+			isa = PBXGroup;
+			children = (
+				15B3D49F2EFDAB6600704BB6 /* FaithToolsScreen.swift */,
+				15B3D4C22EFDB7B900704BB6 /* FaithPlaceholders.swift */,
+			);
+			path = faith;
+			sourceTree = "<group>";
+		};
+		1580D0382F13664800337580 /* Ramadan */ = {
+			isa = PBXGroup;
+			children = (
+				1580D02E2F1361A900337580 /* RamadanImsakiyahService.swift */,
+				1580D0302F1361EC00337580 /* RamadanImsakiyahDay.swift */,
+				15B3D4C02EFDB6F800704BB6 /* RamadanImsakiyahViewModel.swift */,
+			);
+			path = Ramadan;
+			sourceTree = "<group>";
+		};
+		1580D0392F13667900337580 /* Adhan */ = {
+			isa = PBXGroup;
+			children = (
+				15B3D4BC2EFDB3DE00704BB6 /* AdhanReminderSettings.swift */,
+				15B3D4BE2EFDB40400704BB6 /* AdhanNotificationManager.swift */,
+				15B3D4C62EFDBBF200704BB6 /* AdhanSettingsSheet.swift */,
+				1580D03D2F13783000337580 /* AdhanPlayer.swift */,
+			);
+			path = Adhan;
+			sourceTree = "<group>";
+		};
+		1580D03A2F1366B000337580 /* Deen Service */ = {
+			isa = PBXGroup;
+			children = (
+				1580D0322F13652400337580 /* ZakatInfoSheet.swift */,
+				15B3D4C42EFDB94500704BB6 /* QiblaCompassViewModel.swift */,
+			);
+			path = "Deen Service";
+			sourceTree = "<group>";
+		};
 		15A0D76A2EE055040063ED79 = {
 			isa = PBXGroup;
 			children = (
@@ -368,6 +426,7 @@
 				15A0D7812EE059A10063ED79 /* views */,
 				153BA5DD2F0481DC000D22FD /* Frameworks */,
 				15A0D7742EE055040063ED79 /* Products */,
+				1580D03B2F1377AC00337580 /* adhan.caf */,
 			);
 			sourceTree = "<group>";
 		};
@@ -417,15 +476,11 @@
 		15B3D4B92EFDAF0100704BB6 /* deen */ = {
 			isa = PBXGroup;
 			children = (
-				15A0D7912EE05E4C0063ED79 /* PrayerTime.swift */,
-				15B3D49F2EFDAB6600704BB6 /* FaithToolsScreen.swift */,
-				15B3D4BA2EFDAF6C00704BB6 /* PrayerTimesViewModel.swift */,
-				15B3D4BC2EFDB3DE00704BB6 /* AdhanReminderSettings.swift */,
-				15B3D4C62EFDBBF200704BB6 /* AdhanSettingsSheet.swift */,
-				15B3D4BE2EFDB40400704BB6 /* AdhanNotificationManager.swift */,
-				15B3D4C02EFDB6F800704BB6 /* RamadanImsakiyahViewModel.swift */,
-				15B3D4C22EFDB7B900704BB6 /* FaithPlaceholders.swift */,
-				15B3D4C42EFDB94500704BB6 /* QiblaCompassViewModel.swift */,
+				1580D03A2F1366B000337580 /* Deen Service */,
+				1580D0392F13667900337580 /* Adhan */,
+				1580D0382F13664800337580 /* Ramadan */,
+				1580D0372F13661100337580 /* faith */,
+				1580D0362F1365E900337580 /* Prayer */,
 			);
 			path = deen;
 			sourceTree = "<group>";
@@ -525,6 +580,7 @@
 				153BA5D82F046983000D22FD /* HMP.storekit in Resources */,
 				156A32352F00940E00819D25 /* CommunityStubScreens.swif in Resources */,
 				15A0D7A42EE0BBD90063ED79 /* GoogleService-Info.plist in Resources */,
+				1580D03C2F1377AC00337580 /* adhan.caf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -545,6 +601,7 @@
 				15CEB2042EE7C5DF0035A83D /* NoticeBoardViews.swift in Sources */,
 				15C62E132F0D3DBC00702399 /* AddAddressPremiumView.swift in Sources */,
 				155C40012F0B0D32009EEB95 /* AdsStore.swift in Sources */,
+				1580D0312F1361EC00337580 /* RamadanImsakiyahDay.swift in Sources */,
 				155C40062F0B21B4009EEB95 /* FreeOnceGateStore.swift in Sources */,
 				155C3FE62F0A8F48009EEB95 /* FreeMonthlyAdFormView.swift in Sources */,
 				151BD9E42EE5223D0065F10C /* LanguageManager.swift in Sources */,
@@ -556,6 +613,7 @@
 				15109F8D2EFD62510068DFE3 /* AppRouter.swift in Sources */,
 				15A0D79A2EE0605D0063ED79 /* PlaceRowView.swift in Sources */,
 				153BA5DC2F048082000D22FD /* PlaceSubmissionsStore.swift in Sources */,
+				1580D02F2F1361A900337580 /* RamadanImsakiyahService.swift in Sources */,
 				15B48CDC2EE1A70C00A88AB7 /* AddStoreViewModel.swift in Sources */,
 				15A0D7922EE05E4C0063ED79 /* PrayerTime.swift in Sources */,
 				151BD9F32EE597800065F10C /* MyAdsView.swift in Sources */,
@@ -580,6 +638,8 @@
 				156016592F032F3D00ABC8BB /* EventTemplate.swift in Sources */,
 				15B3D4BB2EFDAF6C00704BB6 /* PrayerTimesViewModel.swift in Sources */,
 				15D014352F02BBCB00D34C64 /* JobAlertsSheet 2.swift in Sources */,
+				1580D0332F13652400337580 /* ZakatInfoSheet.swift in Sources */,
+				1580D03E2F13783000337580 /* AdhanPlayer.swift in Sources */,
 				153BA67B2F06BA7A000D22FD /* PurchaseManager.swift in Sources */,
 				15B3D4C72EFDBBF200704BB6 /* AdhanSettingsSheet.swift in Sources */,
 				155C3FED2F0A9617009EEB95 /* PrimeAdInfoView.swift in Sources */,

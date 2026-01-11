@@ -99,7 +99,25 @@ struct AdhanSettingsSheet: View {
                             .onChange(of: settings.isha) { _ in persist() }
                     }
                 }
+                Section(header: Text(lang.isArabic ? "تجربة الصوت" : "Test Sound")) {
+                    Button {
+                        AdhanPlayer.shared.play()
+                    } label: {
+                        HStack {
+                            Image(systemName: "speaker.wave.2.fill")
+                            Text(lang.isArabic ? "تشغيل الأذان الآن" : "Play Adhan Now")
+                        }
+                    }
 
+                    Button(role: .destructive) {
+                        AdhanPlayer.shared.stop()
+                    } label: {
+                        HStack {
+                            Image(systemName: "stop.fill")
+                            Text(lang.isArabic ? "إيقاف" : "Stop")
+                        }
+                    }
+                }
                 // MARK: - Actions
                 Section {
                     Button {

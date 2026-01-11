@@ -24,10 +24,15 @@ struct AdhanReminderSettings: Codable {
     // reminder minutes before prayer (0 = at time)
     var minutesBefore: Int = 0
 
-    // sound setting (simple flag; actual sound is system default unless you add custom sound file later)
+    // sound
     var useSound: Bool = true
+    /// ضع اسم الملف داخل Bundle مثل: "adhan.caf" أو "adhan.wav"
+    var soundName: String = "default"   // "default" or filename
 
-    static let storageKey = "adhan_reminder_settings_v1"
+    // calculation method (AlAdhan)
+    var method: Int = 2   // 2 = MWL (default)
+
+    static let storageKey = "adhanReminderSettings_v1" // ✅ موحد
 
     static func load() -> AdhanReminderSettings {
         guard let data = UserDefaults.standard.data(forKey: storageKey),

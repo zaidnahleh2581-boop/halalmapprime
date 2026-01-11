@@ -133,38 +133,3 @@ struct QiblaInfoSheet: View {
     }
 }
 
-// MARK: - Zakat (Placeholder)
-
-struct ZakatInfoSheet: View {
-
-    @EnvironmentObject var lang: LanguageManager
-    private func L(_ ar: String, _ en: String) -> String { lang.isArabic ? ar : en }
-
-    var body: some View {
-        NavigationStack {
-            VStack(spacing: 16) {
-                Image(systemName: "percent")
-                    .font(.system(size: 48))
-                    .foregroundColor(.yellow)
-
-                Text(L("حاسبة الزكاة", "Zakat Calculator"))
-                    .font(.title2.bold())
-
-                Text(
-                    L(
-                        "سيتم إضافة حاسبة زكاة كاملة ودقيقة قريبًا.",
-                        "A full and accurate zakat calculator will be added soon."
-                    )
-                )
-                .font(.footnote)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-
-                Spacer()
-            }
-            .padding()
-            .navigationTitle(L("الزكاة", "Zakat"))
-            .navigationBarTitleDisplayMode(.inline)
-        }
-    }
-}
