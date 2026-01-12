@@ -31,226 +31,381 @@
 </head>
 
 <body>
-
-<!-- Background -->
-<div class="bg">
-  <div class="bg-orb orb-a"></div>
-  <div class="bg-orb orb-b"></div>
-  <div class="bg-grid"></div>
-  <div class="bg-noise"></div>
-</div>
-
-<!-- Header -->
-<header class="topbar">
-  <div class="container topbar-inner">
-    <div class="brand">
-      <div class="logo">
-        <span class="logo-moon">☾</span>
-        <span class="logo-star">✦</span>
-      </div>
-      <div class="brand-text">
-        <div class="brand-title">Halal Map Prime</div>
-        <div class="brand-sub">Built for Trust</div>
-      </div>
-    </div>
-
-    <nav class="top-actions">
-      <div class="lang">
-        <button class="lang-btn is-active" data-lang="en">EN</button>
-        <button class="lang-btn" data-lang="ar">AR</button>
-        <button class="lang-btn" data-lang="fa">FA</button>
-        <button class="lang-btn" data-lang="tr">TR</button>
-        <button class="lang-btn" data-lang="ur">UR</button>
-      </div>
-
-      <a class="pill" href="mailto:Info@Halalmapprime.com">
-        ✉ <span>Email</span>
-      </a>
-    </nav>
+  <!-- Background FX -->
+  <div class="bg">
+    <div class="bg-orb orb-a"></div>
+    <div class="bg-orb orb-b"></div>
+    <div class="bg-grid"></div>
+    <div class="bg-noise"></div>
   </div>
-</header>
 
-<main role="main">
-
-<!-- HERO -->
-<section class="hero">
-  <div class="container hero-inner">
-
-    <div class="hero-copy">
-      <div class="kicker">Designed in New York • Built for Communities</div>
-
-      <h1 class="title">
-        <span>More than discovery.</span>
-        <span class="grad">A halal clarity layer.</span>
-      </h1>
-
-      <p class="lead">
-        Halal Map Prime brings together halal places, masjids, services, jobs, and community updates —
-        in one premium, respectful experience built for everyday use.
-      </p>
-
-      <div class="cta-row">
-        <a href="#vision" class="btn primary">Our Vision</a>
-        <a href="#contact" class="btn ghost">Get Listed</a>
-      </div>
-
-      <div class="mini-proof">
-        <div class="proof-card">
-          <div class="proof-num">USA</div>
-          <div class="proof-txt">Nationwide focus</div>
+  <!-- Top Bar -->
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="brand">
+        <div class="logo">
+          <span class="logo-moon">☾</span>
+          <span class="logo-star">✦</span>
         </div>
-        <div class="proof-card">
-          <div class="proof-num">Prime</div>
-          <div class="proof-txt">Optional visibility</div>
-        </div>
-        <div class="proof-card">
-          <div class="proof-num">Community</div>
-          <div class="proof-txt">Driven clarity</div>
+        <div class="brand-text">
+          <div class="brand-title">Halal Map Prime</div>
+          <div class="brand-sub" data-i18n="tagline">Built for Trust</div>
         </div>
       </div>
 
-      <div class="note">
-        Community-based platform. Listings rely on submitted information and do not represent official certification.
-      </div>
+      <nav class="top-actions">
+        <div class="lang" aria-label="Language">
+          <button class="lang-btn is-active" data-lang="en" type="button">EN</button>
+          <button class="lang-btn" data-lang="ar" type="button">AR</button>
+          <button class="lang-btn" data-lang="fa" type="button">FA</button>
+          <button class="lang-btn" data-lang="tr" type="button">TR</button>
+          <button class="lang-btn" data-lang="ur" type="button">UR</button>
+        </div>
+
+        <a class="pill" href="mailto:Info@Halalmapprime.com" aria-label="Email">
+          <span aria-hidden="true">✉</span> <span data-i18n="email">Email</span>
+        </a>
+      </nav>
     </div>
+  </header>
 
-    <div class="hero-panel">
-      <div class="panel">
-        <div class="panel-top">
-          <div class="chip">Halal • Community-Verified</div>
-          <div class="chip alt">Jobs • Events • Services</div>
+  <!-- HERO -->
+  <main role="main">
+    <section class="hero" id="top">
+      <div class="container hero-inner">
+        <div class="hero-copy">
+          <div class="kicker" data-i18n="kicker">Designed in New York • Built for Communities</div>
+
+          <h1 class="title">
+            <span data-i18n="heroTitleA">More than discovery.</span>
+            <span class="grad" data-i18n="heroTitleB">A halal clarity layer.</span>
+          </h1>
+
+          <p class="lead" data-i18n="heroLead">
+            Halal Map Prime brings together halal places, masjids, services, jobs, and community updates —
+            in one premium, respectful experience built for everyday use.
+          </p>
+
+          <div class="cta-row">
+            <a class="btn primary" href="#how-it-works" data-i18n="ctaPrimary">How it works</a>
+            <a class="btn ghost" href="#contact" data-i18n="ctaSecondary">Get Listed</a>
+          </div>
+
+          <div class="mini-proof">
+            <div class="proof-card">
+              <div class="proof-num" data-i18n="proofNum1">USA</div>
+              <div class="proof-txt" data-i18n="proof1">Nationwide focus</div>
+            </div>
+            <div class="proof-card">
+              <div class="proof-num" data-i18n="proofNum2">Prime</div>
+              <div class="proof-txt" data-i18n="proof2">Optional visibility</div>
+            </div>
+            <div class="proof-card">
+              <div class="proof-num" data-i18n="proofNum3">Community</div>
+              <div class="proof-txt" data-i18n="proof3">Driven clarity</div>
+            </div>
+          </div>
+
+          <!-- Apple-safe clarification -->
+          <div class="note" data-i18n="disclaimerHero">
+            Community-based platform. Listings rely on submitted information and do not represent official certification.
+          </div>
         </div>
 
-        <div class="panel-body">
-          <div class="panel-title">What you’ll find</div>
-          <div class="panel-line">• Halal food & groceries</div>
-          <div class="panel-line">• Masjids & schools</div>
-          <div class="panel-line">• Local services</div>
-          <div class="panel-line">• Community jobs & events</div>
-          <div class="panel-glow"></div>
-        </div>
+        <div class="hero-panel">
+          <div class="panel">
+            <div class="panel-top">
+              <div class="chip" data-i18n="chipA">Halal • Community-Verified • Premium</div>
+              <div class="chip alt" data-i18n="chipB">Jobs • Events • Services</div>
+            </div>
 
-        <div class="panel-bottom">
-          <a class="social" href="https://www.instagram.com/halalmapprime" target="_blank">Instagram</a>
-          <span class="dot">•</span>
-          <a class="social" href="https://www.tiktok.com/@halalmapprime" target="_blank">TikTok</a>
-          <span class="dot">•</span>
-          <a class="social" href="https://www.facebook.com/profile.php?id=61583835974171" target="_blank">Facebook</a>
-        </div>
-      </div>
-    </div>
+            <div class="panel-body">
+              <div class="panel-title" data-i18n="panelTitle">What you’ll find</div>
+              <div class="panel-line" data-i18n="panelLine1">• Halal food & groceries</div>
+              <div class="panel-line" data-i18n="panelLine2">• Masjids & schools</div>
+              <div class="panel-line" data-i18n="panelLine3">• Local services</div>
+              <div class="panel-line" data-i18n="panelLine4">• Community jobs & events</div>
 
-  </div>
-</section>
+              <div class="panel-glow"></div>
+            </div>
 
-<!-- VISION -->
-<section class="section dark" id="vision">
-  <div class="container">
-    <div class="section-head">
-      <h2>Our vision</h2>
-      <p>Built for real use. Designed to scale with integrity.</p>
-    </div>
-
-    <div class="timeline">
-      <div class="step">
-        <div class="badge">01</div>
-        <div>
-          <h3>United States</h3>
-          <p>Nationwide halal discovery — city by city, community by community.</p>
+            <div class="panel-bottom">
+              <a class="social" href="https://www.facebook.com/profile.php?id=61583835974171" target="_blank" rel="noopener">Facebook</a>
+              <span class="dot">•</span>
+              <a class="social" href="https://www.instagram.com/halalmapprime" target="_blank" rel="noopener">Instagram</a>
+              <span class="dot">•</span>
+              <a class="social" href="https://www.tiktok.com/@halalmapprime" target="_blank" rel="noopener">TikTok</a>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="step">
-        <div class="badge">02</div>
-        <div>
-          <h3>London • Toronto</h3>
-          <p>Key global cities with strong community presence.</p>
+      <div class="scroll-hint">
+        <span data-i18n="scroll">Scroll</span>
+        <span class="arrow" aria-hidden="true">↓</span>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-head">
+          <h2 data-i18n="featuresTitle">What makes it powerful</h2>
+          <p data-i18n="featuresLead">Luxury experience + community utility + halal clarity where it matters.</p>
+        </div>
+
+        <div class="grid">
+          <article class="card">
+            <div class="icon">🗺️</div>
+            <h3 data-i18n="f1Title">Halal map that feels premium</h3>
+            <p data-i18n="f1Body">Fast discovery of masjids, schools, services and halal places around you.</p>
+          </article>
+
+          <article class="card">
+            <div class="icon">✅</div>
+            <h3 data-i18n="f2Title">Verification where it matters</h3>
+            <p data-i18n="f2Body">Only food/meat sellers require verification. Masjids, schools & services can appear directly.</p>
+          </article>
+
+          <article class="card">
+            <div class="icon">📣</div>
+            <h3 data-i18n="f3Title">Prime Ads & paid visibility</h3>
+            <p data-i18n="f3Body">Paid banners and boosted listings for halal businesses that want real growth.</p>
+          </article>
+
+          <article class="card">
+            <div class="icon">👥</div>
+            <h3 data-i18n="f4Title">Community hub</h3>
+            <p data-i18n="f4Body">Jobs, hiring, events, notices — a clean system that supports the community.</p>
+          </article>
+
+          <article class="card">
+            <div class="icon">⚡</div>
+            <h3 data-i18n="f5Title">Built for scale</h3>
+            <p data-i18n="f5Body">United States first, then global markets with the same clarity-first model.</p>
+          </article>
+
+          <article class="card special">
+            <div class="icon">🕌</div>
+            <h3 data-i18n="f6Title">Identity + modern execution</h3>
+            <p data-i18n="f6Body">A world-class product that reflects our community — strong, clean, future-ready.</p>
+          </article>
         </div>
       </div>
+    </section>
 
-      <div class="step">
-        <div class="badge">03</div>
-        <div>
-          <h3>Australia</h3>
-          <p>Long-term expansion with the same clarity-first model.</p>
+    <!-- HOW IT WORKS -->
+    <section class="section dark" id="how-it-works">
+      <div class="container">
+        <div class="section-head">
+          <h2 data-i18n="howTitle">How it works (simple)</h2>
+          <p data-i18n="howLead">Two sides. One ecosystem: users discover, businesses grow, community stays connected.</p>
+        </div>
+
+        <div class="timeline">
+          <div class="step">
+            <div class="badge">01</div>
+            <div>
+              <h3 data-i18n="how1Title">Open the map</h3>
+              <p data-i18n="how1Body">See halal places, masjids, schools, and services around you — instantly.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="badge">02</div>
+            <div>
+              <h3 data-i18n="how2Title">Search & filter</h3>
+              <p data-i18n="how2Body">Find what you need fast: food, groceries, services, and community needs.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="badge">03</div>
+            <div>
+              <h3 data-i18n="how3Title">Clarity on food listings</h3>
+              <p data-i18n="how3Body">Food/meat sellers can submit proof (invoice/photo) to add transparency.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="badge">04</div>
+            <div>
+              <h3 data-i18n="how4Title">Prime visibility (optional)</h3>
+              <p data-i18n="how4Body">Businesses can boost listings or run Prime ads to reach more customers.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="badge">05</div>
+            <div>
+              <h3 data-i18n="how5Title">Community hub</h3>
+              <p data-i18n="how5Body">Jobs, events, and announcements keep users returning daily.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="quote" style="margin-top:22px;">
+          <div class="quote-mark">“</div>
+          <p data-i18n="howQuote">Trust is not claimed. It’s built — step by step.</p>
+          <div class="quote-by" data-i18n="howQuoteBy">— Halal Map Prime</div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="quote">
-      <div class="quote-mark">“</div>
-      <p>Trust is not claimed. It’s built — step by step.</p>
-      <div class="quote-by">Halal Map Prime</div>
-    </div>
-  </div>
-</section>
+    <!-- VISION -->
+    <section class="section dark" id="vision">
+      <div class="container">
+        <div class="section-head">
+          <h2 data-i18n="visionTitle">Our vision</h2>
+          <p data-i18n="visionLead">Built for real use. Designed to scale with integrity.</p>
+        </div>
 
-<!-- CONTACT -->
-<section class="section" id="contact">
-  <div class="container">
-    <div class="section-head">
-      <h2>Get listed / Contact</h2>
-      <p>Businesses, masjids, schools, and services — we’d love to hear from you.</p>
-    </div>
+        <div class="timeline">
+          <div class="step">
+            <div class="badge">01</div>
+            <div>
+              <h3 data-i18n="v1Title">United States</h3>
+              <p data-i18n="v1Body">Nationwide halal discovery — city by city, community by community.</p>
+            </div>
+          </div>
 
-    <div class="contact-grid">
-      <div class="contact-card">
-        <div class="contact-title">Email</div>
-        <a class="contact-link" href="mailto:Info@Halalmapprime.com">Info@Halalmapprime.com</a>
-      </div>
+          <div class="step">
+            <div class="badge">02</div>
+            <div>
+              <h3 data-i18n="v2Title">London • Toronto</h3>
+              <p data-i18n="v2Body">Key global cities with strong community presence.</p>
+            </div>
+          </div>
 
-      <div class="contact-card">
-        <div class="contact-title">Social</div>
-        <div class="social-row">
-          <a class="chiplink" href="https://www.instagram.com/halalmapprime" target="_blank">Instagram</a>
-          <a class="chiplink" href="https://www.tiktok.com/@halalmapprime" target="_blank">TikTok</a>
-          <a class="chiplink" href="https://www.facebook.com/profile.php?id=61583835974171" target="_blank">Facebook</a>
+          <div class="step">
+            <div class="badge">03</div>
+            <div>
+              <h3 data-i18n="v3Title">Australia</h3>
+              <p data-i18n="v3Body">Long-term expansion with the same clarity-first model.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="quote">
+          <div class="quote-mark">“</div>
+          <p data-i18n="quote">Google shows places. Halal Map Prime shows clarity and trust.</p>
+          <div class="quote-by" data-i18n="quoteBy">— Halal Map Prime</div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <footer class="footer">
-      <div class="footer-left">
-        <div class="footer-brand">Halal Map Prime</div>
-        <div class="footer-sub">Built for trust. Built to last.</div>
-        <div class="footer-legal">
-          Community-based discovery platform. No official certification or endorsement implied.
+    <!-- CONTACT -->
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="section-head">
+          <h2 data-i18n="contactTitle">Get listed / Contact</h2>
+          <p data-i18n="contactLead">Business? Masjid? School? Service? Want Prime visibility? Contact us now.</p>
         </div>
+
+        <div class="contact-grid">
+          <div class="contact-card">
+            <div class="contact-title" data-i18n="contactEmailTitle">Email</div>
+            <a class="contact-link" href="mailto:Info@Halalmapprime.com">Info@Halalmapprime.com</a>
+            <div class="contact-hint" data-i18n="contactEmailHint">Best for detailed requests & documents.</div>
+          </div>
+
+          <div class="contact-card">
+            <div class="contact-title" data-i18n="contactWaTitle">WhatsApp</div>
+            <button class="contact-link as-btn" id="waBtn" type="button" data-i18n="contactWaBtn">Open WhatsApp</button>
+            <div class="contact-hint" data-i18n="contactWaHint">Fast for verification (invoice/photo) & quick support.</div>
+          </div>
+
+          <div class="contact-card">
+            <div class="contact-title" data-i18n="contactSocialTitle">Social</div>
+            <div class="social-row">
+              <a class="chiplink" href="https://www.instagram.com/halalmapprime" target="_blank" rel="noopener">Instagram</a>
+              <a class="chiplink" href="https://www.tiktok.com/@halalmapprime" target="_blank" rel="noopener">TikTok</a>
+              <a class="chiplink" href="https://www.facebook.com/profile.php?id=61583835974171" target="_blank" rel="noopener">Facebook</a>
+            </div>
+            <div class="contact-hint" data-i18n="contactSocialHint">Follow us & share the movement.</div>
+          </div>
+        </div>
+
+        <footer class="footer">
+          <div class="footer-left">
+            <div class="footer-brand">Halal Map Prime</div>
+            <div class="footer-sub" data-i18n="footerSub">Built for trust. Built to last.</div>
+            <div class="footer-legal" data-i18n="footerLegal">
+              Community-based discovery platform. Listings and verification are based on submitted information and do not represent official certification or endorsement.
+            </div>
+          </div>
+
+          <div class="footer-right">
+            <span>© <span id="year"></span></span>
+            <span class="dot">•</span>
+            <span data-i18n="footerBuilt">Built in New York</span>
+          </div>
+        </footer>
       </div>
-      <div class="footer-right">
-        © <span id="year"></span> • Built in New York
-      </div>
-    </footer>
-  </div>
-</section>
+    </section>
+  </main>
 
-</main>
+  <!-- IMPORTANT: keep your existing language file logic -->
+  <script src="./app.js"></script>
 
-<script>
-  document.getElementById("year").textContent = new Date().getFullYear();
+  <!-- Small safe helpers that DON'T break your i18n -->
+  <script>
+    // year
+    document.getElementById('year').textContent = new Date().getFullYear();
 
-  const root = document.getElementById("root");
-  const langButtons = document.querySelectorAll(".lang-btn");
-
-  function applyLanguage(lang) {
-    if (["ar","fa","ur"].includes(lang)) {
-      root.setAttribute("dir","rtl");
-      root.style.fontFamily = "'Tajawal', system-ui";
-    } else {
-      root.setAttribute("dir","ltr");
-      root.style.fontFamily = "'Inter', system-ui";
+    // WhatsApp button (safe)
+    const waBtn = document.getElementById('waBtn');
+    const waNumber = ""; // TODO: put your WhatsApp number without +, spaces (example: 1718XXXXXXX)
+    const waText = encodeURIComponent("Salam! I want to get listed / I have a question about Halal Map Prime.");
+    if (waBtn) {
+      waBtn.addEventListener('click', () => {
+        if (!waNumber) {
+          alert("WhatsApp number is not set yet. Please email us at Info@Halalmapprime.com");
+          return;
+        }
+        window.open("https://wa.me/" + waNumber + "?text=" + waText, "_blank", "noopener");
+      });
     }
-    root.setAttribute("lang", lang);
-  }
 
-  langButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      langButtons.forEach(b => b.classList.remove("is-active"));
-      btn.classList.add("is-active");
-      applyLanguage(btn.dataset.lang);
+    /**
+     * Compatibility bridge:
+     * - If your old app.js has setLanguage(lang) or window.setLang(lang), we call it.
+     * - Also we enforce RTL/LTR + font without fighting your translations.
+     */
+    const root = document.getElementById("root");
+    const langButtons = document.querySelectorAll(".lang-btn");
+
+    function applyDirAndFont(lang) {
+      const isRtl = (lang === "ar" || lang === "fa" || lang === "ur");
+      root.setAttribute("dir", isRtl ? "rtl" : "ltr");
+      root.setAttribute("lang", lang);
+      root.style.fontFamily = isRtl
+        ? "'Tajawal', system-ui, -apple-system"
+        : "'Inter', system-ui, -apple-system";
+    }
+
+    function callExistingLanguageSystem(lang) {
+      // try common function names
+      if (typeof window.setLanguage === "function") return window.setLanguage(lang);
+      if (typeof window.setLang === "function") return window.setLang(lang);
+      if (typeof window.changeLanguage === "function") return window.changeLanguage(lang);
+      // if your app.js uses a global i18n object
+      if (window.i18n && typeof window.i18n.set === "function") return window.i18n.set(lang);
+    }
+
+    langButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        langButtons.forEach(b => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+
+        const lang = btn.dataset.lang;
+        applyDirAndFont(lang);
+        callExistingLanguageSystem(lang); // this is the key: keeps your OLD linking working
+      });
     });
-  });
-</script>
 
+    // on load: keep default EN direction + let app.js run if it auto-sets a saved language
+    applyDirAndFont("en");
+  </script>
 </body>
 </html>
