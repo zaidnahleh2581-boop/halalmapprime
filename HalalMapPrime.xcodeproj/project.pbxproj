@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		15109F8D2EFD62510068DFE3 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15109F8C2EFD62510068DFE3 /* AppRouter.swift */; };
 		15109F9A2EFD82B90068DFE3 /* PlaceDetailsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15109F992EFD82B90068DFE3 /* PlaceDetailsSheet.swift */; };
+		15117BB82F173825007FEE82 /* AdImageUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15117BB72F173825007FEE82 /* AdImageUploader.swift */; };
 		151BD9E22EE521030065F10C /* AppLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151BD9E12EE521030065F10C /* AppLanguage.swift */; };
 		151BD9E42EE5223D0065F10C /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151BD9E32EE5223D0065F10C /* LanguageManager.swift */; };
 		151BD9E62EE522760065F10C /* LanguageSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151BD9E52EE522760065F10C /* LanguageSelectionView.swift */; };
@@ -105,6 +106,7 @@
 /* Begin PBXFileReference section */
 		15109F8C2EFD62510068DFE3 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
 		15109F992EFD82B90068DFE3 /* PlaceDetailsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceDetailsSheet.swift; sourceTree = SOURCE_ROOT; };
+		15117BB72F173825007FEE82 /* AdImageUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdImageUploader.swift; sourceTree = "<group>"; };
 		151BD9E12EE521030065F10C /* AppLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppLanguage.swift; path = views/AppLanguage.swift; sourceTree = SOURCE_ROOT; };
 		151BD9E32EE5223D0065F10C /* LanguageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageManager.swift; sourceTree = "<group>"; };
 		151BD9E52EE522760065F10C /* LanguageSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageSelectionView.swift; sourceTree = "<group>"; };
@@ -325,6 +327,7 @@
 				155C40032F0B1424009EEB95 /* HMPAd.swift */,
 				15C62E122F0D3DBC00702399 /* AddAddressPremiumView.swift */,
 				15C62E142F0D416F00702399 /* AdPreviewScreen.swift */,
+				15117BB72F173825007FEE82 /* AdImageUploader.swift */,
 			);
 			path = "HMP ads";
 			sourceTree = "<group>";
@@ -628,6 +631,7 @@
 				155C3FF92F0ADB02009EEB95 /* CreateAdFormView.swift in Sources */,
 				153BA5ED2F052E31000D22FD /* HomeEventsTickerView.swift in Sources */,
 				153BA5E32F0495ED000D22FD /* ActivePlacesStore.swift in Sources */,
+				15117BB82F173825007FEE82 /* AdImageUploader.swift in Sources */,
 				153BA5E92F04AED8000D22FD /* MonthlyFreeGate.swift in Sources */,
 				153BA67D2F06BABB000D22FD /* PaidAdsScreen.swift in Sources */,
 				156A32362F00940E00819D25 /* CommunityHubScreen.swift in Sources */,
@@ -818,7 +822,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_ASSET_PATHS = HalalMapPrime/Assets.xcassets;
 				DEVELOPMENT_TEAM = Q839X9CL76;
 				ENABLE_PREVIEWS = YES;
@@ -834,7 +838,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.HMP.Zaid;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -854,7 +858,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_ASSET_PATHS = HalalMapPrime/Assets.xcassets;
 				DEVELOPMENT_TEAM = Q839X9CL76;
 				ENABLE_PREVIEWS = YES;
@@ -870,7 +874,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.HMP.Zaid;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;

@@ -57,10 +57,12 @@ struct AdsHomeView: View {
                 CreateAdFormView(
                     planDisplayTitleAR: "إعلان مجاني (30 يوم)",
                     planDisplayTitleEN: "Free Ad (30 days)",
-                    onSaved: { draft in
-                        adsStore.createAdFromDraft(draft: draft, plan: .freeOnce)
-                        adsStore.markFreeGiftUsed()
-                        showFreeAdSheet = false
+                    onSaved: { draft, imageDatas in
+                        adsStore.createAdFromDraft(
+                            draft: draft,
+                            plan: .freeOnce,
+                            imageDatas: imageDatas
+                        )
                     }
                 )
                 .environmentObject(lang)

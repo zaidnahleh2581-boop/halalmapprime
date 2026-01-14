@@ -1,9 +1,10 @@
+
 //
 //  SelectAdPlanView.swift
 //  Halal Map Prime
 //
 //  Created by Zaid Nahleh on 2026-01-04.
-//  Updated by Zaid Nahleh on 2026-01-05.
+//  Updated by Zaid Nahleh on 2026-01-13.
 //  Copyright © 2026 Zaid Nahleh.
 //  All rights reserved.
 //
@@ -28,8 +29,8 @@ struct SelectAdPlanView: View {
                     .padding(.top, 4)
 
                 Text(L(
-                    "ملاحظة: حالياً بعد اختيار الخطة سيتم فتح صفحة تعبئة الإعلان مباشرة (بدون الدفع) لتجهيز Apple Review. الدفع نضيفه بعدين.",
-                    "Note: For now, selecting a plan opens the ad form directly (no payment) to keep Apple Review clean. We’ll add payment later."
+                    "ملاحظة: الآن بعد اختيار الخطة سيتم فتح صفحة تعبئة الإعلان، ثم سيتم رفع الصور ومعالجة التخزين. الدفع نضيفه بعدين.",
+                    "Note: Selecting a plan opens the ad form, then we upload/process images. We’ll add payment later."
                 ))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
@@ -58,9 +59,12 @@ struct SelectAdPlanView: View {
                     CreateAdFormView(
                         planDisplayTitleAR: planDisplayTitleAR(plan),
                         planDisplayTitleEN: planDisplayTitleEN(plan),
-                        onSaved: { draft in
-                            adsStore.createAdFromDraft(draft: draft, plan: plan)
-                            // لا داعي load() لأن AdsStore يعمل reload بعد الحفظ
+                        onSaved: { draft, imageDatas in
+                            adsStore.createAdFromDraft(
+                                draft: draft,
+                                plan: plan,
+                                imageDatas: imageDatas
+                            )
                             showCreateForm = false
                             dismiss()
                         }
@@ -71,6 +75,7 @@ struct SelectAdPlanView: View {
         }
     }
 
+    // MARK: - Row
     private func planRow(_ plan: HMPAdPlanKind) -> some View {
         Button {
             selectedPlan = plan
@@ -110,6 +115,7 @@ struct SelectAdPlanView: View {
         .buttonStyle(.plain)
     }
 
+    // MARK: - Titles
     private func planDisplayTitleAR(_ plan: HMPAdPlanKind) -> String {
         switch plan {
         case .weekly:  return "إعلان أسبوعي (7 أيام)"

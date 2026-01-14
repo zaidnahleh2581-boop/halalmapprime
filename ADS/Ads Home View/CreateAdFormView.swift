@@ -3,7 +3,7 @@
 //  Halal Map Prime
 //
 //  Created by Zaid Nahleh on 2026-01-04.
-//  Updated by Zaid Nahleh on 2026-01-09.
+//  Updated by Zaid Nahleh on 2026-01-13.
 //  Copyright © 2026 Zaid Nahleh.
 //  All rights reserved.
 //
@@ -20,9 +20,6 @@ struct AdDraft: Equatable {
     var website: String = ""
     var addressHint: String = ""
     var selectedAudience: AdAudience = .restaurants
-
-    // ✅ Saved images as Base64 (Compressed JPEG)
-    var imageBase64s: [String] = []
 }
 
 struct CreateAdFormView: View {
@@ -32,7 +29,9 @@ struct CreateAdFormView: View {
 
     let planDisplayTitleAR: String
     let planDisplayTitleEN: String
-    let onSaved: ((AdDraft) -> Void)?
+
+    /// ✅ الآن نرجّع الـ Draft + صور مضغوطة (Data) بدل Base64
+    let onSaved: ((AdDraft, [Data]) -> Void)?
 
     @State private var draft = AdDraft()
 
@@ -44,7 +43,6 @@ struct CreateAdFormView: View {
 
     private let maxChars: Int = 150
     private let maxImages: Int = 4
-    private let jpegQuality: CGFloat = 0.65
 
     private func L(_ ar: String, _ en: String) -> String { lang.isArabic ? ar : en }
     private var planTitle: String { lang.isArabic ? planDisplayTitleAR : planDisplayTitleEN }
@@ -294,14 +292,10 @@ struct CreateAdFormView: View {
                     return
                 }
 
-                // ✅ Convert selected images -> Base64 (compressed)
-                draft.imageBase64s = imageDatas.compactMap { data in
-                    guard let ui = UIImage(data: data) else { return nil }
-                    guard let jpeg = ui.jpegData(compressionQuality: jpegQuality) else { return nil }
-                    return jpeg.base64EncodedString()
-                }
+                // ✅ هنا نضغط الصور قبل الإرسال (بدون Base64)
+                let compressedDatas: [Data] = imageDatas.compactMap { AdImageUploader.compress($0) }
 
-                onSaved?(draft)
+                onSaved?(draft, compressedDatas)
 
                 withAnimation(.spring()) { showSavedToast = true }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
