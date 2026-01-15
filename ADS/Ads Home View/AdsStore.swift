@@ -3,7 +3,7 @@
 //  Halal Map Prime
 //
 //  Created by Zaid Nahleh on 2026-01-04.
-//  Updated by Zaid Nahleh on 2026-01-13.
+//  Updated by Zaid Nahleh on 2026-01-15.
 //  Copyright © 2026 Zaid Nahleh.
 //  All rights reserved.
 //
@@ -27,8 +27,9 @@ final class AdsStore: ObservableObject {
     @Published var profilePhone: String? = nil
 
     private let db = Firestore.firestore()
-
     private let freeGiftKey = "HMP_freeGiftUsed_v1"
+
+    // MARK: - Computed
 
     var activePublicAds: [HMPAd] {
         let active = publicAds.filter { $0.isActive }
@@ -63,6 +64,8 @@ final class AdsStore: ObservableObject {
         }
     }
 
+    // MARK: - Free Gift
+
     var canUseFreeGift: Bool {
         !UserDefaults.standard.bool(forKey: freeGiftKey)
     }
@@ -71,6 +74,8 @@ final class AdsStore: ObservableObject {
         UserDefaults.standard.set(true, forKey: freeGiftKey)
     }
 
+    // MARK: - Load
+
     func load() {
         Task {
             await loadPublic()
@@ -78,12 +83,6 @@ final class AdsStore: ObservableObject {
         }
     }
 
-    /// ✅ updated signature (Draft + images)
-    func createAdFromDraft(draft: AdDraft, plan: HMPAdPlanKind, imageDatas: [Data]) {
-        Task { await createAdFromDraftAsync(draft: draft, plan: plan, imageDatas: imageDatas) }
-    }
-
-    // MARK: - Firestore Loads
     func loadPublic() async {
         lastError = nil
         isLoading = true
@@ -99,6 +98,10 @@ final class AdsStore: ObservableObject {
                 .getDocuments()
 
             self.publicAds = snap.documents.compactMap { decodeAd($0) }
+
+            // ✅ Prefetch first images (makes Home faster)
+            prefetchAdImages(self.publicAds)
+
         } catch {
             self.lastError = error.localizedDescription
         }
@@ -122,12 +125,19 @@ final class AdsStore: ObservableObject {
 
             self.profileBusinessName = self.myAds.first?.businessName
             self.profilePhone = self.myAds.first?.phone
+
         } catch {
             self.lastError = error.localizedDescription
         }
     }
 
-    // MARK: - Firestore Create (Storage + imageURLs)
+    // MARK: - Create
+
+    /// ✅ updated signature (Draft + images)
+    func createAdFromDraft(draft: AdDraft, plan: HMPAdPlanKind, imageDatas: [Data]) {
+        Task { await createAdFromDraftAsync(draft: draft, plan: plan, imageDatas: imageDatas) }
+    }
+
     private func createAdFromDraftAsync(draft: AdDraft, plan: HMPAdPlanKind, imageDatas: [Data]) async {
         lastError = nil
         isLoading = true
@@ -164,7 +174,6 @@ final class AdsStore: ObservableObject {
                 "website": draft.website,
                 "addressHint": draft.addressHint,
 
-                // ✅ NEW (no base64)
                 "imageURLs": urls,
 
                 "createdAt": Timestamp(date: now),
@@ -175,6 +184,7 @@ final class AdsStore: ObservableObject {
 
             await loadPublic()
             await loadMyAds()
+
         } catch {
             self.lastError = error.localizedDescription
         }
@@ -189,11 +199,66 @@ final class AdsStore: ObservableObject {
         }
     }
 
+    // MARK: - Owner Helpers + Delete
+
+    func isMyAd(_ ad: HMPAd) -> Bool {
+        guard let uid = Auth.auth().currentUser?.uid else { return false }
+        return ad.ownerKey == uid
+    }
+
+    /// ✅ Delete ad (Firestore + Storage images)
+    func deleteAd(_ ad: HMPAd) async {
+        lastError = nil
+        isLoading = true
+        defer { isLoading = false }
+
+        do {
+            let uid = try await ensureUID()
+
+            guard ad.ownerKey == uid else {
+                self.lastError = "You can't delete an ad you don't own."
+                return
+            }
+
+            // 1) Delete Firestore doc
+            try await db.collection("ads").document(ad.id).delete()
+
+            // 2) Delete Storage folder: ads/{ownerId}/{adId}/...
+            let folderRef = Storage.storage().reference().child("ads/\(uid)/\(ad.id)")
+            try await deleteFolder(folderRef)
+
+            // 3) Refresh
+            await loadPublic()
+            await loadMyAds()
+
+        } catch {
+            self.lastError = error.localizedDescription
+        }
+    }
+
+    // MARK: - Prefetch (fast home images)
+
+    private func prefetchAdImages(_ ads: [HMPAd]) {
+        let urls: [URL] = ads.compactMap { ad in
+            guard let first = ad.imageURLs.first?.trimmingCharacters(in: .whitespacesAndNewlines),
+                  !first.isEmpty,
+                  let url = URL(string: first)
+            else { return nil }
+            return url
+        }
+
+        for url in urls {
+            let req = URLRequest(url: url, cachePolicy: .returnCacheDataElseLoad, timeoutInterval: 25)
+            URLSession.shared.dataTask(with: req).resume()
+        }
+    }
+
     // MARK: - Auth
+
     private func ensureUID() async throws -> String {
         if let uid = Auth.auth().currentUser?.uid { return uid }
 
-        return try await withCheckedThrowingContinuation { cont in
+        return try await withCheckedThrowingContinuation { (cont: CheckedContinuation<String, Error>) in
             Auth.auth().signInAnonymously { result, error in
                 if let error { cont.resume(throwing: error); return }
                 guard let uid = result?.user.uid else {
@@ -208,6 +273,7 @@ final class AdsStore: ObservableObject {
     }
 
     // MARK: - Decode
+
     private func decodeAd(_ doc: QueryDocumentSnapshot) -> HMPAd? {
         let d = doc.data()
         let id = (d["id"] as? String) ?? doc.documentID
@@ -231,11 +297,8 @@ final class AdsStore: ObservableObject {
         let website = (d["website"] as? String) ?? ""
         let addressHint = (d["addressHint"] as? String) ?? ""
 
-        // ✅ NEW (preferred)
         let imageURLs = (d["imageURLs"] as? [String]) ?? []
-
-        // ✅ Legacy support only (old docs)
-        let imageBase64s = (d["imageBase64s"] as? [String]) ?? []
+        let imageBase64s = (d["imageBase64s"] as? [String]) ?? [] // legacy
 
         return HMPAd(
             id: id,
@@ -254,5 +317,45 @@ final class AdsStore: ObservableObject {
             createdAt: createdAtTS.dateValue(),
             expiresAt: expiresAtTS.dateValue()
         )
+    }
+
+    // MARK: - Storage Folder Delete Helpers
+
+    private func deleteFolder(_ ref: StorageReference) async throws {
+        let result = try await listAll(ref)
+
+        // delete files
+        for item in result.items {
+            try await deleteItem(item)
+        }
+
+        // delete subfolders recursively
+        for prefix in result.prefixes {
+            try await deleteFolder(prefix)
+        }
+    }
+
+    private func listAll(_ ref: StorageReference) async throws -> StorageListResult {
+        try await withCheckedThrowingContinuation { (cont: CheckedContinuation<StorageListResult, Error>) in
+            ref.listAll { result, error in
+                if let error { cont.resume(throwing: error); return }
+                guard let result else {
+                    cont.resume(throwing: NSError(domain: "Storage", code: -2, userInfo: [
+                        NSLocalizedDescriptionKey: "Missing listAll result"
+                    ]))
+                    return
+                }
+                cont.resume(returning: result)
+            }
+        }
+    }
+
+    private func deleteItem(_ ref: StorageReference) async throws {
+        try await withCheckedThrowingContinuation { (cont: CheckedContinuation<Void, Error>) in
+            ref.delete { error in
+                if let error { cont.resume(throwing: error); return }
+                cont.resume(returning: ())
+            }
+        }
     }
 }

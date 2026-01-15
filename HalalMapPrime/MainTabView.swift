@@ -33,14 +33,14 @@ struct MainTabView: View {
             .tag(0)
 
             // 1) Jobs ✅ Legacy board only (no confusion)
+            // 1) Jobs
             NavigationStack {
-                JobAdsBoardView()
+                JobLegacyBoardView()
             }
             .tabItem {
-                Label(L("وظائف", "Jobs"), systemImage: "briefcase.fill")
+                Label("وظائف", systemImage: "briefcase.fill")
             }
             .tag(1)
-
             // 2) Ads
             NavigationStack {
                 AdsHomeView()

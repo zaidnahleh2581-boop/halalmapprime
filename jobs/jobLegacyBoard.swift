@@ -2,21 +2,91 @@
 //  jobLegacyBoard.swift
 //  HalalMapPrime
 //
-//  Polished UI + Owner-only delete (Anonymous Auth)
-//  Keeps same core logic (jobAds collection + 7 days filter)
+//  ✅ Full Fix Pack:
+//  1) Monthly limit (1 job ad / month / user) using Firestore gate (transaction-safe)
+//  2) Hiring text bug fixed
+//  3) Large categories list shared by both types + filtering
 //
 //  Created by Zaid Nahleh
 //
+
 import SwiftUI
 import Combine
 import FirebaseAuth
 import FirebaseFirestore
+import CoreLocation
+
 // MARK: - Types
 
 enum JobAdType: String, CaseIterable, Identifiable {
     case lookingForJob
     case hiring
     var id: String { rawValue }
+}
+
+// MARK: - Categories (Same for both)
+
+enum JobCategories {
+    static let ar: [String] = [
+        // Trades
+        "كهربائي", "سباك", "تبريد وتكييف", "فني تبريد", "فني أجهزة", "نجار", "دهان", "حداد", "تركيب شبابيك", "تركيب أبواب",
+        "عامل صيانة", "عامل تنظيف", "عامل بناء", "عامل مستودع",
+
+        // Restaurants / Hospitality
+        "شيف", "مساعد شيف", "عامل مطبخ", "كاشير", "نادل", "باريستا",
+
+        // Health
+        "دكتور", "ممرض", "صيدلي", "مساعد طبي", "مساعد أسنان",
+
+        // Legal / Finance
+        "محامي", "محاسب", "موظف ضرائب", "موظف مكتب",
+
+        // Engineering / Tech
+        "مهندس", "فني شبكات", "دعم فني", "مطور تطبيقات",
+
+        // Delivery / Driving
+        "سائق توصيل", "سائق شاحنة",
+
+        // Beauty
+        "حلاق", "كوافير", "فني أظافر",
+
+        // Business
+        "موظف استقبال", "سكرتير", "خدمة عملاء",
+
+        // Other
+        "عمل حر", "أخرى"
+    ]
+
+    static let en: [String] = [
+        // Trades
+        "Electrician", "Plumber", "HVAC Technician", "Refrigeration Technician", "Appliance Technician",
+        "Carpenter", "Painter", "Welder", "Window Installer", "Door Installer",
+        "Maintenance Worker", "Cleaner", "Construction Worker", "Warehouse Worker",
+
+        // Restaurants / Hospitality
+        "Chef", "Kitchen Helper", "Kitchen Worker", "Cashier", "Server", "Barista",
+
+        // Health
+        "Doctor", "Nurse", "Pharmacist", "Medical Assistant", "Dental Assistant",
+
+        // Legal / Finance
+        "Lawyer", "Accountant", "Tax Preparer", "Office Clerk",
+
+        // Engineering / Tech
+        "Engineer", "Network Technician", "IT Support", "App Developer",
+
+        // Delivery / Driving
+        "Delivery Driver", "Truck Driver",
+
+        // Beauty
+        "Barber", "Hair Stylist", "Nail Technician",
+
+        // Business
+        "Receptionist", "Secretary", "Customer Service",
+
+        // Other
+        "Freelance", "Other"
+    ]
 }
 
 // MARK: - Model
@@ -57,6 +127,65 @@ struct JobAd: Identifiable {
         }
 
         self.ownerId = data["ownerId"] as? String ?? ""
+    }
+}
+
+// MARK: - Gate (Monthly limit)
+
+enum JobMonthlyGate {
+
+    static let collection = "job_monthly_gate"
+
+    static func monthKey(for date: Date = Date()) -> String {
+        let cal = Calendar(identifier: .gregorian)
+        let y = cal.component(.year, from: date)
+        let m = cal.component(.month, from: date)
+        return String(format: "%04d-%02d", y, m)
+    }
+
+    /// Transaction-safe: allow only 1 post / month / uid
+    static func claimOrThrow(db: Firestore, uid: String) async throws {
+
+        let key = monthKey()
+        let docId = "\(uid)_\(key)"
+        let ref = db.collection(collection).document(docId)
+
+        try await withCheckedThrowingContinuation { (cont: CheckedContinuation<Void, Error>) in
+            db.runTransaction({ txn, errorPointer -> Any? in
+                do {
+                    let snap = try txn.getDocument(ref)
+
+                    if snap.exists {
+                        let err = NSError(
+                            domain: "JobGate",
+                            code: 1,
+                            userInfo: [NSLocalizedDescriptionKey: "MONTHLY_LIMIT_REACHED"]
+                        )
+                        errorPointer?.pointee = err
+                        return nil
+                    }
+
+                    txn.setData([
+                        "ownerId": uid,
+                        "monthKey": key,
+                        "createdAt": FieldValue.serverTimestamp()
+                    ], forDocument: ref)
+
+                    return "OK"
+
+                } catch {
+                    errorPointer?.pointee = error as NSError
+                    return nil
+                }
+
+            }, completion: { _, error in
+                if let error {
+                    cont.resume(throwing: error)
+                } else {
+                    cont.resume(returning: ())
+                }
+            })
+        }
     }
 }
 
@@ -105,6 +234,7 @@ final class JobAdsBoardViewModel: ObservableObject {
 
         listener = db.collection("jobAds")
             .order(by: "createdAt", descending: true)
+            .limit(to: 400)
             .addSnapshotListener { [weak self] snapshot, error in
                 guard let self else { return }
 
@@ -150,6 +280,9 @@ struct JobAdsBoardView: View {
     @State private var query: String = ""
     @State private var filterType: JobAdType? = nil
 
+    // ✅ NEW: Info sheet
+    @State private var showJobsInfoSheet = false
+
     private func L(_ ar: String, _ en: String) -> String { lang.isArabic ? ar : en }
 
     private var filtered: [JobAd] {
@@ -157,6 +290,7 @@ struct JobAdsBoardView: View {
 
         return vm.jobAds.filter { ad in
             let matchesType = (filterType == nil) ? true : (ad.type == filterType)
+
             let matchesQuery: Bool
             if q.isEmpty {
                 matchesQuery = true
@@ -167,6 +301,7 @@ struct JobAdsBoardView: View {
                     ad.category.lowercased().contains(q) ||
                     ad.phone.lowercased().contains(q)
             }
+
             return matchesType && matchesQuery
         }
     }
@@ -177,6 +312,10 @@ struct JobAdsBoardView: View {
                 Color(.systemGroupedBackground).ignoresSafeArea()
 
                 VStack(spacing: 12) {
+
+                    // ✅ NEW: Banner explanation (clean + does not break layout)
+                    jobsInfoBanner
+
                     headerControls
 
                     if filtered.isEmpty {
@@ -189,9 +328,7 @@ struct JobAdsBoardView: View {
                                         ad: ad,
                                         isArabic: lang.isArabic,
                                         canDelete: (ad.ownerId == vm.currentUid),
-                                        onDelete: {
-                                            Task { await vm.delete(ad: ad) }
-                                        }
+                                        onDelete: { Task { await vm.delete(ad: ad) } }
                                     )
                                     .padding(.horizontal, 14)
                                 }
@@ -204,9 +341,7 @@ struct JobAdsBoardView: View {
             .navigationTitle(L("الوظائف", "Jobs"))
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        showComposer = true
-                    } label: {
+                    Button { showComposer = true } label: {
                         Image(systemName: "plus.circle.fill")
                     }
                     .accessibilityLabel(L("إضافة إعلان", "Add Ad"))
@@ -216,7 +351,64 @@ struct JobAdsBoardView: View {
                 JobAdComposerView()
                     .environmentObject(lang)
             }
+            // ✅ NEW: Info sheet
+            .sheet(isPresented: $showJobsInfoSheet) {
+                JobPostingInfoSheet(isArabic: lang.isArabic)
+            }
         }
+    }
+
+    // ✅ NEW: Banner View
+    private var jobsInfoBanner: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .top, spacing: 10) {
+                Image(systemName: "sparkles")
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundColor(.blue)
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(L("إعلان وظائف مجاني لخدمة المجتمع", "Free Job Ad — Community Service"))
+                        .font(.subheadline.weight(.bold))
+
+                    Text(L(
+                        "يمكنك نشر إعلان وظيفة واحد كل شهر مجاناً، ويظهر لمدة 7 أيام لمساعدة الباحثين عن عمل وأصحاب المحلات.",
+                        "You can post 1 free job ad per month. It stays visible for 7 days to help job seekers and local businesses."
+                    ))
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                }
+
+                Spacer()
+            }
+
+            Button {
+                showJobsInfoSheet = true
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: "info.circle.fill")
+                    Text(L("اعرف أكثر", "Learn more"))
+                        .font(.subheadline.weight(.semibold))
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundColor(.secondary)
+                }
+                .padding(12)
+                .background(Color.blue.opacity(0.10))
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(14)
+        .background(Color(.secondarySystemGroupedBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(Color.black.opacity(0.04), lineWidth: 1)
+        )
+        .padding(.horizontal, 14)
+        .padding(.top, 10)
     }
 
     private var headerControls: some View {
@@ -232,18 +424,11 @@ struct JobAdsBoardView: View {
             .background(.thinMaterial)
             .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
             .padding(.horizontal, 14)
-            .padding(.top, 10)
 
             HStack(spacing: 10) {
-                filterChip(title: L("الكل", "All"), isOn: filterType == nil) {
-                    filterType = nil
-                }
-                filterChip(title: L("أبحث عن عمل", "Looking"), isOn: filterType == .lookingForJob) {
-                    filterType = .lookingForJob
-                }
-                filterChip(title: L("أبحث عن موظف", "Hiring"), isOn: filterType == .hiring) {
-                    filterType = .hiring
-                }
+                filterChip(title: L("الكل", "All"), isOn: filterType == nil) { filterType = nil }
+                filterChip(title: L("أبحث عن عمل", "Looking"), isOn: filterType == .lookingForJob) { filterType = .lookingForJob }
+                filterChip(title: L("أبحث عن موظف", "Hiring"), isOn: filterType == .hiring) { filterType = .hiring }
             }
             .padding(.horizontal, 14)
         }
@@ -365,9 +550,7 @@ private struct JobAdCardView: View {
                 }
 
                 if canDelete {
-                    Button(role: .destructive) {
-                        onDelete()
-                    } label: {
+                    Button(role: .destructive) { onDelete() } label: {
                         HStack(spacing: 8) {
                             Image(systemName: "trash.fill")
                             Text(L("حذف", "Delete"))
@@ -397,9 +580,7 @@ private struct JobAdCardView: View {
         )
         .contextMenu {
             if canDelete {
-                Button(role: .destructive) {
-                    onDelete()
-                } label: {
+                Button(role: .destructive) { onDelete() } label: {
                     Label(L("حذف الإعلان", "Delete Ad"), systemImage: "trash")
                 }
             }
@@ -437,36 +618,31 @@ struct JobAdComposerView: View {
     private let db = Firestore.firestore()
 
     private func L(_ ar: String, _ en: String) -> String { lang.isArabic ? ar : en }
+    private var categories: [String] { lang.isArabic ? JobCategories.ar : JobCategories.en }
 
-    private var categoriesAr: [String] = [
-        "مسجد", "مطعم", "محل تجاري", "سوبرماركت", "محل ملابس", "صالون حلاقة", "مخبز", "مكتب خدمات", "محل بقالة"
-    ]
-
-    private var categoriesEn: [String] = [
-        "Masjid", "Restaurant", "Store", "Supermarket", "Clothing store", "Barber shop", "Bakery", "Office", "Grocery store"
-    ]
-
-    private var categories: [String] { lang.isArabic ? categoriesAr : categoriesEn }
-
+    // ✅ FIXED: correct text based on adType (Hiring vs Looking)
     private var generatedText: String {
-        let safeName = name.isEmpty ? (lang.isArabic ? "الاسم" : "Name") : name
-        let safeCity = city.isEmpty ? (lang.isArabic ? "المدينة" : "City") : city
-        let safePhone = phone.isEmpty ? (lang.isArabic ? "رقم الهاتف" : "Phone") : phone
-        let safeCategory = selectedCategory.isEmpty ? (lang.isArabic ? "محل تجاري" : "store") : selectedCategory
+        let safeName = name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? (lang.isArabic ? "الاسم" : "Name") : name
+        let safeCity = city.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? (lang.isArabic ? "المدينة" : "City") : city
+        let safePhone = phone.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? (lang.isArabic ? "رقم الهاتف" : "Phone") : phone
+
+        let safeCategory = selectedCategory.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        ? (lang.isArabic ? "أخرى" : "Other")
+        : selectedCategory
 
         if lang.isArabic {
             switch adType {
             case .lookingForJob:
-                return "أنا \(safeName) أبحث عن عمل في \(safeCity) في \(safeCategory). رقم التواصل: \(safePhone)"
+                return "أنا \(safeName) أبحث عن عمل في \(safeCity) في مجال \(safeCategory). رقم التواصل: \(safePhone)"
             case .hiring:
-                return "أنا \(safeName) صاحب \(safeCategory) في \(safeCity) وأبحث عن موظف. رقم التواصل: \(safePhone)"
+                return "أنا \(safeName) أبحث عن موظف (\(safeCategory)) في \(safeCity). رقم التواصل: \(safePhone)"
             }
         } else {
             switch adType {
             case .lookingForJob:
-                return "I’m \(safeName) looking for a job in \(safeCity) in \(safeCategory). Contact: \(safePhone)"
+                return "I’m \(safeName) looking for a job in \(safeCity) as \(safeCategory). Contact: \(safePhone)"
             case .hiring:
-                return "I’m \(safeName), owner of a \(safeCategory) in \(safeCity) and hiring. Contact: \(safePhone)"
+                return "I’m \(safeName) hiring a \(safeCategory) in \(safeCity). Contact: \(safePhone)"
             }
         }
     }
@@ -507,10 +683,11 @@ struct JobAdComposerView: View {
                         .padding(.horizontal, 16)
                         .padding(.top, 6)
 
-                        Text(L("سيتم حذف الإعلانات تلقائياً من العرض بعد ٧ أيام.", "Ads auto-hide after 7 days."))
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                            .padding(.bottom, 20)
+                        Text(L("سيظهر الإعلان 7 أيام. يمكنك نشر إعلان واحد فقط كل شهر.",
+                               "Ad shows for 7 days. You can post only once per month."))
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .padding(.bottom, 20)
                     }
                     .padding(.top, 10)
                 }
@@ -554,6 +731,7 @@ struct JobAdComposerView: View {
                 Text(L("التصنيف", "Category"))
                     .font(.subheadline)
                     .foregroundColor(.secondary)
+
                 Menu {
                     ForEach(categories, id: \.self) { c in
                         Button(c) { selectedCategory = c }
@@ -622,24 +800,137 @@ struct JobAdComposerView: View {
 
         do {
             try await ensureAnonAuthIfNeeded()
-
             let uid = Auth.auth().currentUser?.uid ?? ""
+            guard !uid.isEmpty else { throw NSError(domain: "Auth", code: -1) }
+
+            // ✅ Monthly limit (transaction-safe gate)
+            do {
+                try await JobMonthlyGate.claimOrThrow(db: db, uid: uid)
+            } catch {
+                let msg = (error as NSError).localizedDescription
+                if msg.contains("MONTHLY_LIMIT_REACHED") {
+                    errorMessage = L("مسموح إعلان وظيفة واحد فقط كل شهر. جرّب الشهر القادم.",
+                                     "Only 1 job ad per month. Try again next month.")
+                    return
+                } else {
+                    throw error
+                }
+            }
+
+            let safeCity = city.trimmingCharacters(in: .whitespacesAndNewlines)
+            let safeCategory = selectedCategory.trimmingCharacters(in: .whitespacesAndNewlines)
 
             let doc: [String: Any] = [
                 "type": adType.rawValue,
                 "text": generatedText,
-                "city": city.isEmpty ? "-" : city,
-                "category": selectedCategory.isEmpty ? (lang.isArabic ? "محل تجاري" : "Store") : selectedCategory,
-                "phone": phone.isEmpty ? "-" : phone,
+                "city": safeCity.isEmpty ? "-" : safeCity,
+                "category": safeCategory.isEmpty ? (lang.isArabic ? "أخرى" : "Other") : safeCategory,
+                "phone": phone.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "-" : phone,
                 "createdAt": FieldValue.serverTimestamp(),
                 "ownerId": uid
             ]
 
             _ = try await db.collection("jobAds").addDocument(data: doc)
             dismiss()
+
         } catch {
             errorMessage = L("حصل خطأ أثناء النشر. حاول مرة ثانية.", "Failed to post. Please try again.")
             print("Submit job ad failed: \(error.localizedDescription)")
         }
+    }
+}
+
+// MARK: - Info Sheet (NEW)
+
+private struct JobPostingInfoSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    let isArabic: Bool
+    private func L(_ ar: String, _ en: String) -> String { isArabic ? ar : en }
+
+    var body: some View {
+        NavigationView {
+            ZStack {
+                Color(.systemGroupedBackground).ignoresSafeArea()
+
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 14) {
+
+                        HStack(spacing: 10) {
+                            Image(systemName: "briefcase.fill")
+                                .font(.system(size: 26, weight: .bold))
+                                .foregroundColor(.blue)
+
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(L("إعلان الوظائف المجاني", "Free Job Ad"))
+                                    .font(.title3.weight(.bold))
+                                Text(L("خدمة للمجتمع", "Community Service"))
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
+                            Spacer()
+                        }
+
+                        infoCard(
+                            title: L("كيف تعمل؟", "How it works"),
+                            text: L(
+                                "• يحق لك نشر إعلان وظيفة واحد كل شهر مجاناً.\n• الإعلان يظهر لمدة 7 أيام.\n• النوعين موجودين: (أبحث عن عمل) و (أبحث عن موظف).\n• هدفنا دعم الشباب وأصحاب المحلات.",
+                                "• You can post 1 free job ad per month.\n• The ad stays visible for 7 days.\n• Two types: Looking for Job & Hiring.\n• Goal: support job seekers and local businesses."
+                            ),
+                            icon: "sparkles"
+                        )
+
+                        infoCard(
+                            title: L("ملاحظات مهمة", "Important notes"),
+                            text: L(
+                                "• إذا نشرت هذا الشهر، ستتمكن من النشر مرة ثانية الشهر القادم.\n• يمكنك حذف إعلانك في أي وقت.\n• الإعلانات تُعرض آخر 7 أيام فقط داخل الصفحة.",
+                                "• If you posted this month, you can post again next month.\n• You can delete your ad anytime.\n• The board shows only the last 7 days of posts."
+                            ),
+                            icon: "info.circle.fill"
+                        )
+
+                        Spacer(minLength: 12)
+                    }
+                    .padding(16)
+                }
+            }
+            .navigationTitle(L("شرح الوظائف", "Jobs Info"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(L("إغلاق", "Close")) { dismiss() }
+                }
+            }
+        }
+    }
+
+    private func infoCard(title: String, text: String, icon: String) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 8) {
+                Image(systemName: icon)
+                    .foregroundColor(.blue)
+                Text(title)
+                    .font(.headline)
+            }
+
+            Text(text)
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(14)
+        .background(Color(.secondarySystemGroupedBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(Color.black.opacity(0.04), lineWidth: 1)
+        )
+    }
+}
+
+// MARK: - Wrapper (so MainTabView can call the old name)
+
+struct JobLegacyBoardView: View {
+    var body: some View {
+        JobAdsBoardView()
     }
 }

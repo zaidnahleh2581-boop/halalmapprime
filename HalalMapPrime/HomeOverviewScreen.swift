@@ -3,7 +3,7 @@
 //  Halal Map Prime
 //
 //  Created by Zaid Nahleh on 2025-12-23.
-//  Updated by Zaid Nahleh on 2026-01-05.
+//  Updated by Zaid Nahleh on 2026-01-15.
 //  Copyright © 2026 Zaid Nahleh.
 //  All rights reserved.
 //
@@ -148,7 +148,6 @@ struct HomeOverviewScreen: View {
 
         return Group {
             if featured.isEmpty {
-                // silent
                 EmptyView()
             } else {
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -209,18 +208,13 @@ struct HomeOverviewScreen: View {
 
         return Group {
             if weekly.isEmpty {
-                // if everything empty, show one empty state
-                if weekly.isEmpty {
-                    Text(L("لا توجد إعلانات حالياً.", "No ads right now."))
-                        .font(.footnote.weight(.semibold))
-                        .foregroundColor(.secondary)
-                        .padding(12)
-                        .background(Color(.systemBackground))
-                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                        .padding(.horizontal, 16)
-                } else {
-                    EmptyView()
-                }
+                Text(L("لا توجد إعلانات حالياً.", "No ads right now."))
+                    .font(.footnote.weight(.semibold))
+                    .foregroundColor(.secondary)
+                    .padding(12)
+                    .background(Color(.systemBackground))
+                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    .padding(.horizontal, 16)
             } else {
                 VStack(alignment: .leading, spacing: 10) {
 
@@ -469,7 +463,7 @@ struct HomeOverviewScreen: View {
     }
 }
 
-// MARK: - Featured Slider Card (Prime + FreeOnce) with Images
+// MARK: - Featured Slider Card (Prime + FreeOnce) with URL Images
 
 private struct FeaturedAdSliderCard: View {
     let langIsArabic: Bool
@@ -482,8 +476,46 @@ private struct FeaturedAdSliderCard: View {
         Button(action: onTap) {
             VStack(alignment: .leading, spacing: 10) {
 
-                // Images
-                if !ad.uiImages().isEmpty {
+                // ✅ NEW: URLs first, fallback legacy base64
+                if !ad.imageURLs.isEmpty {
+                    TabView {
+                        ForEach(Array(ad.imageURLs.enumerated()), id: \.offset) { _, u in
+                            if let url = URL(string: u) {
+                                AsyncImage(url: url) { phase in
+                                    switch phase {
+                                    case .empty:
+                                        placeholder(height: 170)
+                                    case .success(let image):
+                                        image
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(height: 170)
+                                            .clipped()
+                                            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                                    case .failure:
+                                        if let legacy = ad.uiImages().first {
+                                            Image(uiImage: legacy)
+                                                .resizable()
+                                                .scaledToFill()
+                                                .frame(height: 170)
+                                                .clipped()
+                                                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                                        } else {
+                                            placeholder(height: 170)
+                                        }
+                                    @unknown default:
+                                        placeholder(height: 170)
+                                    }
+                                }
+                            } else {
+                                placeholder(height: 170)
+                            }
+                        }
+                    }
+                    .frame(height: 170)
+                    .tabViewStyle(.page(indexDisplayMode: .automatic))
+
+                } else if !ad.uiImages().isEmpty {
                     TabView {
                         ForEach(Array(ad.uiImages().enumerated()), id: \.offset) { _, img in
                             Image(uiImage: img)
@@ -496,6 +528,7 @@ private struct FeaturedAdSliderCard: View {
                     }
                     .frame(height: 170)
                     .tabViewStyle(.page(indexDisplayMode: .automatic))
+
                 } else {
                     ZStack {
                         RoundedRectangle(cornerRadius: 16, style: .continuous)
@@ -569,9 +602,16 @@ private struct FeaturedAdSliderCard: View {
         }
         .buttonStyle(.plain)
     }
+
+    private func placeholder(height: CGFloat) -> some View {
+        RoundedRectangle(cornerRadius: 16, style: .continuous)
+            .fill(Color(.secondarySystemBackground))
+            .frame(height: height)
+            .overlay(Image(systemName: "photo").foregroundStyle(.secondary))
+    }
 }
 
-// MARK: - Monthly Spotlight Card (bigger)
+// MARK: - Monthly Spotlight Card (bigger) with URL Image
 
 private struct MonthlySpotlightCard: View {
     let langIsArabic: Bool
@@ -604,8 +644,40 @@ private struct MonthlySpotlightCard: View {
                     .clipShape(Capsule())
             }
 
-            if let first = ad.uiImages().first {
-                Image(uiImage: first)
+            // ✅ NEW: URL first, fallback legacy
+            if let firstURL = ad.imageURLs.first,
+               !firstURL.isEmpty,
+               let url = URL(string: firstURL) {
+
+                AsyncImage(url: url) { phase in
+                    switch phase {
+                    case .empty:
+                        placeholder(height: 150)
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFill()
+                            .frame(height: 150)
+                            .clipped()
+                            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    case .failure:
+                        if let legacy = ad.uiImages().first {
+                            Image(uiImage: legacy)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(height: 150)
+                                .clipped()
+                                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                        } else {
+                            placeholder(height: 150)
+                        }
+                    @unknown default:
+                        placeholder(height: 150)
+                    }
+                }
+
+            } else if let legacy = ad.uiImages().first {
+                Image(uiImage: legacy)
                     .resizable()
                     .scaledToFill()
                     .frame(height: 150)
@@ -631,9 +703,16 @@ private struct MonthlySpotlightCard: View {
         .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
         .shadow(color: Color.black.opacity(0.08), radius: 12, x: 0, y: 8)
     }
+
+    private func placeholder(height: CGFloat) -> some View {
+        RoundedRectangle(cornerRadius: 16, style: .continuous)
+            .fill(Color(.secondarySystemBackground))
+            .frame(height: height)
+            .overlay(Image(systemName: "photo").foregroundStyle(.secondary))
+    }
 }
 
-// MARK: - Weekly Compact Card
+// MARK: - Weekly Compact Card with URL Image
 
 private struct CompactAdCard: View {
     let langIsArabic: Bool
@@ -642,18 +721,47 @@ private struct CompactAdCard: View {
     var body: some View {
         HStack(spacing: 12) {
 
-            if let img = ad.uiImages().first {
-                Image(uiImage: img)
+            // ✅ NEW: URL first, fallback legacy
+            if let firstURL = ad.imageURLs.first,
+               !firstURL.isEmpty,
+               let url = URL(string: firstURL) {
+
+                AsyncImage(url: url) { phase in
+                    switch phase {
+                    case .empty:
+                        placeholder()
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 64, height: 64)
+                            .clipped()
+                            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    case .failure:
+                        if let legacy = ad.uiImages().first {
+                            Image(uiImage: legacy)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 64, height: 64)
+                                .clipped()
+                                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                        } else {
+                            placeholder()
+                        }
+                    @unknown default:
+                        placeholder()
+                    }
+                }
+
+            } else if let legacy = ad.uiImages().first {
+                Image(uiImage: legacy)
                     .resizable()
                     .scaledToFill()
                     .frame(width: 64, height: 64)
                     .clipped()
                     .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
             } else {
-                RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .fill(Color(.secondarySystemBackground))
-                    .frame(width: 64, height: 64)
-                    .overlay(Image(systemName: "photo").foregroundColor(.secondary))
+                placeholder()
             }
 
             VStack(alignment: .leading, spacing: 4) {
@@ -680,8 +788,14 @@ private struct CompactAdCard: View {
         .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
         .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 6)
     }
-}
 
+    private func placeholder() -> some View {
+        RoundedRectangle(cornerRadius: 14, style: .continuous)
+            .fill(Color(.secondarySystemBackground))
+            .frame(width: 64, height: 64)
+            .overlay(Image(systemName: "photo").foregroundColor(.secondary))
+    }
+}
 
 // MARK: - Islamic Pattern Background (subtle)
 

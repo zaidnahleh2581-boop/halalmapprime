@@ -3,6 +3,7 @@
 //  Halal Map Prime
 //
 //  Created by Zaid Nahleh on 2026-01-05.
+//  Updated by Zaid Nahleh on 2026-01-14.
 //  Copyright © 2026 Zaid Nahleh.
 //  All rights reserved.
 //
@@ -17,28 +18,31 @@ struct AdPreviewScreen: View {
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
+    @EnvironmentObject var adsStore: AdsStore
+
+    @State private var showDeleteConfirm: Bool = false
+    @State private var isDeleting: Bool = false
 
     private func L(_ ar: String, _ en: String) -> String { langIsArabic ? ar : en }
+
+    // ✅ Prefer Storage URLs (new) then fallback to legacy base64
+    private var storageURLs: [URL] {
+        ad.imageURLs
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+            .compactMap { URL(string: $0) }
+    }
+
+    private var legacyImages: [UIImage] {
+        ad.uiImages() // base64 legacy only
+    }
 
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack(alignment: .leading, spacing: 14) {
 
-                // Images carousel
-                let imgs = ad.uiImages()
-                if !imgs.isEmpty {
-                    TabView {
-                        ForEach(Array(imgs.enumerated()), id: \.offset) { _, img in
-                            Image(uiImage: img)
-                                .resizable()
-                                .scaledToFill()
-                                .frame(height: 240)
-                                .clipped()
-                        }
-                    }
-                    .frame(height: 240)
-                    .tabViewStyle(.page(indexDisplayMode: .automatic))
-                }
+                // MARK: - Images Carousel
+                imagesCarousel
 
                 VStack(alignment: .leading, spacing: 8) {
                     HStack(alignment: .top) {
@@ -77,7 +81,7 @@ struct AdPreviewScreen: View {
                 .padding(.horizontal, 16)
                 .padding(.top, 10)
 
-                // Actions
+                // MARK: - Actions
                 VStack(spacing: 10) {
 
                     if !ad.phone.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -104,6 +108,27 @@ struct AdPreviewScreen: View {
                     } label: {
                         actionButton(title: L("الذهاب إلى Google Maps", "Open in Google Maps"), systemImage: "map.fill")
                     }
+
+                    // ✅ Delete button (ONLY for owner)
+                    if adsStore.isMyAd(ad) {
+                        Button(role: .destructive) {
+                            showDeleteConfirm = true
+                        } label: {
+                            HStack(spacing: 10) {
+                                Image(systemName: "trash.fill")
+                                Text(L("حذف الإعلان", "Delete Ad"))
+                                    .font(.headline)
+                                Spacer()
+                                if isDeleting {
+                                    ProgressView().scaleEffect(0.9)
+                                }
+                            }
+                            .padding(14)
+                            .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(Color.red.opacity(0.12)))
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.top, 4)
+                    }
                 }
                 .padding(.horizontal, 16)
                 .padding(.bottom, 22)
@@ -116,7 +141,108 @@ struct AdPreviewScreen: View {
                 Button(L("إغلاق", "Close")) { dismiss() }
             }
         }
+        .alert(L("حذف الإعلان", "Delete Ad"), isPresented: $showDeleteConfirm) {
+            Button(L("إلغاء", "Cancel"), role: .cancel) { }
+            Button(L("حذف", "Delete"), role: .destructive) {
+                Task {
+                    await deleteAdNow()
+                }
+            }
+        } message: {
+            Text(L("هل أنت متأكد أنك تريد حذف هذا الإعلان نهائياً؟",
+                   "Are you sure you want to permanently delete this ad?"))
+        }
     }
+
+    // MARK: - Delete
+
+    private func deleteAdNow() async {
+        guard !isDeleting else { return }
+        isDeleting = true
+        await adsStore.deleteAd(ad)
+        isDeleting = false
+        dismiss()
+    }
+
+    // MARK: - Images
+
+    @ViewBuilder
+    private var imagesCarousel: some View {
+        // 1) ✅ Storage URLs (new)
+        if !storageURLs.isEmpty {
+            TabView {
+                ForEach(Array(storageURLs.enumerated()), id: \.offset) { _, url in
+                    AsyncImage(url: url) { phase in
+                        switch phase {
+                        case .empty:
+                            imagePlaceholder(title: L("تحميل الصورة...", "Loading image..."))
+                                .frame(height: 240)
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .scaledToFill()
+                                .frame(height: 240)
+                                .clipped()
+                        case .failure:
+                            if let legacy = legacyImages.first {
+                                Image(uiImage: legacy)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(height: 240)
+                                    .clipped()
+                            } else {
+                                imagePlaceholder(title: L("فشل تحميل الصورة", "Failed to load"))
+                                    .frame(height: 240)
+                            }
+                        @unknown default:
+                            imagePlaceholder(title: L("تحميل الصورة...", "Loading image..."))
+                                .frame(height: 240)
+                        }
+                    }
+                }
+            }
+            .frame(height: 240)
+            .tabViewStyle(.page(indexDisplayMode: .automatic))
+        }
+        // 2) ✅ Legacy base64 (old ads)
+        else if !legacyImages.isEmpty {
+            TabView {
+                ForEach(Array(legacyImages.enumerated()), id: \.offset) { _, img in
+                    Image(uiImage: img)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(height: 240)
+                        .clipped()
+                }
+            }
+            .frame(height: 240)
+            .tabViewStyle(.page(indexDisplayMode: .automatic))
+        }
+        // 3) ✅ No images
+        else {
+            imagePlaceholder(title: L("لا توجد صور", "No images"))
+                .frame(height: 240)
+        }
+    }
+
+    private func imagePlaceholder(title: String) -> some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(Color(.secondarySystemBackground))
+            VStack(spacing: 8) {
+                Image(systemName: "photo")
+                    .font(.system(size: 26, weight: .semibold))
+                    .foregroundStyle(.secondary)
+                Text(title)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .clipped()
+        .padding(.horizontal, 16)
+    }
+
+    // MARK: - UI Helpers
 
     private func actionButton(title: String, systemImage: String) -> some View {
         HStack(spacing: 10) {

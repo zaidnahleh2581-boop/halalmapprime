@@ -3,7 +3,7 @@
 //  Halal Map Prime
 //
 //  Created by Zaid Nahleh on 2026-01-04.
-//  Updated by Zaid Nahleh on 2026-01-08.
+//  Updated by Zaid Nahleh on 2026-01-15.
 //  Copyright © 2026 Zaid Nahleh.
 //  All rights reserved.
 //
@@ -32,6 +32,10 @@ struct AdsHomeView: View {
                 VStack(spacing: 14) {
 
                     topButtonsRow
+
+                    // ✅ NEW: Launch banner (official text)
+                    launchBanner
+
                     profileCard
 
                     publicAdsSection
@@ -69,7 +73,7 @@ struct AdsHomeView: View {
             }
         }
 
-        // ✅ NEW: Verify Sheet
+        // ✅ Verify Sheet
         .sheet(isPresented: $showVerifySheet) {
             NavigationStack {
                 VerifyBusinessSheet(
@@ -95,12 +99,68 @@ struct AdsHomeView: View {
         }
     }
 
+    // MARK: - NEW Launch Banner
+
+    private var launchBanner: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .top, spacing: 10) {
+                Image(systemName: "sparkles")
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundColor(.blue)
+                    .padding(10)
+                    .background(Color.blue.opacity(0.12))
+                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(L("إطلاق النسخة الجديدة ✅", "New launch ✅"))
+                        .font(.headline.weight(.bold))
+
+                    Text(L(
+                        "Halal Map Prime خدمة مجتمعية لدعم أصحاب المحلات. الإعلانات حالياً مجانية لفترة محدودة — جرّب الباقات الأسبوعية والشهرية والمميزة بدون دفع الآن.",
+                        "Halal Map Prime is a community-first service to support local businesses. Ads are currently FREE for a limited time — try Weekly, Monthly, and Prime plans with no payment right now."
+                    ))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                }
+
+                Spacer()
+            }
+
+            HStack(spacing: 10) {
+                Label(L("مجاني لفترة محدودة", "Free for a limited time"), systemImage: "gift.fill")
+                    .font(.caption.weight(.semibold))
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 7)
+                    .background(Color.green.opacity(0.14))
+                    .foregroundColor(.green)
+                    .clipShape(Capsule())
+
+                Label(L("الدفع لاحقاً", "Payment later"), systemImage: "creditcard.fill")
+                    .font(.caption.weight(.semibold))
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 7)
+                    .background(Color.orange.opacity(0.14))
+                    .foregroundColor(.orange)
+                    .clipShape(Capsule())
+
+                Spacer()
+            }
+        }
+        .padding(14)
+        .background(
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .fill(Color(.systemBackground))
+                .shadow(color: Color.black.opacity(0.06), radius: 10, x: 0, y: 6)
+        )
+        .padding(.horizontal, 14)
+    }
+
     // MARK: - Top Buttons
 
     private var topButtonsRow: some View {
         HStack(spacing: 10) {
 
-            // ✅ بدل "أضف عنوانك" صار "توثيق المحل"
             Button { showVerifySheet = true } label: {
                 topPill(
                     title: L("توثيق المحل", "Get Verified"),
@@ -283,14 +343,10 @@ struct AdsHomeView: View {
                 planBadge(ad.plan)
             }
 
-            if let img = ad.uiImages().first {
-                Image(uiImage: img)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(height: 170)
-                    .clipped()
-                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-            }
+            // ✅ NEW: Prefer Storage URLs, fallback to legacy base64
+            adCardImage(ad: ad)
+                .frame(height: 170)
+                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
 
             Text(ad.adText)
                 .font(.footnote)
@@ -308,6 +364,64 @@ struct AdsHomeView: View {
         .padding(14)
         .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Color(.systemBackground)))
         .shadow(color: Color.black.opacity(0.07), radius: 12, x: 0, y: 8)
+    }
+
+    @ViewBuilder
+    private func adCardImage(ad: HMPAd) -> some View {
+        // 1) Storage URL image
+        if let firstURL = ad.imageURLs.first,
+           let url = URL(string: firstURL), !firstURL.isEmpty {
+            AsyncImage(url: url) { phase in
+                switch phase {
+                case .empty:
+                    imagePlaceholder(title: L("تحميل الصورة...", "Loading image..."))
+                case .success(let image):
+                    image
+                        .resizable()
+                        .scaledToFill()
+                        .clipped()
+                case .failure:
+                    // If URL fails, fallback to legacy if exists
+                    if let legacy = ad.uiImages().first {
+                        Image(uiImage: legacy)
+                            .resizable()
+                            .scaledToFill()
+                            .clipped()
+                    } else {
+                        imagePlaceholder(title: L("فشل تحميل الصورة", "Failed to load"))
+                    }
+                @unknown default:
+                    imagePlaceholder(title: L("تحميل الصورة...", "Loading image..."))
+                }
+            }
+        }
+        // 2) Legacy base64
+        else if let legacy = ad.uiImages().first {
+            Image(uiImage: legacy)
+                .resizable()
+                .scaledToFill()
+                .clipped()
+        }
+        // 3) No image
+        else {
+            imagePlaceholder(title: L("لا توجد صورة", "No image"))
+        }
+    }
+
+    private func imagePlaceholder(title: String) -> some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(Color(.secondarySystemBackground))
+            VStack(spacing: 8) {
+                Image(systemName: "photo")
+                    .font(.system(size: 26, weight: .semibold))
+                    .foregroundStyle(.secondary)
+                Text(title)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .clipped()
     }
 
     private func adsExpiredCard(_ ad: HMPAd) -> some View {
