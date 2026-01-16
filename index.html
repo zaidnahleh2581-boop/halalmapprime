@@ -1,645 +1,305 @@
 <!doctype html>
 <html lang="en" dir="ltr" id="root">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="theme-color" content="#0b1220" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#0b1220" />
 
-  <title>Halal Map Prime — Built for Trust</title>
-  <meta name="description" content="Open the map. Feel the difference. Download Halal Map Prime on the App Store." />
+<title>Halal Map Prime — Built for Trust</title>
+<meta name="description" content="A premium halal discovery platform for places, masjids, services, jobs, and community updates." />
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
 
-  <style>
-    :root{
-      --bg:#0b1220;
-      --card: rgba(255,255,255,.06);
-      --border: rgba(255,255,255,.12);
-      --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.78);
-      --shadow: 0 24px 80px rgba(0,0,0,.55);
-      --radius: 24px;
-    }
+<style>
+/* ================== RESET ================== */
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:'Inter',system-ui,-apple-system;
+  background:#0b1220;
+  color:#fff;
+  overflow-x:hidden;
+}
 
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; }
-    body{
-      margin:0;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color: var(--text);
-      background: var(--bg);
-      overflow-x:hidden;
-    }
+/* ================== BACKGROUND ================== */
+.bg{
+  position:fixed; inset:0; z-index:-1;
+  background:
+    radial-gradient(800px 500px at 10% 10%, rgba(80,140,255,.25), transparent 40%),
+    radial-gradient(700px 500px at 90% 30%, rgba(200,80,255,.22), transparent 40%),
+    linear-gradient(180deg,#0b1220,#060913);
+}
 
-    /* Background FX */
-    .bg{ position:fixed; inset:0; z-index:-1; overflow:hidden; }
-    .bg-orb{
-      position:absolute; width:520px; height:520px; border-radius:999px;
-      filter: blur(60px);
-      opacity:.55;
-    }
-    .orb-a{ left:-120px; top:120px; background: radial-gradient(circle at 30% 30%, #38bdf8, transparent 60%); }
-    .orb-b{ right:-140px; bottom:40px; background: radial-gradient(circle at 30% 30%, #a855f7, transparent 60%); }
-    .bg-grid{
-      position:absolute; inset:0; opacity:.12;
-      background-image:
-        linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
-      background-size: 56px 56px;
-      transform: translateZ(0);
-    }
-    .bg-noise{
-      position:absolute; inset:0; opacity:.09;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
-      mix-blend-mode: overlay;
-    }
+/* ================== HEADER ================== */
+.header{
+  height:64px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 22px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  backdrop-filter: blur(10px);
+}
+.brand{
+  display:flex; align-items:center; gap:10px;
+  font-weight:900;
+}
+.brand span{opacity:.85}
+.langs button{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.14);
+  color:#fff;
+  padding:6px 10px;
+  border-radius:10px;
+  margin-left:6px;
+  cursor:pointer;
+  font-weight:700;
+}
 
-    .container{ width:min(1100px, 92vw); margin:0 auto; }
+/* ================== HERO ================== */
+.hero{
+  max-width:1200px;
+  margin:0 auto;
+  padding:64px 20px 80px;
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:40px;
+}
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr}
+}
 
-    /* Topbar */
-    .topbar{
-      position:sticky; top:0; z-index:50;
-      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-      background: rgba(11,18,32,.55);
-      border-bottom:1px solid rgba(255,255,255,.10);
-    }
-    .topbar-inner{
-      display:flex; align-items:center; justify-content:space-between;
-      padding: 14px 0;
-      gap: 14px;
-    }
-    .brand{ display:flex; align-items:center; gap:12px; }
-    .logo{
-      width:40px; height:40px; border-radius:14px;
-      background: rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.12);
-      display:flex; align-items:center; justify-content:center;
-      position:relative;
-      box-shadow: 0 10px 30px rgba(0,0,0,.25);
-    }
-    .logo-moon{ font-size:18px; opacity:.95; }
-    .logo-star{ font-size:12px; position:absolute; right:9px; top:9px; opacity:.95; }
-    .brand-title{ font-weight:900; letter-spacing:.2px; }
-    .brand-sub{ font-size:12px; opacity:.85; margin-top:2px; }
+.kicker{
+  display:inline-block;
+  padding:6px 12px;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.14);
+  font-weight:700;
+  margin-bottom:18px;
+}
+h1{
+  font-size:56px;
+  line-height:1.05;
+  margin:0 0 16px;
+}
+.grad{
+  background:linear-gradient(90deg,#7aa2ff,#d07cff);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.lead{
+  font-size:18px;
+  opacity:.9;
+  max-width:520px;
+}
+.cta{
+  margin-top:28px;
+}
+.cta a{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  max-width:420px;
+  padding:18px;
+  border-radius:20px;
+  font-weight:900;
+  text-decoration:none;
+  color:#fff;
+  background:rgba(0,0,0,.6);
+  border:1px solid rgba(255,255,255,.22);
+  box-shadow:0 30px 80px rgba(0,0,0,.55);
+}
 
-    .top-actions{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
-    .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:10px 12px;
-      border-radius:999px;
-      text-decoration:none;
-      color:var(--text);
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.12);
-      font-weight:800;
-      font-size: 13px;
-    }
+/* ================== PHONE ================== */
+.phone-shell{
+  width:min(380px,92vw);
+  margin:0 auto;
+  padding:14px;
+  border-radius:36px;
+  background:linear-gradient(180deg,#1a1a1a,#000);
+  box-shadow:
+    0 30px 90px rgba(0,0,0,.55),
+    inset 0 0 0 2px rgba(255,255,255,.08);
+  position:relative;
+}
+.phone-shell::after{
+  content:"";
+  position:absolute; inset:0;
+  border-radius:36px;
+  background:linear-gradient(120deg,rgba(255,255,255,.12),transparent 40%);
+  pointer-events:none;
+}
+.phone-notch{
+  position:absolute;
+  top:8px; left:50%;
+  transform:translateX(-50%);
+  width:126px; height:22px;
+  background:#000;
+  border-radius:0 0 14px 14px;
+  z-index:5;
+}
+.phone-screen{
+  border-radius:26px;
+  overflow:hidden;
+  background:#000;
+  aspect-ratio:9/19.5;
+}
+.phone-track{
+  height:100%;
+  display:flex;
+  width:300%;
+  transition:transform .4s ease;
+}
+.phone-slide{
+  flex:0 0 100%;
+}
+.phone-slide img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
 
-    /* HERO */
-    .hero{ padding: 26px 0 38px 0; }
-    .hero-inner{
-      display:grid;
-      grid-template-columns: 1.05fr .95fr;
-      gap: 26px;
-      align-items:start;
-    }
-    .kicker{ opacity:.85; font-weight:800; font-size:12px; letter-spacing:.25px; }
-    .badge{
-      margin-top: 10px;
-      display:inline-flex;
-      padding: 6px 12px;
-      border-radius: 999px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      font-size: 12px;
-      font-weight: 800;
-      opacity:.92;
-    }
-    h1.title{
-      margin: 14px 0 0 0;
-      font-size: clamp(34px, 4.4vw, 54px);
-      line-height: 1.02;
-      letter-spacing: -.2px;
-    }
-    .grad{
-      background: linear-gradient(90deg, #38bdf8, #a855f7);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    .lead{
-      margin: 12px 0 0 0;
-      color: var(--muted);
-      font-size: 16px;
-      line-height: 1.55;
-      max-width: 62ch;
-    }
+/* arrows */
+.phone-arrows{
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.phone-arrow{
+  width:42px;height:42px;
+  margin:0 10px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(0,0,0,.55);
+  color:#fff;
+  font-size:20px;
+  font-weight:900;
+  cursor:pointer;
+}
 
-    /* Biggest CTA */
-    .cta{
-      margin-top: 16px;
-      display:flex;
-      flex-direction:column;
-      gap: 10px;
-      max-width: 560px;
-    }
-    .download-btn{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap: 12px;
-      width:100%;
-      padding: 22px 22px;
-      border-radius: 22px;
-      font-weight: 900;
-      text-decoration:none;
-      color: var(--text);
-      border:1px solid rgba(255,255,255,.22);
-      background: rgba(0,0,0,.60);
-      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      box-shadow: var(--shadow);
-      transform: translateY(0);
-    }
-    .download-btn:hover{ transform: translateY(-2px); transition:.18s ease; }
-    .download-text{ display:flex; flex-direction:column; line-height: 1.05; text-align:center; }
-    .download-text .big{ font-size: 18px; }
-    .download-text .small{ font-size: 12px; opacity:.85; margin-top: 6px; font-weight: 800; }
-
-    .micro{
-      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
-      font-size: 12px; font-weight:800; opacity:.85;
-    }
-    .dot{ opacity:.55; }
-
-    .note{
-      margin-top: 12px;
-      font-size: 12px;
-      opacity:.78;
-      max-width: 70ch;
-    }
-
-    /* Right panel */
-    .panel{
-      border-radius: var(--radius);
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow: 0 18px 60px rgba(0,0,0,.22);
-      overflow:hidden;
-    }
-    .panel-top{ padding:16px; display:flex; gap:10px; flex-wrap:wrap; }
-    .chip{
-      padding:8px 10px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.35);
-      font-weight: 900;
-      font-size: 12px;
-      opacity:.92;
-    }
-    .chip.alt{ background: rgba(255,255,255,.06); }
-    .panel-body{ padding: 0 16px 16px 16px; }
-    .panel-title{ font-weight: 900; margin: 8px 0 10px 0; }
-    .panel-line{ opacity:.86; margin: 6px 0; }
-
-    /* PHONE SLIDER (inside iPhone frame) */
-    .phone-area{ margin-top: 16px; display:flex; justify-content:center; }
-    .iphone{
-      width: min(380px, 88vw);
-      border-radius: 36px;
-      padding: 14px;
-      background: linear-gradient(180deg,#1a1a1a,#000);
-      box-shadow:
-        0 30px 90px rgba(0,0,0,.55),
-        inset 0 0 0 2px rgba(255,255,255,.08);
-      position: relative;
-      user-select:none;
-      -webkit-user-select:none;
-      touch-action: pan-y;
-    }
-    .iphone::after{
-      content:"";
-      position:absolute; inset:0;
-      border-radius:36px;
-      background: linear-gradient(120deg, rgba(255,255,255,.12), rgba(255,255,255,0) 40%);
-      pointer-events:none;
-    }
-    .notch{
-      position:absolute;
-      top: 8px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 126px;
-      height: 22px;
-      background: #000;
-      border-radius: 0 0 14px 14px;
-      z-index: 6;
-    }
-
-    .screen{
-      border-radius: 26px;
-      overflow:hidden;
-      position: relative;
-      background:#000;
-    }
-    .slides{
-      display:flex;
-      width: 300%;
-      transform: translateX(0%);
-      transition: transform .35s ease;
-    }
-    .slide{
-      width: 100%;
-      flex: 0 0 100%;
-    }
-    .slide img{
-      display:block;
-      width: 100%;
-      height: auto;
-    }
-
-    .controls{
-      position:absolute;
-      inset: 0;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      pointer-events:none;
-    }
-    .arrow{
-      pointer-events:auto;
-      width: 42px; height: 42px;
-      border-radius: 14px;
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.55);
-      color: rgba(255,255,255,.92);
-      display:flex; align-items:center; justify-content:center;
-      cursor:pointer;
-      margin: 0 10px;
-      font-size: 18px;
-      font-weight: 900;
-    }
-
-    .dots{
-      position:absolute;
-      left: 0; right: 0;
-      bottom: 10px;
-      display:flex;
-      gap: 8px;
-      justify-content:center;
-      z-index: 7;
-    }
-    .dotbtn{
-      width: 8px; height: 8px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.22);
-      background: rgba(255,255,255,.16);
-      cursor:pointer;
-      opacity:.85;
-    }
-    .dotbtn.active{
-      width: 18px;
-      background: rgba(255,255,255,.86);
-      opacity: 1;
-    }
-
-    /* Sections */
-    .section{ padding: 46px 0; }
-    .section-head h2{ margin:0; font-size: 26px; font-weight: 900; }
-    .section-head p{ margin:10px 0 0 0; opacity:.85; max-width: 72ch; }
-
-    .grid{
-      margin-top: 18px;
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-    }
-    .card{
-      padding: 18px;
-      border-radius: 20px;
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow: 0 16px 50px rgba(0,0,0,.18);
-    }
-    .card .icon{ font-size: 22px; }
-    .card h3{ margin: 10px 0 6px 0; font-weight: 900; }
-    .card p{ margin: 0; opacity:.86; line-height: 1.5; }
-    .dark{ background: rgba(0,0,0,.10); border-top:1px solid rgba(255,255,255,.06); border-bottom:1px solid rgba(255,255,255,.06); }
-
-    .timeline{
-      margin-top: 16px;
-      display:grid;
-      gap: 12px;
-    }
-    .step{
-      display:flex; gap: 12px; align-items:flex-start;
-      padding: 16px;
-      border-radius: 20px;
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.12);
-    }
-    .badgeNum{
-      width: 34px; height: 34px;
-      border-radius: 14px;
-      display:flex; align-items:center; justify-content:center;
-      font-weight: 900;
-      background: rgba(0,0,0,.45);
-      border:1px solid rgba(255,255,255,.14);
-    }
-    .step h3{ margin:0; font-weight: 900; }
-    .step p{ margin: 6px 0 0 0; opacity:.86; }
-
-    /* Responsive */
-    @media (max-width: 980px){
-      .hero-inner{ grid-template-columns: 1fr; }
-      .grid{ grid-template-columns: 1fr; }
-      .panel{ order: 2; }
-    }
-  </style>
+/* dots */
+.phone-dots{
+  position:absolute;
+  left:0; right:0; bottom:12px;
+  display:flex; justify-content:center; gap:8px;
+}
+.phone-dot{
+  width:8px;height:8px;
+  border-radius:999px;
+  background:rgba(255,255,255,.25);
+  border:1px solid rgba(255,255,255,.22);
+  cursor:pointer;
+}
+.phone-dot.active{
+  width:18px;
+  background:#fff;
+}
+</style>
 </head>
 
 <body>
-  <div class="bg">
-    <div class="bg-orb orb-a"></div>
-    <div class="bg-orb orb-b"></div>
-    <div class="bg-grid"></div>
-    <div class="bg-noise"></div>
+
+<div class="bg"></div>
+
+<header class="header">
+  <div class="brand">☾ Halal Map Prime <span>Built for Trust</span></div>
+  <div class="langs">
+    <button onclick="setLang('en')">EN</button>
+    <button onclick="setLang('ar')">AR</button>
+  </div>
+</header>
+
+<section class="hero">
+  <!-- LEFT -->
+  <div>
+    <div class="kicker" data-i18n="kicker">Designed in New York • Built for Communities</div>
+    <h1>
+      <span data-i18n="titleA">Open the map.</span>
+      <span class="grad" data-i18n="titleB">Feel the difference.</span>
+    </h1>
+    <p class="lead" data-i18n="lead">
+      Not just another map — halal clarity for places, masjids, services, jobs, and community updates.
+    </p>
+    <div class="cta">
+      <a href="https://apps.apple.com/app/halal-map-prime/id6756825539" target="_blank">
+         Download on the App Store
+      </a>
+    </div>
   </div>
 
-  <header class="topbar">
-    <div class="container topbar-inner">
-      <div class="brand">
-        <div class="logo"><span class="logo-moon">☾</span><span class="logo-star">✦</span></div>
-        <div>
-          <div class="brand-title">Halal Map Prime</div>
-          <div class="brand-sub">Built for Trust</div>
-        </div>
+  <!-- RIGHT (PHONE) -->
+  <div class="phone-shell" id="phone">
+    <div class="phone-notch"></div>
+    <div class="phone-screen">
+      <div class="phone-track" id="track">
+        <div class="phone-slide"><img src="./images/screen-home.jpg"></div>
+        <div class="phone-slide"><img src="./images/screen-faith.jpg"></div>
+        <div class="phone-slide"><img src="./images/screen-jobs.jpg"></div>
       </div>
-      <nav class="top-actions">
-        <a class="pill" href="mailto:Info@Halalmapprime.com">✉ Email</a>
-        <a class="pill" href="#contact">Get listed</a>
-      </nav>
+      <div class="phone-arrows">
+        <button class="phone-arrow" onclick="prev()">‹</button>
+        <button class="phone-arrow" onclick="next()">›</button>
+      </div>
+      <div class="phone-dots" id="dots"></div>
     </div>
-  </header>
+  </div>
+</section>
 
-  <main>
-    <section class="hero" id="top">
-      <div class="container hero-inner">
+<script>
+/* ================== SLIDER ================== */
+let i=0;
+const total=3;
+const track=document.getElementById('track');
+const dots=document.getElementById('dots');
 
-        <div>
-          <div class="kicker">Designed in New York • Built for Communities</div>
-          <div class="badge">Now available on the App Store</div>
+function renderDots(){
+  dots.innerHTML='';
+  for(let d=0;d<total;d++){
+    const b=document.createElement('div');
+    b.className='phone-dot'+(d===i?' active':'');
+    b.onclick=()=>go(d);
+    dots.appendChild(b);
+  }
+}
+function go(n){
+  i=(n+total)%total;
+  track.style.transform=`translateX(-${i*100}%)`;
+  renderDots();
+}
+function next(){go(i+1)}
+function prev(){go(i-1)}
+renderDots();
+setInterval(next,4500);
 
-          <h1 class="title">
-            Open the map. <span class="grad">Feel the difference.</span>
-          </h1>
+/* ================== LANG ================== */
+const dict={
+  en:{
+    kicker:"Designed in New York • Built for Communities",
+    titleA:"Open the map.",
+    titleB:"Feel the difference.",
+    lead:"Not just another map — halal clarity for places, masjids, services, jobs, and community updates."
+  },
+  ar:{
+    kicker:"مصمم في نيويورك • مبني لخدمة المجتمع",
+    titleA:"افتح الخريطة.",
+    titleB:"واحس بالفرق.",
+    lead:"مش مجرد خريطة — وضوح حلال للأماكن، المساجد، الخدمات، الوظائف، والمجتمع."
+  }
+};
+function setLang(l){
+  document.documentElement.lang=l;
+  document.documentElement.dir=(l==='ar'?'rtl':'ltr');
+  document.body.style.fontFamily=(l==='ar'?'Tajawal':'Inter');
+  document.querySelectorAll('[data-i18n]').forEach(e=>{
+    e.textContent=dict[l][e.dataset.i18n];
+  });
+}
+</script>
 
-          <p class="lead">
-            Not just another map — halal clarity for places, masjids, services, jobs, and community updates.
-          </p>
-
-          <div class="cta">
-            <a class="download-btn" href="https://apps.apple.com/app/halal-map-prime/id6756825539" target="_blank" rel="noopener">
-              
-              <span class="download-text">
-                <span class="big">Download on the App Store</span>
-                <span class="small">Tap • Install • Explore what’s inside</span>
-              </span>
-            </a>
-
-            <div class="micro">
-              <span>No login needed</span><span class="dot">•</span>
-              <span>Fast & premium</span><span class="dot">•</span>
-              <span>Built for trust</span>
-            </div>
-          </div>
-
-          <div class="note">
-            Community-based platform. Listings rely on submitted information and do not represent official certification.
-          </div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-top">
-            <div class="chip">Halal • Community-Verified • Premium</div>
-            <div class="chip alt">Jobs • Events • Services</div>
-          </div>
-
-          <!-- PHONE SLIDER -->
-          <div class="panel-body">
-            <div class="panel-title">See what’s inside</div>
-
-            <div class="phone-area">
-              <div class="iphone" id="iphoneSlider">
-                <div class="notch"></div>
-
-                <div class="screen">
-                  <div class="slides" id="slides">
-                    <div class="slide"><img src="./images/screen-home.jpg" alt="Home screen" loading="lazy"></div>
-                    <div class="slide"><img src="./images/screen-faith.jpg" alt="Faith tools" loading="lazy"></div>
-                    <div class="slide"><img src="./images/screen-jobs.jpg" alt="Jobs & ads" loading="lazy"></div>
-                  </div>
-
-                  <div class="controls">
-                    <button class="arrow" id="prevBtn" aria-label="Previous">‹</button>
-                    <button class="arrow" id="nextBtn" aria-label="Next">›</button>
-                  </div>
-
-                  <div class="dots" id="dots"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="panel-line">• Halal food & groceries</div>
-            <div class="panel-line">• Masjids & schools</div>
-            <div class="panel-line">• Local services</div>
-            <div class="panel-line">• Community jobs & events</div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <section class="section" id="features">
-      <div class="container">
-        <div class="section-head">
-          <h2>Why people keep it</h2>
-          <p>Fast discovery, real utility, and a clean premium experience — built for everyday use.</p>
-        </div>
-
-        <div class="grid">
-          <article class="card">
-            <div class="icon">🗺️</div>
-            <h3>Premium halal discovery</h3>
-            <p>Find halal places, masjids, schools, and services around you — quickly.</p>
-          </article>
-          <article class="card">
-            <div class="icon">✅</div>
-            <h3>Verification where it matters</h3>
-            <p>Only food/meat sellers require verification. Masjids, schools & services can appear directly.</p>
-          </article>
-          <article class="card">
-            <div class="icon">📣</div>
-            <h3>Prime visibility</h3>
-            <p>Boosted listings and banners for halal businesses that want real reach.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section dark" id="vision">
-      <div class="container">
-        <div class="section-head">
-          <h2>Our vision</h2>
-          <p>United States first — then the world, with integrity.</p>
-        </div>
-
-        <div class="timeline">
-          <div class="step">
-            <div class="badgeNum">01</div>
-            <div>
-              <h3>United States</h3>
-              <p>Nationwide halal discovery — city by city, community by community.</p>
-            </div>
-          </div>
-          <div class="step">
-            <div class="badgeNum">02</div>
-            <div>
-              <h3>London • Toronto</h3>
-              <p>Key global cities with strong community presence.</p>
-            </div>
-          </div>
-          <div class="step">
-            <div class="badgeNum">03</div>
-            <div>
-              <h3>Australia</h3>
-              <p>Long-term expansion with the same clarity-first model.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="contact">
-      <div class="container">
-        <div class="section-head">
-          <h2>Get listed / Contact</h2>
-          <p>Business? Masjid? School? Service? Want Prime visibility? Contact us now.</p>
-        </div>
-
-        <div style="margin-top:16px;">
-          <a class="download-btn" href="https://apps.apple.com/app/halal-map-prime/id6756825539" target="_blank" rel="noopener" style="max-width:520px;">
-            
-            <span class="download-text">
-              <span class="big">Download on the App Store</span>
-              <span class="small">Open the map now</span>
-            </span>
-          </a>
-        </div>
-
-        <div style="margin-top:14px; opacity:.88;">
-          Email: <a href="mailto:Info@Halalmapprime.com" style="color:rgba(255,255,255,.92); font-weight:900;">Info@Halalmapprime.com</a>
-        </div>
-
-        <div style="margin-top:24px; opacity:.72; font-size:12px;">
-          © <span id="year"></span> Halal Map Prime • Built in New York
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <script>
-    // year
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // Slider
-    const slidesEl = document.getElementById('slides');
-    const dotsEl = document.getElementById('dots');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const iphone = document.getElementById('iphoneSlider');
-
-    const total = 3;
-    let index = 0;
-    let timer = null;
-
-    function renderDots(){
-      dotsEl.innerHTML = "";
-      for(let i=0;i<total;i++){
-        const b = document.createElement('button');
-        b.className = "dotbtn" + (i===index ? " active" : "");
-        b.setAttribute("aria-label", "Go to slide " + (i+1));
-        b.addEventListener("click", ()=>goTo(i, true));
-        dotsEl.appendChild(b);
-      }
-    }
-
-    function goTo(i, user=false){
-      index = (i + total) % total;
-      slidesEl.style.transform = "translateX(-" + (index*100) + "%)";
-      renderDots();
-      if(user) restart();
-    }
-
-    function next(user=false){ goTo(index+1, user); }
-    function prev(user=false){ goTo(index-1, user); }
-
-    prevBtn.addEventListener("click", ()=>prev(true));
-    nextBtn.addEventListener("click", ()=>next(true));
-
-    // autoplay
-    function start(){
-      if(timer) return;
-      timer = setInterval(()=>next(false), 4000);
-    }
-    function stop(){
-      if(!timer) return;
-      clearInterval(timer);
-      timer = null;
-    }
-    function restart(){
-      stop();
-      start();
-    }
-
-    // pause on hover (desktop)
-    iphone.addEventListener("mouseenter", stop);
-    iphone.addEventListener("mouseleave", start);
-
-    // swipe (mobile)
-    let startX = 0;
-    let isDown = false;
-
-    iphone.addEventListener("touchstart", (e)=>{
-      stop();
-      isDown = true;
-      startX = e.touches[0].clientX;
-    }, {passive:true});
-
-    iphone.addEventListener("touchmove", (e)=>{
-      if(!isDown) return;
-      const dx = e.touches[0].clientX - startX;
-      // no dragging UI (keep it simple)
-    }, {passive:true});
-
-    iphone.addEventListener("touchend", (e)=>{
-      if(!isDown) return;
-      isDown = false;
-      const endX = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientX : startX;
-      const dx = endX - startX;
-      if(Math.abs(dx) > 40){
-        if(dx < 0) next(true);
-        else prev(true);
-      } else {
-        restart();
-      }
-    });
-
-    // init
-    renderDots();
-    goTo(0);
-    start();
-  </script>
 </body>
 </html>
