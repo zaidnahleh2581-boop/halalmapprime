@@ -29,7 +29,7 @@
     gtag('config', 'G-VCT0G5HB9W');
   </script>
 
-  <!-- Small extra CSS for App Store CTA (safe + non-breaking) -->
+  <!-- CTA upgrades (safe + non-breaking) -->
   <style>
     .cta-row .appstore-btn{
       display:inline-flex;
@@ -45,6 +45,7 @@
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       box-shadow: 0 10px 30px rgba(0,0,0,.25);
+      transform: translateY(0);
     }
     .cta-row .appstore-btn:hover{ transform: translateY(-1px); transition: .18s ease; }
     .cta-row .appstore-btn:active{ transform: translateY(0px); }
@@ -56,6 +57,84 @@
       border-radius:999px;
       border:1px solid rgba(255,255,255,.14);
       background:rgba(255,255,255,.06);
+      width: fit-content;
+    }
+
+    /* NEW: Make the hero download button BIG and dominant */
+    .hero-download{
+      padding:18px 22px !important;
+      border-radius:18px !important;
+      font-size:16px;
+      letter-spacing:.2px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.45) !important;
+      border:1px solid rgba(255,255,255,.22) !important;
+    }
+    .hero-download .subline{
+      font-size:12px;
+      opacity:.85;
+      font-weight:700;
+      display:block;
+      margin-top:2px;
+    }
+
+    /* NEW: small helper links instead of secondary buttons */
+    .cta-links{
+      margin-top:12px;
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+      opacity:.9;
+    }
+    .cta-links a{
+      text-decoration:none;
+      border-bottom:1px solid rgba(255,255,255,.22);
+      padding-bottom:2px;
+      font-weight:700;
+    }
+
+    /* NEW: Mid-page + Bottom CTA blocks */
+    .cta-block{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(10,14,24,.35);
+      border-radius:22px;
+      padding:22px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 18px 60px rgba(0,0,0,.25);
+    }
+    .cta-block h3{
+      margin:0;
+      font-size:18px;
+      font-weight:900;
+      letter-spacing:.2px;
+    }
+    .cta-block p{
+      margin:6px 0 0 0;
+      opacity:.85;
+      max-width: 58ch;
+    }
+    .cta-block .cta-actions{
+      flex-shrink:0;
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .cta-block .cta-actions a{
+      text-decoration:none;
+    }
+
+    /* Mobile: full width download button */
+    @media (max-width: 720px){
+      .cta-row{ flex-direction: column; align-items: stretch; }
+      .cta-row .appstore-btn{ width:100%; }
+      .hero-download{ width:100%; justify-content:center; }
+      .cta-block{ flex-direction: column; align-items: stretch; }
+      .cta-block .cta-actions{ width:100%; }
+      .cta-block .cta-actions a{ width:100%; text-align:center; justify-content:center; }
     }
 
     /* Sticky download bar (shows after scroll) */
@@ -189,7 +268,6 @@
         <div class="hero-copy">
           <div class="kicker" data-i18n="kicker">Designed in New York • Built for Communities</div>
 
-          <!-- NEW: App Store availability line -->
           <div class="appstore-badge" data-i18n="appStoreBadge">Now available on the App Store</div>
 
           <h1 class="title">
@@ -197,20 +275,27 @@
             <span class="grad" data-i18n="heroTitleB">A halal clarity layer.</span>
           </h1>
 
+          <!-- NEW: shorter, more “curiosity” lead -->
           <p class="lead" data-i18n="heroLead">
-            Halal Map Prime brings together halal places, masjids, services, jobs, and community updates —
-            in one premium, respectful experience built for everyday use.
+            Open the map and see what your community has been missing — clarity, trust, and real halal discovery.
           </p>
 
+          <!-- HERO CTA: ONE dominant button -->
           <div class="cta-row">
-            <!-- NEW: Primary App Store download -->
-            <a class="appstore-btn" href="https://apps.apple.com/app/halal-map-prime/id6756825539" target="_blank" rel="noopener" data-i18n="ctaDownload">
+            <a class="appstore-btn hero-download"
+               href="https://apps.apple.com/app/halal-map-prime/id6756825539"
+               target="_blank"
+               rel="noopener"
+               data-i18n="ctaDownload">
                <span data-i18n="ctaDownloadText">Download on the App Store</span>
+              <span class="subline" data-i18n="ctaSubline">Tap. Install. Explore.</span>
             </a>
+          </div>
 
-            <!-- Keep existing buttons (now secondary) -->
-            <a class="btn ghost" href="#how-it-works" data-i18n="ctaPrimary">How it works</a>
-            <a class="btn ghost" href="#contact" data-i18n="ctaSecondary">Get Listed</a>
+          <!-- NEW: links (not buttons) = no distraction -->
+          <div class="cta-links">
+            <a href="#features" data-i18n="ctaLink1">What’s inside</a>
+            <a href="#contact" data-i18n="ctaLink2">Business / Get listed</a>
           </div>
 
           <div class="mini-proof">
@@ -228,7 +313,6 @@
             </div>
           </div>
 
-          <!-- Apple-safe clarification -->
           <div class="note" data-i18n="disclaimerHero">
             Community-based platform. Listings rely on submitted information and do not represent official certification.
           </div>
@@ -247,7 +331,6 @@
               <div class="panel-line" data-i18n="panelLine2">• Masjids & schools</div>
               <div class="panel-line" data-i18n="panelLine3">• Local services</div>
               <div class="panel-line" data-i18n="panelLine4">• Community jobs & events</div>
-
               <div class="panel-glow"></div>
             </div>
 
@@ -313,6 +396,27 @@
             <p data-i18n="f6Body">A world-class product that reflects our community — strong, clean, future-ready.</p>
           </article>
         </div>
+
+        <!-- NEW: Mid-page CTA (big, simple, single goal) -->
+        <div style="margin-top:22px;">
+          <div class="cta-block">
+            <div>
+              <h3 data-i18n="midCtaTitle">Ready to see what’s inside?</h3>
+              <p data-i18n="midCtaBody">Download Halal Map Prime and explore your community with clarity.</p>
+            </div>
+            <div class="cta-actions">
+              <a class="appstore-btn hero-download"
+                 href="https://apps.apple.com/app/halal-map-prime/id6756825539"
+                 target="_blank"
+                 rel="noopener"
+                 data-i18n="midCtaBtn">
+                 <span data-i18n="midCtaBtnText">Download on the App Store</span>
+                <span class="subline" data-i18n="midCtaSub">Install in seconds</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -424,6 +528,26 @@
           <p data-i18n="contactLead">Business? Masjid? School? Service? Want Prime visibility? Contact us now.</p>
         </div>
 
+        <!-- NEW: Bottom CTA (before contact grid) -->
+        <div style="margin: 14px 0 18px 0;">
+          <div class="cta-block">
+            <div>
+              <h3 data-i18n="bottomCtaTitle">Download and explore your area</h3>
+              <p data-i18n="bottomCtaBody">It’s the fastest way to understand Halal Map Prime — from the inside.</p>
+            </div>
+            <div class="cta-actions">
+              <a class="appstore-btn hero-download"
+                 href="https://apps.apple.com/app/halal-map-prime/id6756825539"
+                 target="_blank"
+                 rel="noopener"
+                 data-i18n="bottomCtaBtn">
+                 <span data-i18n="bottomCtaBtnText">Download on the App Store</span>
+                <span class="subline" data-i18n="bottomCtaSub">Open the map now</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
         <div class="contact-grid">
           <div class="contact-card">
             <div class="contact-title" data-i18n="contactEmailTitle">Email</div>
@@ -470,7 +594,6 @@
   <!-- IMPORTANT: keep your existing language file logic -->
   <script src="./app.js"></script>
 
-  <!-- Small safe helpers that DON'T break your i18n -->
   <script>
     // year
     document.getElementById('year').textContent = new Date().getFullYear();
@@ -489,11 +612,6 @@
       });
     }
 
-    /**
-     * Compatibility bridge:
-     * - If your old app.js has setLanguage(lang) or window.setLang(lang), we call it.
-     * - Also we enforce RTL/LTR + font without fighting your translations.
-     */
     const root = document.getElementById("root");
     const langButtons = document.querySelectorAll(".lang-btn");
 
