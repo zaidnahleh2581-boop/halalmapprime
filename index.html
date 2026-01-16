@@ -18,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
 
-  <!-- Google Analytics (keep your ID) -->
+  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-VCT0G5HB9W"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -31,11 +31,13 @@
     :root{
       --bg:#0b1220;
       --glass: rgba(255,255,255,.06);
+      --glass2: rgba(0,0,0,.55);
       --border: rgba(255,255,255,.14);
+      --border2: rgba(255,255,255,.22);
       --text: rgba(255,255,255,.94);
       --muted: rgba(255,255,255,.78);
       --shadow: 0 18px 60px rgba(0,0,0,.35);
-      --shadow2: 0 24px 90px rgba(0,0,0,.55);
+      --shadow2: 0 30px 90px rgba(0,0,0,.60);
       --radius: 22px;
     }
 
@@ -49,11 +51,11 @@
       overflow-x:hidden;
     }
 
-    /* Background */
+    /* Background FX */
     .bg{ position:fixed; inset:0; z-index:-1; overflow:hidden; }
-    .orb{ position:absolute; width:520px; height:520px; border-radius:999px; filter: blur(70px); opacity:.55; }
-    .orb.a{ left:-140px; top:140px; background: radial-gradient(circle at 30% 30%, #38bdf8, transparent 60%); }
-    .orb.b{ right:-160px; bottom:40px; background: radial-gradient(circle at 30% 30%, #a855f7, transparent 60%); }
+    .orb{ position:absolute; width:560px; height:560px; border-radius:999px; filter: blur(70px); opacity:.55; }
+    .orb.a{ left:-170px; top:140px; background: radial-gradient(circle at 30% 30%, #38bdf8, transparent 60%); }
+    .orb.b{ right:-180px; bottom:40px; background: radial-gradient(circle at 30% 30%, #a855f7, transparent 60%); }
     .grid{
       position:absolute; inset:0; opacity:.10;
       background-image:
@@ -67,7 +69,7 @@
       mix-blend-mode: overlay;
     }
 
-    .container{ width:min(1100px, 92vw); margin:0 auto; }
+    .container{ width:min(1120px, 92vw); margin:0 auto; }
 
     /* Topbar */
     header{
@@ -135,11 +137,11 @@
       font-size: 13px;
     }
 
-    /* Hero */
-    .hero{ padding: 34px 0 30px; }
+    /* HERO */
+    .hero{ padding: 34px 0 26px; }
     .hero-inner{
       display:grid;
-      grid-template-columns: 1.05fr .95fr;
+      grid-template-columns: 1.08fr .92fr;
       gap: 22px;
       align-items:start;
     }
@@ -160,9 +162,9 @@
 
     h1{
       margin: 14px 0 0 0;
-      font-size: clamp(34px, 4.4vw, 56px);
+      font-size: clamp(38px, 4.9vw, 62px);
       line-height: 1.02;
-      letter-spacing: -.2px;
+      letter-spacing: -.3px;
     }
     .grad{
       background: linear-gradient(90deg, #38bdf8, #a855f7);
@@ -174,11 +176,11 @@
       margin: 12px 0 0 0;
       color: var(--muted);
       font-size: 16px;
-      line-height: 1.55;
-      max-width: 70ch;
+      line-height: 1.58;
+      max-width: 76ch;
     }
 
-    /* CTAs (3 buttons) */
+    /* MEGA Download + 2 secondary buttons */
     .cta-row{
       margin-top: 18px;
       display:flex;
@@ -186,6 +188,82 @@
       flex-wrap:wrap;
       align-items:center;
     }
+
+    .cta-mega{
+      width: min(760px, 92vw);
+      min-height: 92px;
+      padding: 18px 18px;
+      border-radius: 24px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+
+      background:
+        radial-gradient(900px 160px at 25% 20%, rgba(56,189,248,.18), transparent 55%),
+        radial-gradient(900px 160px at 75% 80%, rgba(168,85,247,.18), transparent 55%),
+        rgba(0,0,0,.62);
+
+      border:1px solid rgba(255,255,255,.26);
+      box-shadow: var(--shadow2);
+      text-decoration:none;
+      color: var(--text);
+    }
+    .cta-mega:hover{ transform: translateY(-2px); transition: .18s ease; }
+
+    .cta-icon{
+      width: 56px;
+      height: 56px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius: 18px;
+      font-size: 22px;
+      font-weight: 900;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.16);
+      flex-shrink:0;
+    }
+
+    .cta-text{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      min-width:0;
+    }
+
+    .cta-title{
+      font-weight: 900;
+      font-size: 18px;
+      letter-spacing: .2px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .cta-sub{
+      font-size: 12px;
+      font-weight: 900;
+      opacity: .82;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .cta-arrow{
+      width: 46px;
+      height: 46px;
+      border-radius: 18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight: 900;
+      font-size: 18px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.16);
+      flex-shrink:0;
+    }
+
     .btn{
       display:inline-flex;
       align-items:center;
@@ -201,22 +279,15 @@
     }
     .btn:hover{ transform: translateY(-1px); transition: .18s ease; }
     .btn:active{ transform: translateY(0px); }
-    .btn.primary{
-      padding: 16px 18px;
-      border-radius: 18px;
-      background: rgba(0,0,0,.60);
-      border:1px solid rgba(255,255,255,.22);
-      box-shadow: var(--shadow2);
-      min-width: min(520px, 92vw);
-    }
-    .btn.primary .sub{
-      font-size: 12px;
-      opacity:.85;
-      font-weight: 900;
+
+    @media (max-width: 560px){
+      .cta-mega{ min-height: 84px; padding: 16px; }
+      .cta-title{ font-size: 16px; }
+      .cta-icon{ width: 50px; height: 50px; }
     }
 
     .micro{
-      margin-top: 10px;
+      margin-top: 12px;
       display:flex;
       gap:10px;
       flex-wrap:wrap;
@@ -230,7 +301,7 @@
       margin-top: 12px;
       font-size: 12px;
       opacity:.78;
-      max-width: 72ch;
+      max-width: 80ch;
     }
 
     /* Right card */
@@ -269,7 +340,7 @@
       border-bottom:1px solid rgba(255,255,255,.06);
     }
     .section-head h2{ margin:0; font-size: 26px; font-weight: 900; }
-    .section-head p{ margin:10px 0 0 0; opacity:.85; max-width: 72ch; }
+    .section-head p{ margin:10px 0 0 0; opacity:.85; max-width: 78ch; }
 
     .grid3{
       margin-top: 18px;
@@ -310,18 +381,13 @@
     .step h3{ margin:0; font-weight: 900; }
     .step p{ margin: 6px 0 0 0; opacity:.86; }
 
-    /* Footer */
-    footer{
-      padding: 26px 0 34px;
-      opacity:.86;
-      font-size: 12px;
-    }
+    footer{ padding: 26px 0 34px; opacity:.86; font-size: 12px; }
     .footer-row{
       display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
       border-top:1px solid rgba(255,255,255,.08);
       padding-top: 18px;
     }
-    .footer-legal{ max-width: 80ch; opacity:.8; }
+    .footer-legal{ max-width: 90ch; opacity:.8; }
   </style>
 </head>
 
@@ -373,13 +439,15 @@
             in one premium, respectful experience built for everyday use.
           </p>
 
-          <!-- 3 Buttons (Download first) -->
+          <!-- 3 buttons -->
           <div class="cta-row">
-            <a class="btn primary" href="https://apps.apple.com/app/halal-map-prime/id6756825539" target="_blank" rel="noopener">
-               <span>
-                <span data-i18n="ctaDownloadText">Download on the App Store</span><br>
-                <span class="sub" data-i18n="ctaDownloadSub">Tap • Install • Explore what’s inside</span>
+            <a class="cta-mega" href="https://apps.apple.com/app/halal-map-prime/id6756825539" target="_blank" rel="noopener">
+              <span class="cta-icon"></span>
+              <span class="cta-text">
+                <span class="cta-title" data-i18n="ctaDownloadText">Download on the App Store</span>
+                <span class="cta-sub" data-i18n="ctaDownloadSub">Tap • Install • Explore what’s inside</span>
               </span>
+              <span class="cta-arrow">→</span>
             </a>
 
             <a class="btn" href="#how-it-works" data-i18n="ctaHow">How it works</a>
@@ -495,7 +563,7 @@
       </div>
     </section>
 
-    <!-- VISION (Dubai removed) -->
+    <!-- VISION (no Dubai) -->
     <section class="section dark" id="vision">
       <div class="container">
         <div class="section-head">
@@ -540,11 +608,13 @@
         </div>
 
         <div style="margin-top:16px;">
-          <a class="btn primary" href="https://apps.apple.com/app/halal-map-prime/id6756825539" target="_blank" rel="noopener">
-             <span>
-              <span data-i18n="ctaDownloadText">Download on the App Store</span><br>
-              <span class="sub" data-i18n="ctaDownloadSub2">Open the map now</span>
+          <a class="cta-mega" href="https://apps.apple.com/app/halal-map-prime/id6756825539" target="_blank" rel="noopener">
+            <span class="cta-icon"></span>
+            <span class="cta-text">
+              <span class="cta-title" data-i18n="ctaDownloadText">Download on the App Store</span>
+              <span class="cta-sub" data-i18n="ctaDownloadSub2">Open the map now</span>
             </span>
+            <span class="cta-arrow">→</span>
           </a>
         </div>
 
@@ -566,10 +636,8 @@
   </main>
 
   <script>
-    // year
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Languages (4)
     const dict = {
       en: {
         tagline:"Built for Trust",
@@ -628,7 +696,6 @@
         footerLegal:"Community-based discovery platform. Listings and verification are based on submitted information and do not represent official certification or endorsement.",
         footerBuilt:"Built in New York"
       },
-
       ar: {
         tagline:"مبني على الثقة",
         email:"إيميل",
@@ -686,7 +753,6 @@
         footerLegal:"منصة مجتمعية. الإدخالات والتوثيق يعتمد على معلومات مرسلة ولا تمثل شهادة أو اعتماد رسمي.",
         footerBuilt:"مبني في نيويورك"
       },
-
       fa: {
         tagline:"ساخته شده برای اعتماد",
         email:"ایمیل",
@@ -744,7 +810,6 @@
         footerLegal:"پلتفرم جامعه‌محور. اطلاعات و تأییدها بر اساس ارسال کاربران است و تأیید رسمی نیست.",
         footerBuilt:"ساخته‌شده در نیویورک"
       },
-
       tr: {
         tagline:"Güven için üretildi",
         email:"E-posta",
@@ -805,7 +870,7 @@
     };
 
     const root = document.getElementById("root");
-    const langButtons = document.querySelectorAll(".lang button");
+    const buttons = document.querySelectorAll(".lang button");
 
     function applyDirFont(lang){
       const isRtl = (lang === "ar" || lang === "fa");
@@ -821,10 +886,10 @@
         const key = el.getAttribute("data-i18n");
         if (data[key]) el.textContent = data[key];
       });
-      langButtons.forEach(b => b.classList.toggle("active", b.dataset.lang === lang));
+      buttons.forEach(b => b.classList.toggle("active", b.dataset.lang === lang));
     }
 
-    langButtons.forEach(btn=>{
+    buttons.forEach(btn=>{
       btn.addEventListener("click", ()=> setLanguage(btn.dataset.lang));
     });
 
