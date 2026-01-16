@@ -16,7 +16,7 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="./style.css" />
 
@@ -29,74 +29,82 @@
     gtag('config', 'G-VCT0G5HB9W');
   </script>
 
-  <!-- CTA upgrades (safe + non-breaking) -->
+  <!-- Bold CTA layer (safe + non-breaking) -->
   <style>
-    .cta-row .appstore-btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      padding:14px 18px;
-      border-radius:14px;
-      font-weight:800;
-      text-decoration:none;
-      border:1px solid rgba(255,255,255,.18);
-      background:rgba(0,0,0,.55);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      box-shadow: 0 10px 30px rgba(0,0,0,.25);
-      transform: translateY(0);
-    }
-    .cta-row .appstore-btn:hover{ transform: translateY(-1px); transition: .18s ease; }
-    .cta-row .appstore-btn:active{ transform: translateY(0px); }
-
+    /* === HERO: make the download button the biggest thing === */
     .appstore-badge{
       font-size:12px;
-      opacity:.85;
-      padding:5px 10px;
+      opacity:.88;
+      padding:6px 12px;
       border-radius:999px;
       border:1px solid rgba(255,255,255,.14);
       background:rgba(255,255,255,.06);
       width: fit-content;
+      margin-top: 10px;
     }
 
-    /* NEW: Make the hero download button BIG and dominant */
-    .hero-download{
-      padding:18px 22px !important;
-      border-radius:18px !important;
-      font-size:16px;
-      letter-spacing:.2px;
-      box-shadow: 0 18px 60px rgba(0,0,0,.45) !important;
-      border:1px solid rgba(255,255,255,.22) !important;
-    }
-    .hero-download .subline{
-      font-size:12px;
-      opacity:.85;
-      font-weight:700;
-      display:block;
-      margin-top:2px;
+    .cta-row{
+      margin-top: 16px;
     }
 
-    /* NEW: small helper links instead of secondary buttons */
-    .cta-links{
-      margin-top:12px;
+    .cta-row .appstore-btn{
       display:flex;
-      gap:14px;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      width: 100%;
+      max-width: 520px;
+      padding: 22px 22px;
+      border-radius: 22px;
+      font-weight: 900;
+      text-decoration:none;
+      border: 1px solid rgba(255,255,255,.22);
+      background: rgba(0,0,0,.60);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 24px 80px rgba(0,0,0,.55);
+      transform: translateY(0);
+    }
+    .cta-row .appstore-btn:hover{ transform: translateY(-2px); transition: .18s ease; }
+    .cta-row .appstore-btn:active{ transform: translateY(0px); }
+
+    .cta-main-text{
+      display:flex;
+      flex-direction:column;
+      line-height: 1.05;
+      text-align:center;
+    }
+    .cta-main-text .big{
+      font-size: 18px;
+      letter-spacing: .2px;
+    }
+    .cta-main-text .small{
+      font-size: 12px;
+      opacity:.85;
+      font-weight: 800;
+      margin-top: 6px;
+    }
+
+    /* Under-CTA micro links (not buttons) */
+    .cta-links{
+      margin-top: 14px;
+      display:flex;
+      gap: 14px;
       flex-wrap:wrap;
-      opacity:.9;
+      opacity:.92;
     }
     .cta-links a{
       text-decoration:none;
-      border-bottom:1px solid rgba(255,255,255,.22);
-      padding-bottom:2px;
-      font-weight:700;
+      border-bottom: 1px solid rgba(255,255,255,.22);
+      padding-bottom: 2px;
+      font-weight: 800;
     }
 
-    /* NEW: Mid-page + Bottom CTA blocks */
+    /* CTA blocks (mid + bottom) */
     .cta-block{
       border:1px solid rgba(255,255,255,.12);
-      background:rgba(10,14,24,.35);
-      border-radius:22px;
+      background:rgba(10,14,24,.38);
+      border-radius:24px;
       padding:22px;
       display:flex;
       align-items:center;
@@ -115,7 +123,7 @@
     .cta-block p{
       margin:6px 0 0 0;
       opacity:.85;
-      max-width: 58ch;
+      max-width: 62ch;
     }
     .cta-block .cta-actions{
       flex-shrink:0;
@@ -125,16 +133,28 @@
     }
     .cta-block .cta-actions a{
       text-decoration:none;
+      width: 320px;
+      max-width: 100%;
     }
 
-    /* Mobile: full width download button */
+    /* keep one goal: download */
+    .cta-mini{
+      font-size:12px;
+      opacity:.75;
+      margin-top: 10px;
+      max-width: 58ch;
+    }
+
+    /* Mobile */
     @media (max-width: 720px){
-      .cta-row{ flex-direction: column; align-items: stretch; }
-      .cta-row .appstore-btn{ width:100%; }
-      .hero-download{ width:100%; justify-content:center; }
+      .cta-row .appstore-btn{
+        max-width: 100%;
+        padding: 22px 16px;
+      }
+      .cta-main-text .big{ font-size: 17px; }
       .cta-block{ flex-direction: column; align-items: stretch; }
       .cta-block .cta-actions{ width:100%; }
-      .cta-block .cta-actions a{ width:100%; text-align:center; justify-content:center; }
+      .cta-block .cta-actions a{ width:100%; }
     }
 
     /* Sticky download bar (shows after scroll) */
@@ -167,7 +187,7 @@
       min-width: 0;
     }
     .sticky-title{
-      font-weight:800;
+      font-weight:900;
       white-space:nowrap;
     }
     .sticky-sub{
@@ -182,16 +202,14 @@
       display:flex; align-items:center; gap:10px;
       flex-shrink:0;
     }
-    .sticky-actions a{
-      text-decoration:none;
-    }
+    .sticky-actions a{ text-decoration:none; }
     .sticky-btn{
       display:inline-flex;
       align-items:center;
       justify-content:center;
       padding:10px 14px;
       border-radius:12px;
-      font-weight:800;
+      font-weight:900;
       border:1px solid rgba(255,255,255,.18);
       background:rgba(0,0,0,.55);
     }
@@ -271,28 +289,29 @@
           <div class="appstore-badge" data-i18n="appStoreBadge">Now available on the App Store</div>
 
           <h1 class="title">
-            <span data-i18n="heroTitleA">More than discovery.</span>
-            <span class="grad" data-i18n="heroTitleB">A halal clarity layer.</span>
+            <span data-i18n="heroTitleA">Open the map.</span>
+            <span class="grad" data-i18n="heroTitleB">Feel the difference.</span>
           </h1>
 
-          <!-- NEW: shorter, more “curiosity” lead -->
           <p class="lead" data-i18n="heroLead">
-            Open the map and see what your community has been missing — clarity, trust, and real halal discovery.
+            This isn’t just “another map.” It’s the halal clarity layer — places, masjids, services, jobs, and community updates in one premium experience.
           </p>
 
-          <!-- HERO CTA: ONE dominant button -->
+          <!-- ONE MAIN GOAL: DOWNLOAD -->
           <div class="cta-row">
-            <a class="appstore-btn hero-download"
+            <a class="appstore-btn"
                href="https://apps.apple.com/app/halal-map-prime/id6756825539"
                target="_blank"
                rel="noopener"
                data-i18n="ctaDownload">
-               <span data-i18n="ctaDownloadText">Download on the App Store</span>
-              <span class="subline" data-i18n="ctaSubline">Tap. Install. Explore.</span>
+              
+              <span class="cta-main-text">
+                <span class="big" data-i18n="ctaDownloadText">Download on the App Store</span>
+                <span class="small" data-i18n="ctaSubline">Tap • Install • Explore what’s inside</span>
+              </span>
             </a>
           </div>
 
-          <!-- NEW: links (not buttons) = no distraction -->
           <div class="cta-links">
             <a href="#features" data-i18n="ctaLink1">What’s inside</a>
             <a href="#contact" data-i18n="ctaLink2">Business / Get listed</a>
@@ -313,7 +332,7 @@
             </div>
           </div>
 
-          <div class="note" data-i18n="disclaimerHero">
+          <div class="cta-mini" data-i18n="disclaimerHero">
             Community-based platform. Listings rely on submitted information and do not represent official certification.
           </div>
         </div>
@@ -326,7 +345,7 @@
             </div>
 
             <div class="panel-body">
-              <div class="panel-title" data-i18n="panelTitle">What you’ll find</div>
+              <div class="panel-title" data-i18n="panelTitle">Inside the app</div>
               <div class="panel-line" data-i18n="panelLine1">• Halal food & groceries</div>
               <div class="panel-line" data-i18n="panelLine2">• Masjids & schools</div>
               <div class="panel-line" data-i18n="panelLine3">• Local services</div>
@@ -355,15 +374,15 @@
     <section class="section" id="features">
       <div class="container">
         <div class="section-head">
-          <h2 data-i18n="featuresTitle">What makes it powerful</h2>
-          <p data-i18n="featuresLead">Luxury experience + community utility + halal clarity where it matters.</p>
+          <h2 data-i18n="featuresTitle">Why people keep it</h2>
+          <p data-i18n="featuresLead">Fast discovery, real utility, and a clean premium experience — built for everyday use.</p>
         </div>
 
         <div class="grid">
           <article class="card">
             <div class="icon">🗺️</div>
-            <h3 data-i18n="f1Title">Halal map that feels premium</h3>
-            <p data-i18n="f1Body">Fast discovery of masjids, schools, services and halal places around you.</p>
+            <h3 data-i18n="f1Title">Premium halal discovery</h3>
+            <p data-i18n="f1Body">Find halal places, masjids, schools, and services around you — quickly.</p>
           </article>
 
           <article class="card">
@@ -374,19 +393,19 @@
 
           <article class="card">
             <div class="icon">📣</div>
-            <h3 data-i18n="f3Title">Prime Ads & paid visibility</h3>
-            <p data-i18n="f3Body">Paid banners and boosted listings for halal businesses that want real growth.</p>
+            <h3 data-i18n="f3Title">Prime visibility</h3>
+            <p data-i18n="f3Body">Boosted listings and banners for halal businesses that want real reach.</p>
           </article>
 
           <article class="card">
             <div class="icon">👥</div>
             <h3 data-i18n="f4Title">Community hub</h3>
-            <p data-i18n="f4Body">Jobs, hiring, events, notices — a clean system that supports the community.</p>
+            <p data-i18n="f4Body">Jobs, hiring, events, notices — built to keep people returning.</p>
           </article>
 
           <article class="card">
             <div class="icon">⚡</div>
-            <h3 data-i18n="f5Title">Built for scale</h3>
+            <h3 data-i18n="f5Title">Built to scale</h3>
             <p data-i18n="f5Body">United States first, then global markets with the same clarity-first model.</p>
           </article>
 
@@ -397,21 +416,24 @@
           </article>
         </div>
 
-        <!-- NEW: Mid-page CTA (big, simple, single goal) -->
+        <!-- MID CTA -->
         <div style="margin-top:22px;">
           <div class="cta-block">
             <div>
-              <h3 data-i18n="midCtaTitle">Ready to see what’s inside?</h3>
-              <p data-i18n="midCtaBody">Download Halal Map Prime and explore your community with clarity.</p>
+              <h3 data-i18n="midCtaTitle">Don’t judge it from a page.</h3>
+              <p data-i18n="midCtaBody">Download the app and see what the experience feels like — from the inside.</p>
             </div>
             <div class="cta-actions">
-              <a class="appstore-btn hero-download"
+              <a class="appstore-btn"
                  href="https://apps.apple.com/app/halal-map-prime/id6756825539"
                  target="_blank"
                  rel="noopener"
                  data-i18n="midCtaBtn">
-                 <span data-i18n="midCtaBtnText">Download on the App Store</span>
-                <span class="subline" data-i18n="midCtaSub">Install in seconds</span>
+                
+                <span class="cta-main-text">
+                  <span class="big" data-i18n="midCtaBtnText">Download on the App Store</span>
+                  <span class="small" data-i18n="midCtaSub">Install in seconds</span>
+                </span>
               </a>
             </div>
           </div>
@@ -425,7 +447,7 @@
       <div class="container">
         <div class="section-head">
           <h2 data-i18n="howTitle">How it works (simple)</h2>
-          <p data-i18n="howLead">Two sides. One ecosystem: users discover, businesses grow, community stays connected.</p>
+          <p data-i18n="howLead">Users discover. Businesses grow. Community stays connected.</p>
         </div>
 
         <div class="timeline">
@@ -472,18 +494,18 @@
 
         <div class="quote" style="margin-top:22px;">
           <div class="quote-mark">“</div>
-          <p data-i18n="howQuote">Trust is not claimed. It’s built — step by step.</p>
+          <p data-i18n="howQuote">Trust isn’t claimed. It’s built.</p>
           <div class="quote-by" data-i18n="howQuoteBy">— Halal Map Prime</div>
         </div>
       </div>
     </section>
 
-    <!-- VISION -->
+    <!-- VISION (Dubai removed) -->
     <section class="section dark" id="vision">
       <div class="container">
         <div class="section-head">
           <h2 data-i18n="visionTitle">Our vision</h2>
-          <p data-i18n="visionLead">Built for real use. Designed to scale with integrity.</p>
+          <p data-i18n="visionLead">United States first — then the world, with integrity.</p>
         </div>
 
         <div class="timeline">
@@ -528,21 +550,24 @@
           <p data-i18n="contactLead">Business? Masjid? School? Service? Want Prime visibility? Contact us now.</p>
         </div>
 
-        <!-- NEW: Bottom CTA (before contact grid) -->
+        <!-- BOTTOM CTA -->
         <div style="margin: 14px 0 18px 0;">
           <div class="cta-block">
             <div>
-              <h3 data-i18n="bottomCtaTitle">Download and explore your area</h3>
-              <p data-i18n="bottomCtaBody">It’s the fastest way to understand Halal Map Prime — from the inside.</p>
+              <h3 data-i18n="bottomCtaTitle">Ready? Open it from the inside.</h3>
+              <p data-i18n="bottomCtaBody">Download Halal Map Prime and explore your area with clarity.</p>
             </div>
             <div class="cta-actions">
-              <a class="appstore-btn hero-download"
+              <a class="appstore-btn"
                  href="https://apps.apple.com/app/halal-map-prime/id6756825539"
                  target="_blank"
                  rel="noopener"
                  data-i18n="bottomCtaBtn">
-                 <span data-i18n="bottomCtaBtnText">Download on the App Store</span>
-                <span class="subline" data-i18n="bottomCtaSub">Open the map now</span>
+                
+                <span class="cta-main-text">
+                  <span class="big" data-i18n="bottomCtaBtnText">Download on the App Store</span>
+                  <span class="small" data-i18n="bottomCtaSub">Open the map now</span>
+                </span>
               </a>
             </div>
           </div>
@@ -591,9 +616,10 @@
     </section>
   </main>
 
-  <!-- IMPORTANT: keep your existing language file logic -->
+  <!-- Keep your existing language file logic -->
   <script src="./app.js"></script>
 
+  <!-- Safe helpers that DON'T break your i18n -->
   <script>
     // year
     document.getElementById('year').textContent = new Date().getFullYear();
@@ -612,6 +638,9 @@
       });
     }
 
+    /**
+     * Compatibility bridge (keep your existing i18n):
+     */
     const root = document.getElementById("root");
     const langButtons = document.querySelectorAll(".lang-btn");
 
