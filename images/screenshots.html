@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en" dir="ltr" id="root">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0b1220" />
+
+  <title>Halal Map Prime — Screenshots</title>
+  <meta name="description" content="Screenshots from inside Halal Map Prime." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./style.css" />
+
+  <style>
+    .shots-wrap{
+      padding-top: 22px;
+      padding-bottom: 40px;
+    }
+    .shots-head{
+      max-width: 900px;
+      margin: 0 auto 16px auto;
+      text-align: center;
+    }
+    .shots-head h1{
+      margin: 0;
+      font-size: 34px;
+      font-weight: 900;
+      letter-spacing: .2px;
+    }
+    .shots-head p{
+      margin: 10px 0 0 0;
+      opacity: .85;
+    }
+
+    .phone-showcase{
+      max-width: 1100px;
+      margin: 18px auto 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .iphone-frame{
+      position: relative;
+      border-radius: 34px;
+      padding: 14px;
+      background: linear-gradient(180deg,#1a1a1a,#000);
+      box-shadow:
+        0 30px 90px rgba(0,0,0,.55),
+        inset 0 0 0 2px rgba(255,255,255,.08);
+    }
+
+    .iphone-frame img{
+      width: 100%;
+      display: block;
+      border-radius: 24px;
+    }
+
+    .iphone-notch{
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 22px;
+      background: #000;
+      border-radius: 0 0 14px 14px;
+      z-index: 2;
+    }
+
+    .iphone-frame::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:34px;
+      background: linear-gradient(120deg, rgba(255,255,255,.12), rgba(255,255,255,0) 40%);
+      pointer-events:none;
+    }
+
+    .download-row{
+      display:flex;
+      justify-content:center;
+      margin-top: 18px;
+    }
+    .download-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      width: 100%;
+      max-width: 520px;
+      padding: 18px 18px;
+      border-radius: 20px;
+      font-weight: 900;
+      text-decoration:none;
+      border: 1px solid rgba(255,255,255,.22);
+      background: rgba(0,0,0,.60);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 24px 80px rgba(0,0,0,.55);
+    }
+
+    @media (max-width: 900px){
+      .phone-showcase{ grid-template-columns: 1fr; }
+      .iphone-frame{ max-width: 360px; margin: 0 auto; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg">
+    <div class="bg-orb orb-a"></div>
+    <div class="bg-orb orb-b"></div>
+    <div class="bg-grid"></div>
+    <div class="bg-noise"></div>
+  </div>
+
+  <!-- Top Bar (simple) -->
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="brand">
+        <div class="logo"><span class="logo-moon">☾</span><span class="logo-star">✦</span></div>
+        <div class="brand-text">
+          <div class="brand-title">Halal Map Prime</div>
+          <div class="brand-sub">Screenshots</div>
+        </div>
+      </div>
+
+      <nav class="top-actions">
+        <a class="pill" href="./index.html">← Back</a>
+        <a class="pill" href="mailto:Info@Halalmapprime.com">✉ Email</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shots-wrap">
+    <div class="container">
+      <div class="shots-head">
+        <h1>See what’s inside</h1>
+        <p>Three real screens from the app — clean, premium, community-first.</p>
+      </div>
+
+      <div class="download-row">
+        <a class="download-btn" href="https://apps.apple.com/app/halal-map-prime/id6756825539" target="_blank" rel="noopener">
+           Download on the App Store
+        </a>
+      </div>
+
+      <div class="phone-showcase">
+        <div class="iphone-frame">
+          <div class="iphone-notch"></div>
+          <img src="./images/screen-home.jpg" alt="Home screen" loading="lazy">
+        </div>
+
+        <div class="iphone-frame">
+          <div class="iphone-notch"></div>
+          <img src="./images/screen-faith.jpg" alt="Faith tools screen" loading="lazy">
+        </div>
+
+        <div class="iphone-frame">
+          <div class="iphone-notch"></div>
+          <img src="./images/screen-jobs.jpg" alt="Create job ad screen" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>
