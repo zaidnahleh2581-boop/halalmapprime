@@ -6,11 +6,11 @@
   <meta name="theme-color" content="#0b1220" />
 
   <title>Halal Map Prime — Built for Trust</title>
-  <meta name="description" content="Halal Map Prime is a premium, community-driven halal discovery platform for places, services, jobs, and ethical visibility — built with clarity and modern design." />
+  <meta name="description" content="Halal Map Prime brings halal discovery, services, jobs, events, and community clarity — in one premium experience." />
 
   <!-- Open Graph -->
   <meta property="og:title" content="Halal Map Prime — Built for Trust" />
-  <meta property="og:description" content="Discover halal places, community services, and local businesses with clarity and premium experience." />
+  <meta property="og:description" content="Open the map. Feel the difference. Download Halal Map Prime on the App Store." />
   <meta property="og:type" content="website" />
 
   <!-- Fonts -->
@@ -29,9 +29,9 @@
     gtag('config', 'G-VCT0G5HB9W');
   </script>
 
-  <!-- Bold CTA layer (safe + non-breaking) -->
+  <!-- Extra CTA + iPhone frames (safe, non-breaking) -->
   <style>
-    /* === HERO: make the download button the biggest thing === */
+    /* App Store badge */
     .appstore-badge{
       font-size:12px;
       opacity:.88;
@@ -43,17 +43,15 @@
       margin-top: 10px;
     }
 
-    .cta-row{
-      margin-top: 16px;
-    }
-
+    /* Biggest CTA */
+    .cta-row{ margin-top: 16px; }
     .cta-row .appstore-btn{
       display:flex;
       align-items:center;
       justify-content:center;
       gap:12px;
       width: 100%;
-      max-width: 520px;
+      max-width: 560px;
       padding: 22px 22px;
       border-radius: 22px;
       font-weight: 900;
@@ -85,9 +83,24 @@
       margin-top: 6px;
     }
 
-    /* Under-CTA micro links (not buttons) */
+    /* small “trust” line under CTA */
+    .cta-micro{
+      margin-top: 10px;
+      opacity: .82;
+      font-size: 12px;
+      font-weight: 700;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+    }
+    .cta-dot{
+      opacity:.55;
+    }
+
+    /* links (not competing buttons) */
     .cta-links{
-      margin-top: 14px;
+      margin-top: 12px;
       display:flex;
       gap: 14px;
       flex-wrap:wrap;
@@ -98,6 +111,48 @@
       border-bottom: 1px solid rgba(255,255,255,.22);
       padding-bottom: 2px;
       font-weight: 800;
+    }
+
+    /* iPhone screenshots */
+    .phone-showcase{
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+      max-width: 1100px;
+    }
+    .iphone-frame{
+      position: relative;
+      border-radius: 34px;
+      padding: 14px;
+      background: linear-gradient(180deg,#1a1a1a,#000);
+      box-shadow:
+        0 30px 90px rgba(0,0,0,.55),
+        inset 0 0 0 2px rgba(255,255,255,.08);
+    }
+    .iphone-frame img{
+      width: 100%;
+      display: block;
+      border-radius: 24px;
+    }
+    .iphone-notch{
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 22px;
+      background: #000;
+      border-radius: 0 0 14px 14px;
+      z-index: 2;
+    }
+    .iphone-frame::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:34px;
+      background: linear-gradient(120deg, rgba(255,255,255,.12), rgba(255,255,255,0) 40%);
+      pointer-events:none;
     }
 
     /* CTA blocks (mid + bottom) */
@@ -137,27 +192,7 @@
       max-width: 100%;
     }
 
-    /* keep one goal: download */
-    .cta-mini{
-      font-size:12px;
-      opacity:.75;
-      margin-top: 10px;
-      max-width: 58ch;
-    }
-
-    /* Mobile */
-    @media (max-width: 720px){
-      .cta-row .appstore-btn{
-        max-width: 100%;
-        padding: 22px 16px;
-      }
-      .cta-main-text .big{ font-size: 17px; }
-      .cta-block{ flex-direction: column; align-items: stretch; }
-      .cta-block .cta-actions{ width:100%; }
-      .cta-block .cta-actions a{ width:100%; }
-    }
-
-    /* Sticky download bar (shows after scroll) */
+    /* Sticky download bar */
     .sticky-download{
       position: fixed;
       left: 12px;
@@ -182,14 +217,8 @@
       -webkit-backdrop-filter: blur(12px);
       box-shadow: 0 18px 50px rgba(0,0,0,.35);
     }
-    .sticky-left{
-      display:flex; align-items:center; gap:10px;
-      min-width: 0;
-    }
-    .sticky-title{
-      font-weight:900;
-      white-space:nowrap;
-    }
+    .sticky-left{ display:flex; align-items:center; gap:10px; min-width: 0; }
+    .sticky-title{ font-weight:900; white-space:nowrap; }
     .sticky-sub{
       opacity:.85;
       font-size:13px;
@@ -198,10 +227,7 @@
       text-overflow:ellipsis;
       max-width: 56vw;
     }
-    .sticky-actions{
-      display:flex; align-items:center; gap:10px;
-      flex-shrink:0;
-    }
+    .sticky-actions{ display:flex; align-items:center; gap:10px; flex-shrink:0; }
     .sticky-actions a{ text-decoration:none; }
     .sticky-btn{
       display:inline-flex;
@@ -220,6 +246,15 @@
       border:1px solid rgba(255,255,255,.18);
       background:rgba(255,255,255,.06);
       cursor:pointer;
+    }
+
+    /* Mobile */
+    @media (max-width: 900px){
+      .phone-showcase{ grid-template-columns: 1fr; }
+      .iphone-frame{ max-width: 360px; margin: 0 auto; }
+      .cta-block{ flex-direction: column; align-items: stretch; }
+      .cta-block .cta-actions{ width:100%; }
+      .cta-block .cta-actions a{ width:100%; }
     }
   </style>
 </head>
@@ -241,9 +276,7 @@
         <div class="sticky-sub" data-i18n="stickySub">Now available on the App Store</div>
       </div>
       <div class="sticky-actions">
-        <a class="sticky-btn" href="https://apps.apple.com/app/halal-map-prime/id6756825539" target="_blank" rel="noopener" data-i18n="stickyBtn">
-          Download
-        </a>
+        <a class="sticky-btn" href="https://apps.apple.com/app/halal-map-prime/id6756825539" target="_blank" rel="noopener" data-i18n="stickyBtn">Download</a>
         <button class="sticky-x" type="button" id="stickyClose" aria-label="Close">✕</button>
       </div>
     </div>
@@ -285,7 +318,6 @@
       <div class="container hero-inner">
         <div class="hero-copy">
           <div class="kicker" data-i18n="kicker">Designed in New York • Built for Communities</div>
-
           <div class="appstore-badge" data-i18n="appStoreBadge">Now available on the App Store</div>
 
           <h1 class="title">
@@ -294,16 +326,11 @@
           </h1>
 
           <p class="lead" data-i18n="heroLead">
-            This isn’t just “another map.” It’s the halal clarity layer — places, masjids, services, jobs, and community updates in one premium experience.
+            This isn’t just “another map.” It’s halal clarity — places, masjids, services, jobs, and community updates in one premium experience.
           </p>
 
-          <!-- ONE MAIN GOAL: DOWNLOAD -->
           <div class="cta-row">
-            <a class="appstore-btn"
-               href="https://apps.apple.com/app/halal-map-prime/id6756825539"
-               target="_blank"
-               rel="noopener"
-               data-i18n="ctaDownload">
+            <a class="appstore-btn" href="https://apps.apple.com/app/halal-map-prime/id6756825539" target="_blank" rel="noopener" data-i18n="ctaDownload">
               
               <span class="cta-main-text">
                 <span class="big" data-i18n="ctaDownloadText">Download on the App Store</span>
@@ -312,27 +339,40 @@
             </a>
           </div>
 
+          <div class="cta-micro">
+            <span data-i18n="micro1">No login needed</span>
+            <span class="cta-dot">•</span>
+            <span data-i18n="micro2">Fast & premium</span>
+            <span class="cta-dot">•</span>
+            <span data-i18n="micro3">Built for trust</span>
+          </div>
+
           <div class="cta-links">
             <a href="#features" data-i18n="ctaLink1">What’s inside</a>
             <a href="#contact" data-i18n="ctaLink2">Business / Get listed</a>
+            <!-- optional: if you later create screenshots.html -->
+            <a href="./screenshots.html" data-i18n="ctaLink3">Screenshots</a>
           </div>
 
-          <div class="mini-proof">
-            <div class="proof-card">
-              <div class="proof-num" data-i18n="proofNum1">USA</div>
-              <div class="proof-txt" data-i18n="proof1">Nationwide focus</div>
+          <!-- iPhone frames (YOUR screenshots) -->
+          <div class="phone-showcase">
+            <div class="iphone-frame">
+              <div class="iphone-notch"></div>
+              <img src="./images/screen-home.jpg" alt="Home screen" loading="lazy">
             </div>
-            <div class="proof-card">
-              <div class="proof-num" data-i18n="proofNum2">Prime</div>
-              <div class="proof-txt" data-i18n="proof2">Optional visibility</div>
+
+            <div class="iphone-frame">
+              <div class="iphone-notch"></div>
+              <img src="./images/screen-faith.jpg" alt="Faith tools screen" loading="lazy">
             </div>
-            <div class="proof-card">
-              <div class="proof-num" data-i18n="proofNum3">Community</div>
-              <div class="proof-txt" data-i18n="proof3">Driven clarity</div>
+
+            <div class="iphone-frame">
+              <div class="iphone-notch"></div>
+              <img src="./images/screen-jobs.jpg" alt="Create job ad screen" loading="lazy">
             </div>
           </div>
 
-          <div class="cta-mini" data-i18n="disclaimerHero">
+          <div class="note" data-i18n="disclaimerHero" style="margin-top:14px;">
             Community-based platform. Listings rely on submitted information and do not represent official certification.
           </div>
         </div>
@@ -424,11 +464,7 @@
               <p data-i18n="midCtaBody">Download the app and see what the experience feels like — from the inside.</p>
             </div>
             <div class="cta-actions">
-              <a class="appstore-btn"
-                 href="https://apps.apple.com/app/halal-map-prime/id6756825539"
-                 target="_blank"
-                 rel="noopener"
-                 data-i18n="midCtaBtn">
+              <a class="appstore-btn" href="https://apps.apple.com/app/halal-map-prime/id6756825539" target="_blank" rel="noopener" data-i18n="midCtaBtn">
                 
                 <span class="cta-main-text">
                   <span class="big" data-i18n="midCtaBtnText">Download on the App Store</span>
@@ -558,11 +594,7 @@
               <p data-i18n="bottomCtaBody">Download Halal Map Prime and explore your area with clarity.</p>
             </div>
             <div class="cta-actions">
-              <a class="appstore-btn"
-                 href="https://apps.apple.com/app/halal-map-prime/id6756825539"
-                 target="_blank"
-                 rel="noopener"
-                 data-i18n="bottomCtaBtn">
+              <a class="appstore-btn" href="https://apps.apple.com/app/halal-map-prime/id6756825539" target="_blank" rel="noopener" data-i18n="bottomCtaBtn">
                 
                 <span class="cta-main-text">
                   <span class="big" data-i18n="bottomCtaBtnText">Download on the App Store</span>
@@ -619,7 +651,6 @@
   <!-- Keep your existing language file logic -->
   <script src="./app.js"></script>
 
-  <!-- Safe helpers that DON'T break your i18n -->
   <script>
     // year
     document.getElementById('year').textContent = new Date().getFullYear();
@@ -639,7 +670,7 @@
     }
 
     /**
-     * Compatibility bridge (keep your existing i18n):
+     * Compatibility bridge (keeps your existing i18n):
      */
     const root = document.getElementById("root");
     const langButtons = document.querySelectorAll(".lang-btn");
