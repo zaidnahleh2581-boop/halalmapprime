@@ -6,261 +6,360 @@
   <meta name="theme-color" content="#0b1220" />
 
   <title>Halal Map Prime — Built for Trust</title>
-  <meta name="description" content="Halal Map Prime brings halal discovery, services, jobs, events, and community clarity — in one premium experience." />
-
-  <!-- Open Graph -->
-  <meta property="og:title" content="Halal Map Prime — Built for Trust" />
-  <meta property="og:description" content="Open the map. Feel the difference. Download Halal Map Prime on the App Store." />
-  <meta property="og:type" content="website" />
+  <meta name="description" content="Open the map. Feel the difference. Download Halal Map Prime on the App Store." />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="./style.css" />
-
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VCT0G5HB9W"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-VCT0G5HB9W');
-  </script>
-
-  <!-- Extra CTA + iPhone frames (safe, non-breaking) -->
   <style>
-    /* App Store badge */
-    .appstore-badge{
-      font-size:12px;
-      opacity:.88;
-      padding:6px 12px;
+    :root{
+      --bg:#0b1220;
+      --card: rgba(255,255,255,.06);
+      --border: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.78);
+      --shadow: 0 24px 80px rgba(0,0,0,.55);
+      --radius: 24px;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      overflow-x:hidden;
+    }
+
+    /* Background FX */
+    .bg{ position:fixed; inset:0; z-index:-1; overflow:hidden; }
+    .bg-orb{
+      position:absolute; width:520px; height:520px; border-radius:999px;
+      filter: blur(60px);
+      opacity:.55;
+    }
+    .orb-a{ left:-120px; top:120px; background: radial-gradient(circle at 30% 30%, #38bdf8, transparent 60%); }
+    .orb-b{ right:-140px; bottom:40px; background: radial-gradient(circle at 30% 30%, #a855f7, transparent 60%); }
+    .bg-grid{
+      position:absolute; inset:0; opacity:.12;
+      background-image:
+        linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+      background-size: 56px 56px;
+      transform: translateZ(0);
+    }
+    .bg-noise{
+      position:absolute; inset:0; opacity:.09;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+    }
+
+    .container{ width:min(1100px, 92vw); margin:0 auto; }
+
+    /* Topbar */
+    .topbar{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      background: rgba(11,18,32,.55);
+      border-bottom:1px solid rgba(255,255,255,.10);
+    }
+    .topbar-inner{
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 14px 0;
+      gap: 14px;
+    }
+    .brand{ display:flex; align-items:center; gap:12px; }
+    .logo{
+      width:40px; height:40px; border-radius:14px;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      display:flex; align-items:center; justify-content:center;
+      position:relative;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+    .logo-moon{ font-size:18px; opacity:.95; }
+    .logo-star{ font-size:12px; position:absolute; right:9px; top:9px; opacity:.95; }
+    .brand-title{ font-weight:900; letter-spacing:.2px; }
+    .brand-sub{ font-size:12px; opacity:.85; margin-top:2px; }
+
+    .top-actions{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:10px 12px;
       border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.06);
-      width: fit-content;
+      text-decoration:none;
+      color:var(--text);
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      font-weight:800;
+      font-size: 13px;
+    }
+
+    /* HERO */
+    .hero{ padding: 26px 0 38px 0; }
+    .hero-inner{
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 26px;
+      align-items:start;
+    }
+    .kicker{ opacity:.85; font-weight:800; font-size:12px; letter-spacing:.25px; }
+    .badge{
       margin-top: 10px;
+      display:inline-flex;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      font-size: 12px;
+      font-weight: 800;
+      opacity:.92;
+    }
+    h1.title{
+      margin: 14px 0 0 0;
+      font-size: clamp(34px, 4.4vw, 54px);
+      line-height: 1.02;
+      letter-spacing: -.2px;
+    }
+    .grad{
+      background: linear-gradient(90deg, #38bdf8, #a855f7);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .lead{
+      margin: 12px 0 0 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.55;
+      max-width: 62ch;
     }
 
     /* Biggest CTA */
-    .cta-row{ margin-top: 16px; }
-    .cta-row .appstore-btn{
+    .cta{
+      margin-top: 16px;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      max-width: 560px;
+    }
+    .download-btn{
       display:flex;
       align-items:center;
       justify-content:center;
-      gap:12px;
-      width: 100%;
-      max-width: 560px;
+      gap: 12px;
+      width:100%;
       padding: 22px 22px;
       border-radius: 22px;
       font-weight: 900;
       text-decoration:none;
-      border: 1px solid rgba(255,255,255,.22);
+      color: var(--text);
+      border:1px solid rgba(255,255,255,.22);
       background: rgba(0,0,0,.60);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      box-shadow: 0 24px 80px rgba(0,0,0,.55);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      box-shadow: var(--shadow);
       transform: translateY(0);
     }
-    .cta-row .appstore-btn:hover{ transform: translateY(-2px); transition: .18s ease; }
-    .cta-row .appstore-btn:active{ transform: translateY(0px); }
+    .download-btn:hover{ transform: translateY(-2px); transition:.18s ease; }
+    .download-text{ display:flex; flex-direction:column; line-height: 1.05; text-align:center; }
+    .download-text .big{ font-size: 18px; }
+    .download-text .small{ font-size: 12px; opacity:.85; margin-top: 6px; font-weight: 800; }
 
-    .cta-main-text{
-      display:flex;
-      flex-direction:column;
-      line-height: 1.05;
-      text-align:center;
+    .micro{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+      font-size: 12px; font-weight:800; opacity:.85;
     }
-    .cta-main-text .big{
-      font-size: 18px;
-      letter-spacing: .2px;
-    }
-    .cta-main-text .small{
-      font-size: 12px;
-      opacity:.85;
-      font-weight: 800;
-      margin-top: 6px;
-    }
+    .dot{ opacity:.55; }
 
-    /* small “trust” line under CTA */
-    .cta-micro{
-      margin-top: 10px;
-      opacity: .82;
-      font-size: 12px;
-      font-weight: 700;
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      align-items:center;
-    }
-    .cta-dot{
-      opacity:.55;
-    }
-
-    /* links (not competing buttons) */
-    .cta-links{
+    .note{
       margin-top: 12px;
-      display:flex;
-      gap: 14px;
-      flex-wrap:wrap;
+      font-size: 12px;
+      opacity:.78;
+      max-width: 70ch;
+    }
+
+    /* Right panel */
+    .panel{
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow: 0 18px 60px rgba(0,0,0,.22);
+      overflow:hidden;
+    }
+    .panel-top{ padding:16px; display:flex; gap:10px; flex-wrap:wrap; }
+    .chip{
+      padding:8px 10px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.35);
+      font-weight: 900;
+      font-size: 12px;
       opacity:.92;
     }
-    .cta-links a{
-      text-decoration:none;
-      border-bottom: 1px solid rgba(255,255,255,.22);
-      padding-bottom: 2px;
-      font-weight: 800;
-    }
+    .chip.alt{ background: rgba(255,255,255,.06); }
+    .panel-body{ padding: 0 16px 16px 16px; }
+    .panel-title{ font-weight: 900; margin: 8px 0 10px 0; }
+    .panel-line{ opacity:.86; margin: 6px 0; }
 
-    /* iPhone screenshots */
-    .phone-showcase{
-      margin-top: 18px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 22px;
-      max-width: 1100px;
-    }
-    .iphone-frame{
-      position: relative;
-      border-radius: 34px;
+    /* PHONE SLIDER (inside iPhone frame) */
+    .phone-area{ margin-top: 16px; display:flex; justify-content:center; }
+    .iphone{
+      width: min(380px, 88vw);
+      border-radius: 36px;
       padding: 14px;
       background: linear-gradient(180deg,#1a1a1a,#000);
       box-shadow:
         0 30px 90px rgba(0,0,0,.55),
         inset 0 0 0 2px rgba(255,255,255,.08);
+      position: relative;
+      user-select:none;
+      -webkit-user-select:none;
+      touch-action: pan-y;
     }
-    .iphone-frame img{
-      width: 100%;
-      display: block;
-      border-radius: 24px;
-    }
-    .iphone-notch{
-      position: absolute;
-      top: 8px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 120px;
-      height: 22px;
-      background: #000;
-      border-radius: 0 0 14px 14px;
-      z-index: 2;
-    }
-    .iphone-frame::after{
+    .iphone::after{
       content:"";
-      position:absolute;
-      inset:0;
-      border-radius:34px;
+      position:absolute; inset:0;
+      border-radius:36px;
       background: linear-gradient(120deg, rgba(255,255,255,.12), rgba(255,255,255,0) 40%);
       pointer-events:none;
     }
-
-    /* CTA blocks (mid + bottom) */
-    .cta-block{
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(10,14,24,.38);
-      border-radius:24px;
-      padding:22px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      box-shadow: 0 18px 60px rgba(0,0,0,.25);
-    }
-    .cta-block h3{
-      margin:0;
-      font-size:18px;
-      font-weight:900;
-      letter-spacing:.2px;
-    }
-    .cta-block p{
-      margin:6px 0 0 0;
-      opacity:.85;
-      max-width: 62ch;
-    }
-    .cta-block .cta-actions{
-      flex-shrink:0;
-      display:flex;
-      gap:10px;
-      align-items:center;
-    }
-    .cta-block .cta-actions a{
-      text-decoration:none;
-      width: 320px;
-      max-width: 100%;
+    .notch{
+      position:absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 126px;
+      height: 22px;
+      background: #000;
+      border-radius: 0 0 14px 14px;
+      z-index: 6;
     }
 
-    /* Sticky download bar */
-    .sticky-download{
-      position: fixed;
-      left: 12px;
-      right: 12px;
-      bottom: 12px;
-      z-index: 9999;
-      display: none;
-    }
-    .sticky-download.is-visible{ display: block; }
-    .sticky-inner{
-      max-width: 1100px;
-      margin: 0 auto;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      padding:12px 14px;
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.16);
-      background:rgba(10,14,24,.72);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      box-shadow: 0 18px 50px rgba(0,0,0,.35);
-    }
-    .sticky-left{ display:flex; align-items:center; gap:10px; min-width: 0; }
-    .sticky-title{ font-weight:900; white-space:nowrap; }
-    .sticky-sub{
-      opacity:.85;
-      font-size:13px;
-      white-space:nowrap;
+    .screen{
+      border-radius: 26px;
       overflow:hidden;
-      text-overflow:ellipsis;
-      max-width: 56vw;
+      position: relative;
+      background:#000;
     }
-    .sticky-actions{ display:flex; align-items:center; gap:10px; flex-shrink:0; }
-    .sticky-actions a{ text-decoration:none; }
-    .sticky-btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:10px 14px;
-      border-radius:12px;
-      font-weight:900;
-      border:1px solid rgba(255,255,255,.18);
-      background:rgba(0,0,0,.55);
+    .slides{
+      display:flex;
+      width: 300%;
+      transform: translateX(0%);
+      transition: transform .35s ease;
     }
-    .sticky-x{
-      width: 38px;
-      height: 38px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.18);
-      background:rgba(255,255,255,.06);
-      cursor:pointer;
+    .slide{
+      width: 100%;
+      flex: 0 0 100%;
+    }
+    .slide img{
+      display:block;
+      width: 100%;
+      height: auto;
     }
 
-    /* Mobile */
-    @media (max-width: 900px){
-      .phone-showcase{ grid-template-columns: 1fr; }
-      .iphone-frame{ max-width: 360px; margin: 0 auto; }
-      .cta-block{ flex-direction: column; align-items: stretch; }
-      .cta-block .cta-actions{ width:100%; }
-      .cta-block .cta-actions a{ width:100%; }
+    .controls{
+      position:absolute;
+      inset: 0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      pointer-events:none;
+    }
+    .arrow{
+      pointer-events:auto;
+      width: 42px; height: 42px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.55);
+      color: rgba(255,255,255,.92);
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer;
+      margin: 0 10px;
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .dots{
+      position:absolute;
+      left: 0; right: 0;
+      bottom: 10px;
+      display:flex;
+      gap: 8px;
+      justify-content:center;
+      z-index: 7;
+    }
+    .dotbtn{
+      width: 8px; height: 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.22);
+      background: rgba(255,255,255,.16);
+      cursor:pointer;
+      opacity:.85;
+    }
+    .dotbtn.active{
+      width: 18px;
+      background: rgba(255,255,255,.86);
+      opacity: 1;
+    }
+
+    /* Sections */
+    .section{ padding: 46px 0; }
+    .section-head h2{ margin:0; font-size: 26px; font-weight: 900; }
+    .section-head p{ margin:10px 0 0 0; opacity:.85; max-width: 72ch; }
+
+    .grid{
+      margin-top: 18px;
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .card{
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow: 0 16px 50px rgba(0,0,0,.18);
+    }
+    .card .icon{ font-size: 22px; }
+    .card h3{ margin: 10px 0 6px 0; font-weight: 900; }
+    .card p{ margin: 0; opacity:.86; line-height: 1.5; }
+    .dark{ background: rgba(0,0,0,.10); border-top:1px solid rgba(255,255,255,.06); border-bottom:1px solid rgba(255,255,255,.06); }
+
+    .timeline{
+      margin-top: 16px;
+      display:grid;
+      gap: 12px;
+    }
+    .step{
+      display:flex; gap: 12px; align-items:flex-start;
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+    }
+    .badgeNum{
+      width: 34px; height: 34px;
+      border-radius: 14px;
+      display:flex; align-items:center; justify-content:center;
+      font-weight: 900;
+      background: rgba(0,0,0,.45);
+      border:1px solid rgba(255,255,255,.14);
+    }
+    .step h3{ margin:0; font-weight: 900; }
+    .step p{ margin: 6px 0 0 0; opacity:.86; }
+
+    /* Responsive */
+    @media (max-width: 980px){
+      .hero-inner{ grid-template-columns: 1fr; }
+      .grid{ grid-template-columns: 1fr; }
+      .panel{ order: 2; }
     }
   </style>
 </head>
 
 <body>
-  <!-- Background FX -->
   <div class="bg">
     <div class="bg-orb orb-a"></div>
     <div class="bg-orb orb-b"></div>
@@ -268,468 +367,279 @@
     <div class="bg-noise"></div>
   </div>
 
-  <!-- Sticky Download Bar -->
-  <div class="sticky-download" id="stickyDownload" aria-hidden="true">
-    <div class="sticky-inner">
-      <div class="sticky-left">
-        <div class="sticky-title">Halal Map Prime</div>
-        <div class="sticky-sub" data-i18n="stickySub">Now available on the App Store</div>
-      </div>
-      <div class="sticky-actions">
-        <a class="sticky-btn" href="https://apps.apple.com/app/halal-map-prime/id6756825539" target="_blank" rel="noopener" data-i18n="stickyBtn">Download</a>
-        <button class="sticky-x" type="button" id="stickyClose" aria-label="Close">✕</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Top Bar -->
   <header class="topbar">
     <div class="container topbar-inner">
       <div class="brand">
-        <div class="logo">
-          <span class="logo-moon">☾</span>
-          <span class="logo-star">✦</span>
-        </div>
-        <div class="brand-text">
+        <div class="logo"><span class="logo-moon">☾</span><span class="logo-star">✦</span></div>
+        <div>
           <div class="brand-title">Halal Map Prime</div>
-          <div class="brand-sub" data-i18n="tagline">Built for Trust</div>
+          <div class="brand-sub">Built for Trust</div>
         </div>
       </div>
-
       <nav class="top-actions">
-        <div class="lang" aria-label="Language">
-          <button class="lang-btn is-active" data-lang="en" type="button">EN</button>
-          <button class="lang-btn" data-lang="ar" type="button">AR</button>
-          <button class="lang-btn" data-lang="fa" type="button">FA</button>
-          <button class="lang-btn" data-lang="tr" type="button">TR</button>
-          <button class="lang-btn" data-lang="ur" type="button">UR</button>
-        </div>
-
-        <a class="pill" href="mailto:Info@Halalmapprime.com" aria-label="Email">
-          <span aria-hidden="true">✉</span> <span data-i18n="email">Email</span>
-        </a>
+        <a class="pill" href="mailto:Info@Halalmapprime.com">✉ Email</a>
+        <a class="pill" href="#contact">Get listed</a>
       </nav>
     </div>
   </header>
 
-  <!-- HERO -->
-  <main role="main">
+  <main>
     <section class="hero" id="top">
       <div class="container hero-inner">
-        <div class="hero-copy">
-          <div class="kicker" data-i18n="kicker">Designed in New York • Built for Communities</div>
-          <div class="appstore-badge" data-i18n="appStoreBadge">Now available on the App Store</div>
+
+        <div>
+          <div class="kicker">Designed in New York • Built for Communities</div>
+          <div class="badge">Now available on the App Store</div>
 
           <h1 class="title">
-            <span data-i18n="heroTitleA">Open the map.</span>
-            <span class="grad" data-i18n="heroTitleB">Feel the difference.</span>
+            Open the map. <span class="grad">Feel the difference.</span>
           </h1>
 
-          <p class="lead" data-i18n="heroLead">
-            This isn’t just “another map.” It’s halal clarity — places, masjids, services, jobs, and community updates in one premium experience.
+          <p class="lead">
+            Not just another map — halal clarity for places, masjids, services, jobs, and community updates.
           </p>
 
-          <div class="cta-row">
-            <a class="appstore-btn" href="https://apps.apple.com/app/halal-map-prime/id6756825539" target="_blank" rel="noopener" data-i18n="ctaDownload">
+          <div class="cta">
+            <a class="download-btn" href="https://apps.apple.com/app/halal-map-prime/id6756825539" target="_blank" rel="noopener">
               
-              <span class="cta-main-text">
-                <span class="big" data-i18n="ctaDownloadText">Download on the App Store</span>
-                <span class="small" data-i18n="ctaSubline">Tap • Install • Explore what’s inside</span>
+              <span class="download-text">
+                <span class="big">Download on the App Store</span>
+                <span class="small">Tap • Install • Explore what’s inside</span>
               </span>
             </a>
-          </div>
 
-          <div class="cta-micro">
-            <span data-i18n="micro1">No login needed</span>
-            <span class="cta-dot">•</span>
-            <span data-i18n="micro2">Fast & premium</span>
-            <span class="cta-dot">•</span>
-            <span data-i18n="micro3">Built for trust</span>
-          </div>
-
-          <div class="cta-links">
-            <a href="#features" data-i18n="ctaLink1">What’s inside</a>
-            <a href="#contact" data-i18n="ctaLink2">Business / Get listed</a>
-            <!-- optional: if you later create screenshots.html -->
-            <a href="./screenshots.html" data-i18n="ctaLink3">Screenshots</a>
-          </div>
-
-          <!-- iPhone frames (YOUR screenshots) -->
-          <div class="phone-showcase">
-            <div class="iphone-frame">
-              <div class="iphone-notch"></div>
-              <img src="./images/screen-home.jpg" alt="Home screen" loading="lazy">
-            </div>
-
-            <div class="iphone-frame">
-              <div class="iphone-notch"></div>
-              <img src="./images/screen-faith.jpg" alt="Faith tools screen" loading="lazy">
-            </div>
-
-            <div class="iphone-frame">
-              <div class="iphone-notch"></div>
-              <img src="./images/screen-jobs.jpg" alt="Create job ad screen" loading="lazy">
+            <div class="micro">
+              <span>No login needed</span><span class="dot">•</span>
+              <span>Fast & premium</span><span class="dot">•</span>
+              <span>Built for trust</span>
             </div>
           </div>
 
-          <div class="note" data-i18n="disclaimerHero" style="margin-top:14px;">
+          <div class="note">
             Community-based platform. Listings rely on submitted information and do not represent official certification.
           </div>
         </div>
 
-        <div class="hero-panel">
-          <div class="panel">
-            <div class="panel-top">
-              <div class="chip" data-i18n="chipA">Halal • Community-Verified • Premium</div>
-              <div class="chip alt" data-i18n="chipB">Jobs • Events • Services</div>
+        <div class="panel">
+          <div class="panel-top">
+            <div class="chip">Halal • Community-Verified • Premium</div>
+            <div class="chip alt">Jobs • Events • Services</div>
+          </div>
+
+          <!-- PHONE SLIDER -->
+          <div class="panel-body">
+            <div class="panel-title">See what’s inside</div>
+
+            <div class="phone-area">
+              <div class="iphone" id="iphoneSlider">
+                <div class="notch"></div>
+
+                <div class="screen">
+                  <div class="slides" id="slides">
+                    <div class="slide"><img src="./images/screen-home.jpg" alt="Home screen" loading="lazy"></div>
+                    <div class="slide"><img src="./images/screen-faith.jpg" alt="Faith tools" loading="lazy"></div>
+                    <div class="slide"><img src="./images/screen-jobs.jpg" alt="Jobs & ads" loading="lazy"></div>
+                  </div>
+
+                  <div class="controls">
+                    <button class="arrow" id="prevBtn" aria-label="Previous">‹</button>
+                    <button class="arrow" id="nextBtn" aria-label="Next">›</button>
+                  </div>
+
+                  <div class="dots" id="dots"></div>
+                </div>
+              </div>
             </div>
 
-            <div class="panel-body">
-              <div class="panel-title" data-i18n="panelTitle">Inside the app</div>
-              <div class="panel-line" data-i18n="panelLine1">• Halal food & groceries</div>
-              <div class="panel-line" data-i18n="panelLine2">• Masjids & schools</div>
-              <div class="panel-line" data-i18n="panelLine3">• Local services</div>
-              <div class="panel-line" data-i18n="panelLine4">• Community jobs & events</div>
-              <div class="panel-glow"></div>
-            </div>
-
-            <div class="panel-bottom">
-              <a class="social" href="https://www.facebook.com/profile.php?id=61583835974171" target="_blank" rel="noopener">Facebook</a>
-              <span class="dot">•</span>
-              <a class="social" href="https://www.instagram.com/halalmapprime" target="_blank" rel="noopener">Instagram</a>
-              <span class="dot">•</span>
-              <a class="social" href="https://www.tiktok.com/@halalmapprime" target="_blank" rel="noopener">TikTok</a>
-            </div>
+            <div class="panel-line">• Halal food & groceries</div>
+            <div class="panel-line">• Masjids & schools</div>
+            <div class="panel-line">• Local services</div>
+            <div class="panel-line">• Community jobs & events</div>
           </div>
         </div>
-      </div>
 
-      <div class="scroll-hint">
-        <span data-i18n="scroll">Scroll</span>
-        <span class="arrow" aria-hidden="true">↓</span>
       </div>
     </section>
 
-    <!-- FEATURES -->
     <section class="section" id="features">
       <div class="container">
         <div class="section-head">
-          <h2 data-i18n="featuresTitle">Why people keep it</h2>
-          <p data-i18n="featuresLead">Fast discovery, real utility, and a clean premium experience — built for everyday use.</p>
+          <h2>Why people keep it</h2>
+          <p>Fast discovery, real utility, and a clean premium experience — built for everyday use.</p>
         </div>
 
         <div class="grid">
           <article class="card">
             <div class="icon">🗺️</div>
-            <h3 data-i18n="f1Title">Premium halal discovery</h3>
-            <p data-i18n="f1Body">Find halal places, masjids, schools, and services around you — quickly.</p>
+            <h3>Premium halal discovery</h3>
+            <p>Find halal places, masjids, schools, and services around you — quickly.</p>
           </article>
-
           <article class="card">
             <div class="icon">✅</div>
-            <h3 data-i18n="f2Title">Verification where it matters</h3>
-            <p data-i18n="f2Body">Only food/meat sellers require verification. Masjids, schools & services can appear directly.</p>
+            <h3>Verification where it matters</h3>
+            <p>Only food/meat sellers require verification. Masjids, schools & services can appear directly.</p>
           </article>
-
           <article class="card">
             <div class="icon">📣</div>
-            <h3 data-i18n="f3Title">Prime visibility</h3>
-            <p data-i18n="f3Body">Boosted listings and banners for halal businesses that want real reach.</p>
+            <h3>Prime visibility</h3>
+            <p>Boosted listings and banners for halal businesses that want real reach.</p>
           </article>
-
-          <article class="card">
-            <div class="icon">👥</div>
-            <h3 data-i18n="f4Title">Community hub</h3>
-            <p data-i18n="f4Body">Jobs, hiring, events, notices — built to keep people returning.</p>
-          </article>
-
-          <article class="card">
-            <div class="icon">⚡</div>
-            <h3 data-i18n="f5Title">Built to scale</h3>
-            <p data-i18n="f5Body">United States first, then global markets with the same clarity-first model.</p>
-          </article>
-
-          <article class="card special">
-            <div class="icon">🕌</div>
-            <h3 data-i18n="f6Title">Identity + modern execution</h3>
-            <p data-i18n="f6Body">A world-class product that reflects our community — strong, clean, future-ready.</p>
-          </article>
-        </div>
-
-        <!-- MID CTA -->
-        <div style="margin-top:22px;">
-          <div class="cta-block">
-            <div>
-              <h3 data-i18n="midCtaTitle">Don’t judge it from a page.</h3>
-              <p data-i18n="midCtaBody">Download the app and see what the experience feels like — from the inside.</p>
-            </div>
-            <div class="cta-actions">
-              <a class="appstore-btn" href="https://apps.apple.com/app/halal-map-prime/id6756825539" target="_blank" rel="noopener" data-i18n="midCtaBtn">
-                
-                <span class="cta-main-text">
-                  <span class="big" data-i18n="midCtaBtnText">Download on the App Store</span>
-                  <span class="small" data-i18n="midCtaSub">Install in seconds</span>
-                </span>
-              </a>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- HOW IT WORKS -->
-    <section class="section dark" id="how-it-works">
-      <div class="container">
-        <div class="section-head">
-          <h2 data-i18n="howTitle">How it works (simple)</h2>
-          <p data-i18n="howLead">Users discover. Businesses grow. Community stays connected.</p>
-        </div>
-
-        <div class="timeline">
-          <div class="step">
-            <div class="badge">01</div>
-            <div>
-              <h3 data-i18n="how1Title">Open the map</h3>
-              <p data-i18n="how1Body">See halal places, masjids, schools, and services around you — instantly.</p>
-            </div>
-          </div>
-
-          <div class="step">
-            <div class="badge">02</div>
-            <div>
-              <h3 data-i18n="how2Title">Search & filter</h3>
-              <p data-i18n="how2Body">Find what you need fast: food, groceries, services, and community needs.</p>
-            </div>
-          </div>
-
-          <div class="step">
-            <div class="badge">03</div>
-            <div>
-              <h3 data-i18n="how3Title">Clarity on food listings</h3>
-              <p data-i18n="how3Body">Food/meat sellers can submit proof (invoice/photo) to add transparency.</p>
-            </div>
-          </div>
-
-          <div class="step">
-            <div class="badge">04</div>
-            <div>
-              <h3 data-i18n="how4Title">Prime visibility (optional)</h3>
-              <p data-i18n="how4Body">Businesses can boost listings or run Prime ads to reach more customers.</p>
-            </div>
-          </div>
-
-          <div class="step">
-            <div class="badge">05</div>
-            <div>
-              <h3 data-i18n="how5Title">Community hub</h3>
-              <p data-i18n="how5Body">Jobs, events, and announcements keep users returning daily.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="quote" style="margin-top:22px;">
-          <div class="quote-mark">“</div>
-          <p data-i18n="howQuote">Trust isn’t claimed. It’s built.</p>
-          <div class="quote-by" data-i18n="howQuoteBy">— Halal Map Prime</div>
         </div>
       </div>
     </section>
 
-    <!-- VISION (Dubai removed) -->
     <section class="section dark" id="vision">
       <div class="container">
         <div class="section-head">
-          <h2 data-i18n="visionTitle">Our vision</h2>
-          <p data-i18n="visionLead">United States first — then the world, with integrity.</p>
+          <h2>Our vision</h2>
+          <p>United States first — then the world, with integrity.</p>
         </div>
 
         <div class="timeline">
           <div class="step">
-            <div class="badge">01</div>
+            <div class="badgeNum">01</div>
             <div>
-              <h3 data-i18n="v1Title">United States</h3>
-              <p data-i18n="v1Body">Nationwide halal discovery — city by city, community by community.</p>
+              <h3>United States</h3>
+              <p>Nationwide halal discovery — city by city, community by community.</p>
             </div>
           </div>
-
           <div class="step">
-            <div class="badge">02</div>
+            <div class="badgeNum">02</div>
             <div>
-              <h3 data-i18n="v2Title">London • Toronto</h3>
-              <p data-i18n="v2Body">Key global cities with strong community presence.</p>
+              <h3>London • Toronto</h3>
+              <p>Key global cities with strong community presence.</p>
             </div>
           </div>
-
           <div class="step">
-            <div class="badge">03</div>
+            <div class="badgeNum">03</div>
             <div>
-              <h3 data-i18n="v3Title">Australia</h3>
-              <p data-i18n="v3Body">Long-term expansion with the same clarity-first model.</p>
+              <h3>Australia</h3>
+              <p>Long-term expansion with the same clarity-first model.</p>
             </div>
           </div>
-        </div>
-
-        <div class="quote">
-          <div class="quote-mark">“</div>
-          <p data-i18n="quote">Google shows places. Halal Map Prime shows clarity and trust.</p>
-          <div class="quote-by" data-i18n="quoteBy">— Halal Map Prime</div>
         </div>
       </div>
     </section>
 
-    <!-- CONTACT -->
     <section class="section" id="contact">
       <div class="container">
         <div class="section-head">
-          <h2 data-i18n="contactTitle">Get listed / Contact</h2>
-          <p data-i18n="contactLead">Business? Masjid? School? Service? Want Prime visibility? Contact us now.</p>
+          <h2>Get listed / Contact</h2>
+          <p>Business? Masjid? School? Service? Want Prime visibility? Contact us now.</p>
         </div>
 
-        <!-- BOTTOM CTA -->
-        <div style="margin: 14px 0 18px 0;">
-          <div class="cta-block">
-            <div>
-              <h3 data-i18n="bottomCtaTitle">Ready? Open it from the inside.</h3>
-              <p data-i18n="bottomCtaBody">Download Halal Map Prime and explore your area with clarity.</p>
-            </div>
-            <div class="cta-actions">
-              <a class="appstore-btn" href="https://apps.apple.com/app/halal-map-prime/id6756825539" target="_blank" rel="noopener" data-i18n="bottomCtaBtn">
-                
-                <span class="cta-main-text">
-                  <span class="big" data-i18n="bottomCtaBtnText">Download on the App Store</span>
-                  <span class="small" data-i18n="bottomCtaSub">Open the map now</span>
-                </span>
-              </a>
-            </div>
-          </div>
+        <div style="margin-top:16px;">
+          <a class="download-btn" href="https://apps.apple.com/app/halal-map-prime/id6756825539" target="_blank" rel="noopener" style="max-width:520px;">
+            
+            <span class="download-text">
+              <span class="big">Download on the App Store</span>
+              <span class="small">Open the map now</span>
+            </span>
+          </a>
         </div>
 
-        <div class="contact-grid">
-          <div class="contact-card">
-            <div class="contact-title" data-i18n="contactEmailTitle">Email</div>
-            <a class="contact-link" href="mailto:Info@Halalmapprime.com">Info@Halalmapprime.com</a>
-            <div class="contact-hint" data-i18n="contactEmailHint">Best for detailed requests & documents.</div>
-          </div>
-
-          <div class="contact-card">
-            <div class="contact-title" data-i18n="contactWaTitle">WhatsApp</div>
-            <button class="contact-link as-btn" id="waBtn" type="button" data-i18n="contactWaBtn">Open WhatsApp</button>
-            <div class="contact-hint" data-i18n="contactWaHint">Fast for verification (invoice/photo) & quick support.</div>
-          </div>
-
-          <div class="contact-card">
-            <div class="contact-title" data-i18n="contactSocialTitle">Social</div>
-            <div class="social-row">
-              <a class="chiplink" href="https://www.instagram.com/halalmapprime" target="_blank" rel="noopener">Instagram</a>
-              <a class="chiplink" href="https://www.tiktok.com/@halalmapprime" target="_blank" rel="noopener">TikTok</a>
-              <a class="chiplink" href="https://www.facebook.com/profile.php?id=61583835974171" target="_blank" rel="noopener">Facebook</a>
-            </div>
-            <div class="contact-hint" data-i18n="contactSocialHint">Follow us & share the movement.</div>
-          </div>
+        <div style="margin-top:14px; opacity:.88;">
+          Email: <a href="mailto:Info@Halalmapprime.com" style="color:rgba(255,255,255,.92); font-weight:900;">Info@Halalmapprime.com</a>
         </div>
 
-        <footer class="footer">
-          <div class="footer-left">
-            <div class="footer-brand">Halal Map Prime</div>
-            <div class="footer-sub" data-i18n="footerSub">Built for trust. Built to last.</div>
-            <div class="footer-legal" data-i18n="footerLegal">
-              Community-based discovery platform. Listings and verification are based on submitted information and do not represent official certification or endorsement.
-            </div>
-          </div>
-
-          <div class="footer-right">
-            <span>© <span id="year"></span></span>
-            <span class="dot">•</span>
-            <span data-i18n="footerBuilt">Built in New York</span>
-          </div>
-        </footer>
+        <div style="margin-top:24px; opacity:.72; font-size:12px;">
+          © <span id="year"></span> Halal Map Prime • Built in New York
+        </div>
       </div>
     </section>
   </main>
-
-  <!-- Keep your existing language file logic -->
-  <script src="./app.js"></script>
 
   <script>
     // year
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // WhatsApp button (safe)
-    const waBtn = document.getElementById('waBtn');
-    const waNumber = ""; // TODO: put your WhatsApp number without +, spaces (example: 1718XXXXXXX)
-    const waText = encodeURIComponent("Salam! I want to get listed / I have a question about Halal Map Prime.");
-    if (waBtn) {
-      waBtn.addEventListener('click', () => {
-        if (!waNumber) {
-          alert("WhatsApp number is not set yet. Please email us at Info@Halalmapprime.com");
-          return;
-        }
-        window.open("https://wa.me/" + waNumber + "?text=" + waText, "_blank", "noopener");
-      });
-    }
+    // Slider
+    const slidesEl = document.getElementById('slides');
+    const dotsEl = document.getElementById('dots');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const iphone = document.getElementById('iphoneSlider');
 
-    /**
-     * Compatibility bridge (keeps your existing i18n):
-     */
-    const root = document.getElementById("root");
-    const langButtons = document.querySelectorAll(".lang-btn");
+    const total = 3;
+    let index = 0;
+    let timer = null;
 
-    function applyDirAndFont(lang) {
-      const isRtl = (lang === "ar" || lang === "fa" || lang === "ur");
-      root.setAttribute("dir", isRtl ? "rtl" : "ltr");
-      root.setAttribute("lang", lang);
-      root.style.fontFamily = isRtl
-        ? "'Tajawal', system-ui, -apple-system"
-        : "'Inter', system-ui, -apple-system";
-    }
-
-    function callExistingLanguageSystem(lang) {
-      if (typeof window.setLanguage === "function") return window.setLanguage(lang);
-      if (typeof window.setLang === "function") return window.setLang(lang);
-      if (typeof window.changeLanguage === "function") return window.changeLanguage(lang);
-      if (window.i18n && typeof window.i18n.set === "function") return window.i18n.set(lang);
-    }
-
-    langButtons.forEach(btn => {
-      btn.addEventListener("click", () => {
-        langButtons.forEach(b => b.classList.remove("is-active"));
-        btn.classList.add("is-active");
-
-        const lang = btn.dataset.lang;
-        applyDirAndFont(lang);
-        callExistingLanguageSystem(lang);
-      });
-    });
-
-    applyDirAndFont("en");
-
-    // Sticky download bar logic (safe)
-    const sticky = document.getElementById("stickyDownload");
-    const stickyClose = document.getElementById("stickyClose");
-    let stickyDismissed = false;
-
-    function updateSticky() {
-      if (!sticky || stickyDismissed) return;
-      const y = window.scrollY || 0;
-      if (y > 260) {
-        sticky.classList.add("is-visible");
-        sticky.setAttribute("aria-hidden", "false");
-      } else {
-        sticky.classList.remove("is-visible");
-        sticky.setAttribute("aria-hidden", "true");
+    function renderDots(){
+      dotsEl.innerHTML = "";
+      for(let i=0;i<total;i++){
+        const b = document.createElement('button');
+        b.className = "dotbtn" + (i===index ? " active" : "");
+        b.setAttribute("aria-label", "Go to slide " + (i+1));
+        b.addEventListener("click", ()=>goTo(i, true));
+        dotsEl.appendChild(b);
       }
     }
-    window.addEventListener("scroll", updateSticky, { passive: true });
-    updateSticky();
 
-    if (stickyClose) {
-      stickyClose.addEventListener("click", () => {
-        stickyDismissed = true;
-        sticky.classList.remove("is-visible");
-        sticky.setAttribute("aria-hidden", "true");
-      });
+    function goTo(i, user=false){
+      index = (i + total) % total;
+      slidesEl.style.transform = "translateX(-" + (index*100) + "%)";
+      renderDots();
+      if(user) restart();
     }
+
+    function next(user=false){ goTo(index+1, user); }
+    function prev(user=false){ goTo(index-1, user); }
+
+    prevBtn.addEventListener("click", ()=>prev(true));
+    nextBtn.addEventListener("click", ()=>next(true));
+
+    // autoplay
+    function start(){
+      if(timer) return;
+      timer = setInterval(()=>next(false), 4000);
+    }
+    function stop(){
+      if(!timer) return;
+      clearInterval(timer);
+      timer = null;
+    }
+    function restart(){
+      stop();
+      start();
+    }
+
+    // pause on hover (desktop)
+    iphone.addEventListener("mouseenter", stop);
+    iphone.addEventListener("mouseleave", start);
+
+    // swipe (mobile)
+    let startX = 0;
+    let isDown = false;
+
+    iphone.addEventListener("touchstart", (e)=>{
+      stop();
+      isDown = true;
+      startX = e.touches[0].clientX;
+    }, {passive:true});
+
+    iphone.addEventListener("touchmove", (e)=>{
+      if(!isDown) return;
+      const dx = e.touches[0].clientX - startX;
+      // no dragging UI (keep it simple)
+    }, {passive:true});
+
+    iphone.addEventListener("touchend", (e)=>{
+      if(!isDown) return;
+      isDown = false;
+      const endX = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientX : startX;
+      const dx = endX - startX;
+      if(Math.abs(dx) > 40){
+        if(dx < 0) next(true);
+        else prev(true);
+      } else {
+        restart();
+      }
+    });
+
+    // init
+    renderDots();
+    goTo(0);
+    start();
   </script>
 </body>
 </html>
