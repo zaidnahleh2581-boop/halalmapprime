@@ -1,305 +1,834 @@
 <!doctype html>
 <html lang="en" dir="ltr" id="root">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="theme-color" content="#0b1220" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0b1220" />
 
-<title>Halal Map Prime — Built for Trust</title>
-<meta name="description" content="A premium halal discovery platform for places, masjids, services, jobs, and community updates." />
+  <title>Halal Map Prime — Built for Trust</title>
+  <meta name="description" content="Halal Map Prime brings together halal places, masjids, services, jobs, and community updates — in one premium, respectful experience." />
 
-<!-- Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+  <!-- Open Graph -->
+  <meta property="og:title" content="Halal Map Prime — Built for Trust" />
+  <meta property="og:description" content="Discover halal places, community services, and local businesses with clarity and premium experience." />
+  <meta property="og:type" content="website" />
 
-<style>
-/* ================== RESET ================== */
-*{box-sizing:border-box}
-html,body{margin:0;padding:0}
-body{
-  font-family:'Inter',system-ui,-apple-system;
-  background:#0b1220;
-  color:#fff;
-  overflow-x:hidden;
-}
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
 
-/* ================== BACKGROUND ================== */
-.bg{
-  position:fixed; inset:0; z-index:-1;
-  background:
-    radial-gradient(800px 500px at 10% 10%, rgba(80,140,255,.25), transparent 40%),
-    radial-gradient(700px 500px at 90% 30%, rgba(200,80,255,.22), transparent 40%),
-    linear-gradient(180deg,#0b1220,#060913);
-}
+  <!-- Google Analytics (keep your ID) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VCT0G5HB9W"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VCT0G5HB9W');
+  </script>
 
-/* ================== HEADER ================== */
-.header{
-  height:64px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 22px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  backdrop-filter: blur(10px);
-}
-.brand{
-  display:flex; align-items:center; gap:10px;
-  font-weight:900;
-}
-.brand span{opacity:.85}
-.langs button{
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.14);
-  color:#fff;
-  padding:6px 10px;
-  border-radius:10px;
-  margin-left:6px;
-  cursor:pointer;
-  font-weight:700;
-}
+  <style>
+    :root{
+      --bg:#0b1220;
+      --glass: rgba(255,255,255,.06);
+      --border: rgba(255,255,255,.14);
+      --text: rgba(255,255,255,.94);
+      --muted: rgba(255,255,255,.78);
+      --shadow: 0 18px 60px rgba(0,0,0,.35);
+      --shadow2: 0 24px 90px rgba(0,0,0,.55);
+      --radius: 22px;
+    }
 
-/* ================== HERO ================== */
-.hero{
-  max-width:1200px;
-  margin:0 auto;
-  padding:64px 20px 80px;
-  display:grid;
-  grid-template-columns:1.1fr .9fr;
-  gap:40px;
-}
-@media(max-width:900px){
-  .hero{grid-template-columns:1fr}
-}
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x:hidden;
+    }
 
-.kicker{
-  display:inline-block;
-  padding:6px 12px;
-  border-radius:999px;
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.14);
-  font-weight:700;
-  margin-bottom:18px;
-}
-h1{
-  font-size:56px;
-  line-height:1.05;
-  margin:0 0 16px;
-}
-.grad{
-  background:linear-gradient(90deg,#7aa2ff,#d07cff);
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
-}
-.lead{
-  font-size:18px;
-  opacity:.9;
-  max-width:520px;
-}
-.cta{
-  margin-top:28px;
-}
-.cta a{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  width:100%;
-  max-width:420px;
-  padding:18px;
-  border-radius:20px;
-  font-weight:900;
-  text-decoration:none;
-  color:#fff;
-  background:rgba(0,0,0,.6);
-  border:1px solid rgba(255,255,255,.22);
-  box-shadow:0 30px 80px rgba(0,0,0,.55);
-}
+    /* Background */
+    .bg{ position:fixed; inset:0; z-index:-1; overflow:hidden; }
+    .orb{ position:absolute; width:520px; height:520px; border-radius:999px; filter: blur(70px); opacity:.55; }
+    .orb.a{ left:-140px; top:140px; background: radial-gradient(circle at 30% 30%, #38bdf8, transparent 60%); }
+    .orb.b{ right:-160px; bottom:40px; background: radial-gradient(circle at 30% 30%, #a855f7, transparent 60%); }
+    .grid{
+      position:absolute; inset:0; opacity:.10;
+      background-image:
+        linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+      background-size: 56px 56px;
+    }
+    .noise{
+      position:absolute; inset:0; opacity:.08;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+    }
 
-/* ================== PHONE ================== */
-.phone-shell{
-  width:min(380px,92vw);
-  margin:0 auto;
-  padding:14px;
-  border-radius:36px;
-  background:linear-gradient(180deg,#1a1a1a,#000);
-  box-shadow:
-    0 30px 90px rgba(0,0,0,.55),
-    inset 0 0 0 2px rgba(255,255,255,.08);
-  position:relative;
-}
-.phone-shell::after{
-  content:"";
-  position:absolute; inset:0;
-  border-radius:36px;
-  background:linear-gradient(120deg,rgba(255,255,255,.12),transparent 40%);
-  pointer-events:none;
-}
-.phone-notch{
-  position:absolute;
-  top:8px; left:50%;
-  transform:translateX(-50%);
-  width:126px; height:22px;
-  background:#000;
-  border-radius:0 0 14px 14px;
-  z-index:5;
-}
-.phone-screen{
-  border-radius:26px;
-  overflow:hidden;
-  background:#000;
-  aspect-ratio:9/19.5;
-}
-.phone-track{
-  height:100%;
-  display:flex;
-  width:300%;
-  transition:transform .4s ease;
-}
-.phone-slide{
-  flex:0 0 100%;
-}
-.phone-slide img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
+    .container{ width:min(1100px, 92vw); margin:0 auto; }
 
-/* arrows */
-.phone-arrows{
-  position:absolute; inset:0;
-  display:flex; align-items:center; justify-content:space-between;
-}
-.phone-arrow{
-  width:42px;height:42px;
-  margin:0 10px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.18);
-  background:rgba(0,0,0,.55);
-  color:#fff;
-  font-size:20px;
-  font-weight:900;
-  cursor:pointer;
-}
+    /* Topbar */
+    header{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      background: rgba(11,18,32,.55);
+      border-bottom:1px solid rgba(255,255,255,.10);
+    }
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:14px;
+      padding: 14px 0;
+    }
 
-/* dots */
-.phone-dots{
-  position:absolute;
-  left:0; right:0; bottom:12px;
-  display:flex; justify-content:center; gap:8px;
-}
-.phone-dot{
-  width:8px;height:8px;
-  border-radius:999px;
-  background:rgba(255,255,255,.25);
-  border:1px solid rgba(255,255,255,.22);
-  cursor:pointer;
-}
-.phone-dot.active{
-  width:18px;
-  background:#fff;
-}
-</style>
+    .brand{ display:flex; align-items:center; gap:12px; min-width:0; }
+    .logo{
+      width:40px; height:40px; border-radius:14px;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      display:flex; align-items:center; justify-content:center;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+      flex-shrink:0;
+      position:relative;
+    }
+    .logo span{ opacity:.95; font-weight:900; }
+    .brand-title{ font-weight:900; letter-spacing:.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .brand-sub{ font-size:12px; opacity:.85; margin-top:2px; }
+
+    .right{
+      display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end;
+    }
+
+    .lang{
+      display:flex; gap:6px;
+      padding:6px;
+      border-radius:999px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+    }
+    .lang button{
+      cursor:pointer;
+      border:0;
+      color: rgba(255,255,255,.90);
+      background: transparent;
+      padding:8px 10px;
+      border-radius:999px;
+      font-weight:900;
+      font-size:12px;
+    }
+    .lang button.active{
+      background: rgba(0,0,0,.40);
+      border:1px solid rgba(255,255,255,.14);
+    }
+
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:10px 12px;
+      border-radius:999px;
+      text-decoration:none;
+      color:var(--text);
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      font-weight:900;
+      font-size: 13px;
+    }
+
+    /* Hero */
+    .hero{ padding: 34px 0 30px; }
+    .hero-inner{
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 22px;
+      align-items:start;
+    }
+    @media (max-width: 960px){
+      .hero-inner{ grid-template-columns: 1fr; }
+    }
+
+    .kicker{
+      display:inline-flex;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      font-weight: 900;
+      font-size: 12px;
+      opacity:.92;
+    }
+
+    h1{
+      margin: 14px 0 0 0;
+      font-size: clamp(34px, 4.4vw, 56px);
+      line-height: 1.02;
+      letter-spacing: -.2px;
+    }
+    .grad{
+      background: linear-gradient(90deg, #38bdf8, #a855f7);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .lead{
+      margin: 12px 0 0 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.55;
+      max-width: 70ch;
+    }
+
+    /* CTAs (3 buttons) */
+    .cta-row{
+      margin-top: 18px;
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      font-weight: 900;
+      text-decoration:none;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+    }
+    .btn:hover{ transform: translateY(-1px); transition: .18s ease; }
+    .btn:active{ transform: translateY(0px); }
+    .btn.primary{
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: rgba(0,0,0,.60);
+      border:1px solid rgba(255,255,255,.22);
+      box-shadow: var(--shadow2);
+      min-width: min(520px, 92vw);
+    }
+    .btn.primary .sub{
+      font-size: 12px;
+      opacity:.85;
+      font-weight: 900;
+    }
+
+    .micro{
+      margin-top: 10px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      font-size: 12px;
+      font-weight:900;
+      opacity:.85;
+    }
+    .dot{ opacity:.55; }
+
+    .note{
+      margin-top: 12px;
+      font-size: 12px;
+      opacity:.78;
+      max-width: 72ch;
+    }
+
+    /* Right card */
+    .panel{
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .panel-top{
+      padding:16px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .chip{
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.35);
+      font-weight: 900;
+      font-size: 12px;
+      opacity:.92;
+    }
+    .chip.alt{ background: rgba(255,255,255,.06); }
+    .panel-body{ padding: 0 16px 16px; }
+    .panel-title{ font-weight: 900; margin: 8px 0 10px 0; }
+    .panel-line{ opacity:.86; margin: 6px 0; }
+
+    /* Sections */
+    .section{ padding: 46px 0; }
+    .section.dark{
+      background: rgba(0,0,0,.10);
+      border-top:1px solid rgba(255,255,255,.06);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .section-head h2{ margin:0; font-size: 26px; font-weight: 900; }
+    .section-head p{ margin:10px 0 0 0; opacity:.85; max-width: 72ch; }
+
+    .grid3{
+      margin-top: 18px;
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    @media (max-width: 980px){ .grid3{ grid-template-columns:1fr; } }
+
+    .card{
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow: 0 16px 50px rgba(0,0,0,.18);
+    }
+    .card .icon{ font-size: 22px; }
+    .card h3{ margin: 10px 0 6px 0; font-weight: 900; }
+    .card p{ margin: 0; opacity:.86; line-height: 1.5; }
+
+    .timeline{ margin-top: 16px; display:grid; gap: 12px; }
+    .step{
+      display:flex; gap: 12px; align-items:flex-start;
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+    }
+    .badgeNum{
+      width: 34px; height: 34px;
+      border-radius: 14px;
+      display:flex; align-items:center; justify-content:center;
+      font-weight: 900;
+      background: rgba(0,0,0,.45);
+      border:1px solid rgba(255,255,255,.14);
+      flex-shrink:0;
+    }
+    .step h3{ margin:0; font-weight: 900; }
+    .step p{ margin: 6px 0 0 0; opacity:.86; }
+
+    /* Footer */
+    footer{
+      padding: 26px 0 34px;
+      opacity:.86;
+      font-size: 12px;
+    }
+    .footer-row{
+      display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
+      border-top:1px solid rgba(255,255,255,.08);
+      padding-top: 18px;
+    }
+    .footer-legal{ max-width: 80ch; opacity:.8; }
+  </style>
 </head>
 
 <body>
-
-<div class="bg"></div>
-
-<header class="header">
-  <div class="brand">☾ Halal Map Prime <span>Built for Trust</span></div>
-  <div class="langs">
-    <button onclick="setLang('en')">EN</button>
-    <button onclick="setLang('ar')">AR</button>
-  </div>
-</header>
-
-<section class="hero">
-  <!-- LEFT -->
-  <div>
-    <div class="kicker" data-i18n="kicker">Designed in New York • Built for Communities</div>
-    <h1>
-      <span data-i18n="titleA">Open the map.</span>
-      <span class="grad" data-i18n="titleB">Feel the difference.</span>
-    </h1>
-    <p class="lead" data-i18n="lead">
-      Not just another map — halal clarity for places, masjids, services, jobs, and community updates.
-    </p>
-    <div class="cta">
-      <a href="https://apps.apple.com/app/halal-map-prime/id6756825539" target="_blank">
-         Download on the App Store
-      </a>
-    </div>
+  <div class="bg">
+    <div class="orb a"></div>
+    <div class="orb b"></div>
+    <div class="grid"></div>
+    <div class="noise"></div>
   </div>
 
-  <!-- RIGHT (PHONE) -->
-  <div class="phone-shell" id="phone">
-    <div class="phone-notch"></div>
-    <div class="phone-screen">
-      <div class="phone-track" id="track">
-        <div class="phone-slide"><img src="./images/screen-home.jpg"></div>
-        <div class="phone-slide"><img src="./images/screen-faith.jpg"></div>
-        <div class="phone-slide"><img src="./images/screen-jobs.jpg"></div>
+  <header>
+    <div class="container topbar">
+      <div class="brand">
+        <div class="logo"><span>☾</span></div>
+        <div style="min-width:0">
+          <div class="brand-title">Halal Map Prime</div>
+          <div class="brand-sub" data-i18n="tagline">Built for Trust</div>
+        </div>
       </div>
-      <div class="phone-arrows">
-        <button class="phone-arrow" onclick="prev()">‹</button>
-        <button class="phone-arrow" onclick="next()">›</button>
+
+      <div class="right">
+        <div class="lang" aria-label="Language">
+          <button class="active" data-lang="en" type="button">EN</button>
+          <button data-lang="ar" type="button">AR</button>
+          <button data-lang="fa" type="button">FA</button>
+          <button data-lang="tr" type="button">TR</button>
+        </div>
+
+        <a class="pill" href="mailto:Info@Halalmapprime.com"><span aria-hidden="true">✉</span> <span data-i18n="email">Email</span></a>
       </div>
-      <div class="phone-dots" id="dots"></div>
     </div>
-  </div>
-</section>
+  </header>
 
-<script>
-/* ================== SLIDER ================== */
-let i=0;
-const total=3;
-const track=document.getElementById('track');
-const dots=document.getElementById('dots');
+  <main>
+    <!-- HERO -->
+    <section class="hero" id="top">
+      <div class="container hero-inner">
+        <div>
+          <div class="kicker" data-i18n="kicker">Designed in New York • Built for Communities</div>
 
-function renderDots(){
-  dots.innerHTML='';
-  for(let d=0;d<total;d++){
-    const b=document.createElement('div');
-    b.className='phone-dot'+(d===i?' active':'');
-    b.onclick=()=>go(d);
-    dots.appendChild(b);
-  }
-}
-function go(n){
-  i=(n+total)%total;
-  track.style.transform=`translateX(-${i*100}%)`;
-  renderDots();
-}
-function next(){go(i+1)}
-function prev(){go(i-1)}
-renderDots();
-setInterval(next,4500);
+          <h1>
+            <span data-i18n="heroTitleA">More than discovery.</span>
+            <span class="grad" data-i18n="heroTitleB">A halal clarity layer.</span>
+          </h1>
 
-/* ================== LANG ================== */
-const dict={
-  en:{
-    kicker:"Designed in New York • Built for Communities",
-    titleA:"Open the map.",
-    titleB:"Feel the difference.",
-    lead:"Not just another map — halal clarity for places, masjids, services, jobs, and community updates."
-  },
-  ar:{
-    kicker:"مصمم في نيويورك • مبني لخدمة المجتمع",
-    titleA:"افتح الخريطة.",
-    titleB:"واحس بالفرق.",
-    lead:"مش مجرد خريطة — وضوح حلال للأماكن، المساجد، الخدمات، الوظائف، والمجتمع."
-  }
-};
-function setLang(l){
-  document.documentElement.lang=l;
-  document.documentElement.dir=(l==='ar'?'rtl':'ltr');
-  document.body.style.fontFamily=(l==='ar'?'Tajawal':'Inter');
-  document.querySelectorAll('[data-i18n]').forEach(e=>{
-    e.textContent=dict[l][e.dataset.i18n];
-  });
-}
-</script>
+          <p class="lead" data-i18n="heroLead">
+            Halal Map Prime brings together halal places, masjids, services, jobs, and community updates —
+            in one premium, respectful experience built for everyday use.
+          </p>
 
+          <!-- 3 Buttons (Download first) -->
+          <div class="cta-row">
+            <a class="btn primary" href="https://apps.apple.com/app/halal-map-prime/id6756825539" target="_blank" rel="noopener">
+               <span>
+                <span data-i18n="ctaDownloadText">Download on the App Store</span><br>
+                <span class="sub" data-i18n="ctaDownloadSub">Tap • Install • Explore what’s inside</span>
+              </span>
+            </a>
+
+            <a class="btn" href="#how-it-works" data-i18n="ctaHow">How it works</a>
+            <a class="btn" href="#contact" data-i18n="ctaList">Get listed</a>
+          </div>
+
+          <div class="micro">
+            <span data-i18n="micro1">No login needed</span><span class="dot">•</span>
+            <span data-i18n="micro2">Fast & premium</span><span class="dot">•</span>
+            <span data-i18n="micro3">Built for trust</span>
+          </div>
+
+          <div class="note" data-i18n="disclaimerHero">
+            Community-based platform. Listings rely on submitted information and do not represent official certification.
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-top">
+            <div class="chip" data-i18n="chipA">Halal • Community-Verified • Premium</div>
+            <div class="chip alt" data-i18n="chipB">Jobs • Events • Services</div>
+          </div>
+          <div class="panel-body">
+            <div class="panel-title" data-i18n="panelTitle">What you’ll find</div>
+            <div class="panel-line" data-i18n="panelLine1">• Halal food & groceries</div>
+            <div class="panel-line" data-i18n="panelLine2">• Masjids & schools</div>
+            <div class="panel-line" data-i18n="panelLine3">• Local services</div>
+            <div class="panel-line" data-i18n="panelLine4">• Community jobs & events</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-head">
+          <h2 data-i18n="featuresTitle">What makes it powerful</h2>
+          <p data-i18n="featuresLead">Luxury experience + community utility + halal clarity where it matters.</p>
+        </div>
+
+        <div class="grid3">
+          <article class="card">
+            <div class="icon">🗺️</div>
+            <h3 data-i18n="f1Title">Premium halal map</h3>
+            <p data-i18n="f1Body">Fast discovery of masjids, schools, services and halal places around you.</p>
+          </article>
+
+          <article class="card">
+            <div class="icon">✅</div>
+            <h3 data-i18n="f2Title">Verification where it matters</h3>
+            <p data-i18n="f2Body">Only food/meat sellers require verification. Masjids, schools & services can appear directly.</p>
+          </article>
+
+          <article class="card">
+            <div class="icon">📣</div>
+            <h3 data-i18n="f3Title">Prime ads & visibility</h3>
+            <p data-i18n="f3Body">Boosted listings and banners for halal businesses that want real reach.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="section dark" id="how-it-works">
+      <div class="container">
+        <div class="section-head">
+          <h2 data-i18n="howTitle">How it works (simple)</h2>
+          <p data-i18n="howLead">Two sides. One ecosystem: users discover, businesses grow, community stays connected.</p>
+        </div>
+
+        <div class="timeline">
+          <div class="step">
+            <div class="badgeNum">01</div>
+            <div>
+              <h3 data-i18n="how1Title">Open the map</h3>
+              <p data-i18n="how1Body">See halal places, masjids, schools, and services around you — instantly.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="badgeNum">02</div>
+            <div>
+              <h3 data-i18n="how2Title">Search & filter</h3>
+              <p data-i18n="how2Body">Find what you need fast: food, groceries, services, and community needs.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="badgeNum">03</div>
+            <div>
+              <h3 data-i18n="how3Title">Clarity on food listings</h3>
+              <p data-i18n="how3Body">Food/meat sellers can submit proof (invoice/photo) to add transparency.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="badgeNum">04</div>
+            <div>
+              <h3 data-i18n="how4Title">Prime visibility (optional)</h3>
+              <p data-i18n="how4Body">Businesses can boost listings or run Prime ads to reach more customers.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="badgeNum">05</div>
+            <div>
+              <h3 data-i18n="how5Title">Community hub</h3>
+              <p data-i18n="how5Body">Jobs, events, and announcements keep users returning daily.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VISION (Dubai removed) -->
+    <section class="section dark" id="vision">
+      <div class="container">
+        <div class="section-head">
+          <h2 data-i18n="visionTitle">Our vision</h2>
+          <p data-i18n="visionLead">Built for real use. Designed to scale with integrity.</p>
+        </div>
+
+        <div class="timeline">
+          <div class="step">
+            <div class="badgeNum">01</div>
+            <div>
+              <h3 data-i18n="v1Title">United States</h3>
+              <p data-i18n="v1Body">Nationwide halal discovery — city by city, community by community.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="badgeNum">02</div>
+            <div>
+              <h3 data-i18n="v2Title">London • Toronto</h3>
+              <p data-i18n="v2Body">Key global cities with strong community presence.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="badgeNum">03</div>
+            <div>
+              <h3 data-i18n="v3Title">Australia</h3>
+              <p data-i18n="v3Body">Long-term expansion with the same clarity-first model.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="section-head">
+          <h2 data-i18n="contactTitle">Get listed / Contact</h2>
+          <p data-i18n="contactLead">Business? Masjid? School? Service? Want Prime visibility? Contact us now.</p>
+        </div>
+
+        <div style="margin-top:16px;">
+          <a class="btn primary" href="https://apps.apple.com/app/halal-map-prime/id6756825539" target="_blank" rel="noopener">
+             <span>
+              <span data-i18n="ctaDownloadText">Download on the App Store</span><br>
+              <span class="sub" data-i18n="ctaDownloadSub2">Open the map now</span>
+            </span>
+          </a>
+        </div>
+
+        <div style="margin-top:14px; opacity:.88;">
+          <span data-i18n="contactEmailTitle">Email:</span>
+          <a href="mailto:Info@Halalmapprime.com" style="color:rgba(255,255,255,.92); font-weight:900;">Info@Halalmapprime.com</a>
+        </div>
+
+        <footer>
+          <div class="footer-row">
+            <div class="footer-legal" data-i18n="footerLegal">
+              Community-based discovery platform. Listings and verification are based on submitted information and do not represent official certification or endorsement.
+            </div>
+            <div>© <span id="year"></span> <span data-i18n="footerBuilt">Built in New York</span></div>
+          </div>
+        </footer>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Languages (4)
+    const dict = {
+      en: {
+        tagline:"Built for Trust",
+        email:"Email",
+        kicker:"Designed in New York • Built for Communities",
+        heroTitleA:"More than discovery.",
+        heroTitleB:"A halal clarity layer.",
+        heroLead:"Halal Map Prime brings together halal places, masjids, services, jobs, and community updates — in one premium, respectful experience built for everyday use.",
+        ctaDownloadText:"Download on the App Store",
+        ctaDownloadSub:"Tap • Install • Explore what’s inside",
+        ctaDownloadSub2:"Open the map now",
+        ctaHow:"How it works",
+        ctaList:"Get listed",
+        micro1:"No login needed",
+        micro2:"Fast & premium",
+        micro3:"Built for trust",
+        disclaimerHero:"Community-based platform. Listings rely on submitted information and do not represent official certification.",
+        chipA:"Halal • Community-Verified • Premium",
+        chipB:"Jobs • Events • Services",
+        panelTitle:"What you’ll find",
+        panelLine1:"• Halal food & groceries",
+        panelLine2:"• Masjids & schools",
+        panelLine3:"• Local services",
+        panelLine4:"• Community jobs & events",
+        featuresTitle:"What makes it powerful",
+        featuresLead:"Luxury experience + community utility + halal clarity where it matters.",
+        f1Title:"Premium halal map",
+        f1Body:"Fast discovery of masjids, schools, services and halal places around you.",
+        f2Title:"Verification where it matters",
+        f2Body:"Only food/meat sellers require verification. Masjids, schools & services can appear directly.",
+        f3Title:"Prime ads & visibility",
+        f3Body:"Boosted listings and banners for halal businesses that want real reach.",
+        howTitle:"How it works (simple)",
+        howLead:"Two sides. One ecosystem: users discover, businesses grow, community stays connected.",
+        how1Title:"Open the map",
+        how1Body:"See halal places, masjids, schools, and services around you — instantly.",
+        how2Title:"Search & filter",
+        how2Body:"Find what you need fast: food, groceries, services, and community needs.",
+        how3Title:"Clarity on food listings",
+        how3Body:"Food/meat sellers can submit proof (invoice/photo) to add transparency.",
+        how4Title:"Prime visibility (optional)",
+        how4Body:"Businesses can boost listings or run Prime ads to reach more customers.",
+        how5Title:"Community hub",
+        how5Body:"Jobs, events, and announcements keep users returning daily.",
+        visionTitle:"Our vision",
+        visionLead:"Built for real use. Designed to scale with integrity.",
+        v1Title:"United States",
+        v1Body:"Nationwide halal discovery — city by city, community by community.",
+        v2Title:"London • Toronto",
+        v2Body:"Key global cities with strong community presence.",
+        v3Title:"Australia",
+        v3Body:"Long-term expansion with the same clarity-first model.",
+        contactTitle:"Get listed / Contact",
+        contactLead:"Business? Masjid? School? Service? Want Prime visibility? Contact us now.",
+        contactEmailTitle:"Email:",
+        footerLegal:"Community-based discovery platform. Listings and verification are based on submitted information and do not represent official certification or endorsement.",
+        footerBuilt:"Built in New York"
+      },
+
+      ar: {
+        tagline:"مبني على الثقة",
+        email:"إيميل",
+        kicker:"مصمم في نيويورك • مبني لخدمة المجتمع",
+        heroTitleA:"أكثر من مجرد بحث.",
+        heroTitleB:"طبقة وضوح حلال.",
+        heroLead:"Halal Map Prime يجمع أماكن الحلال، المساجد، الخدمات، الوظائف، وتحديثات المجتمع — بتجربة فخمة ومحترمة للاستخدام اليومي.",
+        ctaDownloadText:"تحميل من App Store",
+        ctaDownloadSub:"اضغط • ثبّت • وشوف اللي بالداخل",
+        ctaDownloadSub2:"افتح الخريطة الآن",
+        ctaHow:"كيف يعمل",
+        ctaList:"أضف نشاطك",
+        micro1:"بدون تسجيل",
+        micro2:"سريع وفخم",
+        micro3:"مبني على الثقة",
+        disclaimerHero:"منصة مجتمعية. الإدخالات تعتمد على معلومات مرسلة ولا تمثل شهادة رسمية.",
+        chipA:"حلال • توثيق مجتمعي • فخم",
+        chipB:"وظائف • فعاليات • خدمات",
+        panelTitle:"شو بتلاقي",
+        panelLine1:"• أكل وبقالة حلال",
+        panelLine2:"• مساجد ومدارس",
+        panelLine3:"• خدمات محلية",
+        panelLine4:"• وظائف وفعاليات المجتمع",
+        featuresTitle:"ليش قوي؟",
+        featuresLead:"فخامة + خدمة مجتمع + وضوح حلال حيث يهم.",
+        f1Title:"خريطة حلال فخمة",
+        f1Body:"اكتشف المساجد والمدارس والخدمات وأماكن الحلال بسرعة.",
+        f2Title:"توثيق حيث يهم",
+        f2Body:"التوثيق مطلوب فقط لبائعي الأكل/اللحمة. أما المساجد والمدارس والخدمات فتظهر مباشرة.",
+        f3Title:"إعلانات Prime",
+        f3Body:"رفع الظهور وإعلانات للبزنس اللي بدها نمو حقيقي.",
+        howTitle:"كيف يعمل (ببساطة)",
+        howLead:"طرفين… نظام واحد: المستخدم يكتشف، والبزنس يكبر، والمجتمع يتواصل.",
+        how1Title:"افتح الخريطة",
+        how1Body:"شوف أماكن الحلال والمساجد والمدارس والخدمات حولك فورًا.",
+        how2Title:"ابحث وفلتر",
+        how2Body:"وصل بسرعة: أكل، بقالة، خدمات، واحتياجات المجتمع.",
+        how3Title:"وضوح لقوائم الأكل",
+        how3Body:"بائعو الأكل/اللحمة يمكنهم رفع إثبات لزيادة الشفافية.",
+        how4Title:"ظهور Prime (اختياري)",
+        how4Body:"البزنس تقدر تعزز الظهور أو تعمل إعلانات Prime.",
+        how5Title:"مركز المجتمع",
+        how5Body:"وظائف وفعاليات وإعلانات تخلي الناس ترجع يوميًا.",
+        visionTitle:"رؤيتنا",
+        visionLead:"مبني للاستخدام الحقيقي… ومصمم للتوسع بنزاهة.",
+        v1Title:"الولايات المتحدة",
+        v1Body:"بحث حلال على مستوى أمريكا — مدينة مدينة.",
+        v2Title:"لندن • تورنتو",
+        v2Body:"مدن عالمية أساسية بحضور قوي للمجتمع.",
+        v3Title:"أستراليا",
+        v3Body:"توسع طويل المدى بنفس نموذج الوضوح أولاً.",
+        contactTitle:"تواصل / أضف نشاطك",
+        contactLead:"محل؟ مسجد؟ مدرسة؟ خدمة؟ بدك Prime؟ تواصل معنا.",
+        contactEmailTitle:"الإيميل:",
+        footerLegal:"منصة مجتمعية. الإدخالات والتوثيق يعتمد على معلومات مرسلة ولا تمثل شهادة أو اعتماد رسمي.",
+        footerBuilt:"مبني في نيويورك"
+      },
+
+      fa: {
+        tagline:"ساخته شده برای اعتماد",
+        email:"ایمیل",
+        kicker:"طراحی‌شده در نیویورک • برای جامعه",
+        heroTitleA:"فراتر از جستجو.",
+        heroTitleB:"لایه‌ای از شفافیت حلال.",
+        heroLead:"Halal Map Prime مکان‌های حلال، مساجد، خدمات، کارها و بروزرسانی‌های جامعه را در یک تجربه حرفه‌ای و محترمانه جمع می‌کند.",
+        ctaDownloadText:"دانلود از App Store",
+        ctaDownloadSub:"کلیک • نصب • داخلش رو ببین",
+        ctaDownloadSub2:"همین حالا نقشه را باز کن",
+        ctaHow:"نحوه کار",
+        ctaList:"ثبت کسب‌وکار",
+        micro1:"بدون ورود",
+        micro2:"سریع و حرفه‌ای",
+        micro3:"بر پایه اعتماد",
+        disclaimerHero:"پلتفرم جامعه‌محور. اطلاعات ثبت‌شده بر اساس ارسال کاربران است و تأیید رسمی محسوب نمی‌شود.",
+        chipA:"حلال • تأیید جامعه • حرفه‌ای",
+        chipB:"کار • رویداد • خدمات",
+        panelTitle:"چه چیزهایی هست",
+        panelLine1:"• غذا و سوپرمارکت حلال",
+        panelLine2:"• مسجد و مدرسه",
+        panelLine3:"• خدمات محلی",
+        panelLine4:"• کارها و رویدادهای جامعه",
+        featuresTitle:"چه چیزی قدرتمندش می‌کند",
+        featuresLead:"تجربه لوکس + کاربرد اجتماعی + شفافیت حلال.",
+        f1Title:"نقشه حلال حرفه‌ای",
+        f1Body:"یافتن سریع مسجدها، مدرسه‌ها، خدمات و مکان‌های حلال اطراف شما.",
+        f2Title:"تأیید در جای مهم",
+        f2Body:"فقط فروشندگان غذا/گوشت نیاز به تأیید دارند؛ مسجدها و خدمات مستقیم نمایش داده می‌شوند.",
+        f3Title:"تبلیغات Prime",
+        f3Body:"افزایش دیده‌شدن و بنرها برای رشد واقعی کسب‌وکارهای حلال.",
+        howTitle:"نحوه کار (ساده)",
+        howLead:"دو طرف، یک اکوسیستم: کاربران پیدا می‌کنند، کسب‌وکارها رشد می‌کنند، جامعه وصل می‌ماند.",
+        how1Title:"نقشه را باز کن",
+        how1Body:"مکان‌های حلال، مسجدها، مدرسه‌ها و خدمات اطرافت را فوراً ببین.",
+        how2Title:"جستجو و فیلتر",
+        how2Body:"سریع پیدا کن: غذا، سوپرمارکت، خدمات و نیازهای جامعه.",
+        how3Title:"شفافیت برای لیست غذا",
+        how3Body:"فروشندگان می‌توانند مدارک ارسال کنند تا شفافیت بیشتر شود.",
+        how4Title:"دیده‌شدن Prime (اختیاری)",
+        how4Body:"کسب‌وکارها می‌توانند لیست را تقویت یا تبلیغ Prime اجرا کنند.",
+        how5Title:"مرکز جامعه",
+        how5Body:"کارها، رویدادها و اعلان‌ها کاربران را روزانه برمی‌گرداند.",
+        visionTitle:"چشم‌انداز ما",
+        visionLead:"برای استفاده واقعی ساخته شده و با صداقت مقیاس‌پذیر است.",
+        v1Title:"ایالات متحده",
+        v1Body:"کشف حلال در سراسر آمریکا — شهر به شهر.",
+        v2Title:"لندن • تورنتو",
+        v2Body:"شهرهای کلیدی با حضور قوی جامعه.",
+        v3Title:"استرالیا",
+        v3Body:"گسترش بلندمدت با همان مدل شفافیت.",
+        contactTitle:"تماس / ثبت",
+        contactLead:"کسب‌وکار؟ مسجد؟ مدرسه؟ خدمات؟ Prime می‌خواهید؟ تماس بگیرید.",
+        contactEmailTitle:"ایمیل:",
+        footerLegal:"پلتفرم جامعه‌محور. اطلاعات و تأییدها بر اساس ارسال کاربران است و تأیید رسمی نیست.",
+        footerBuilt:"ساخته‌شده در نیویورک"
+      },
+
+      tr: {
+        tagline:"Güven için üretildi",
+        email:"E-posta",
+        kicker:"New York’ta tasarlandı • Topluluklar için",
+        heroTitleA:"Sadece keşif değil.",
+        heroTitleB:"Helal netlik katmanı.",
+        heroLead:"Halal Map Prime; helal yerleri, camileri, hizmetleri, işleri ve topluluk güncellemelerini premium bir deneyimde birleştirir.",
+        ctaDownloadText:"App Store’dan indir",
+        ctaDownloadSub:"Tıkla • Kur • İçeri bak",
+        ctaDownloadSub2:"Haritayı şimdi aç",
+        ctaHow:"Nasıl çalışır",
+        ctaList:"İşletmeni ekle",
+        micro1:"Giriş gerekmez",
+        micro2:"Hızlı ve premium",
+        micro3:"Güven odaklı",
+        disclaimerHero:"Topluluk tabanlı platform. Listeler gönderilen bilgilere dayanır ve resmi sertifika değildir.",
+        chipA:"Helal • Topluluk Onayı • Premium",
+        chipB:"İş • Etkinlik • Hizmet",
+        panelTitle:"İçeride neler var",
+        panelLine1:"• Helal yemek & market",
+        panelLine2:"• Cami & okul",
+        panelLine3:"• Yerel hizmetler",
+        panelLine4:"• Topluluk işleri & etkinlikler",
+        featuresTitle:"Güçlü yapan şey",
+        featuresLead:"Lüks deneyim + topluluk faydası + helal netlik.",
+        f1Title:"Premium helal harita",
+        f1Body:"Yakınınızdaki cami, okul, hizmet ve helal yerleri hızlıca bulun.",
+        f2Title:"Gereken yerde doğrulama",
+        f2Body:"Sadece yemek/et satanlar doğrulama ister. Cami, okul ve hizmetler direkt görünür.",
+        f3Title:"Prime reklam & görünürlük",
+        f3Body:"Gerçek büyüme isteyen işletmeler için öne çıkarma ve banner reklamlar.",
+        howTitle:"Nasıl çalışır (basit)",
+        howLead:"İki taraf, tek ekosistem: kullanıcı keşfeder, işletme büyür, topluluk bağlı kalır.",
+        how1Title:"Haritayı aç",
+        how1Body:"Helal yerleri, camileri, okulları ve hizmetleri anında gör.",
+        how2Title:"Ara & filtrele",
+        how2Body:"Hızlı bul: yemek, market, hizmet ve topluluk ihtiyaçları.",
+        how3Title:"Yemek listelerinde netlik",
+        how3Body:"Yemek/et satıcıları şeffaflık için kanıt yükleyebilir.",
+        how4Title:"Prime görünürlük (opsiyonel)",
+        how4Body:"İşletmeler listeyi güçlendirebilir veya Prime reklam yayınlayabilir.",
+        how5Title:"Topluluk merkezi",
+        how5Body:"İşler, etkinlikler ve duyurular kullanıcıları günlük geri getirir.",
+        visionTitle:"Vizyonumuz",
+        visionLead:"Gerçek kullanım için üretildi. Dürüstçe ölçeklenir.",
+        v1Title:"Amerika Birleşik Devletleri",
+        v1Body:"ABD genelinde helal keşfi — şehir şehir.",
+        v2Title:"Londra • Toronto",
+        v2Body:"Topluluğun güçlü olduğu kilit şehirler.",
+        v3Title:"Avustralya",
+        v3Body:"Aynı netlik modeliyle uzun vadeli genişleme.",
+        contactTitle:"İletişim / Listele",
+        contactLead:"İşletme? Cami? Okul? Hizmet? Prime istiyor musun? Hemen iletişime geç.",
+        contactEmailTitle:"E-posta:",
+        footerLegal:"Topluluk tabanlı platform. Listeler ve doğrulama gönderilen bilgilere dayanır; resmi onay değildir.",
+        footerBuilt:"New York’ta üretildi"
+      }
+    };
+
+    const root = document.getElementById("root");
+    const langButtons = document.querySelectorAll(".lang button");
+
+    function applyDirFont(lang){
+      const isRtl = (lang === "ar" || lang === "fa");
+      root.setAttribute("dir", isRtl ? "rtl" : "ltr");
+      root.setAttribute("lang", lang);
+      document.body.style.fontFamily = isRtl ? "'Tajawal', system-ui, -apple-system" : "'Inter', system-ui, -apple-system";
+    }
+
+    function setLanguage(lang){
+      const data = dict[lang] || dict.en;
+      applyDirFont(lang);
+      document.querySelectorAll("[data-i18n]").forEach(el=>{
+        const key = el.getAttribute("data-i18n");
+        if (data[key]) el.textContent = data[key];
+      });
+      langButtons.forEach(b => b.classList.toggle("active", b.dataset.lang === lang));
+    }
+
+    langButtons.forEach(btn=>{
+      btn.addEventListener("click", ()=> setLanguage(btn.dataset.lang));
+    });
+
+    setLanguage("en");
+  </script>
 </body>
 </html>
