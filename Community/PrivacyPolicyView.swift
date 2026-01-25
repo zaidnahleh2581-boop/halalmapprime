@@ -18,6 +18,13 @@ struct PrivacyPolicyView: View {
     private let lastUpdatedEN = "Last updated: December 2025"
     private let lastUpdatedAR = "آخر تحديث: ديسمبر 2025"
 
+    // ✅ Admin secret gate
+    @State private var showAdminGate: Bool = false
+    @State private var adminTapCount: Int = 0
+    @State private var lastAdminTapTime: Date = .distantPast
+    private let adminTapNeeded: Int = 7
+    private let adminTapWindowSeconds: TimeInterval = 1.4   // لازم تكون سريعة
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 14) {
@@ -25,9 +32,11 @@ struct PrivacyPolicyView: View {
                 Text(L("سياسة الخصوصية", "Privacy Policy"))
                     .font(.title2.bold())
 
+                // ✅ كلمة "آخر تحديث" هي زر الأدمن المخفي (7 ضغطات سريعة)
                 Text(L(lastUpdatedAR, lastUpdatedEN))
                     .foregroundColor(.secondary)
                     .font(.footnote)
+                    .onTapGesture { adminSecretTap() }
 
                 // MARK: - 1) Overview
                 sectionTitle(L("1) نظرة عامة", "1) Overview"))
@@ -101,8 +110,8 @@ struct PrivacyPolicyView: View {
                 // MARK: - 9) Security
                 sectionTitle(L("9) أمان البيانات", "9) Data Security"))
                 paragraph(L(
-                    "نتخذ إجراءات تقنية وتنظيمية معقولة لحماية البيانات، لكن لا توجد طريقة نقل أو تخزين آمنة 100%.",
-                    "We use reasonable technical and organizational measures to protect data, but no method of transmission or storage is 100% secure."
+                    "نستخدم إجراءات أمان قياسية في الصناعة (تشفير أثناء النقل، صلاحيات وصول مقيدة، ومراقبة إساءة الاستخدام). لكن لا توجد طريقة نقل أو تخزين مضمونة 100%.",
+                    "We use industry-standard security measures (encryption in transit, restricted access controls, and abuse monitoring). However, no method of transmission or storage can be guaranteed 100% secure."
                 ))
 
                 // MARK: - 10) Children
@@ -133,6 +142,27 @@ struct PrivacyPolicyView: View {
         }
         .navigationTitle(L("الخصوصية", "Privacy"))
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showAdminGate) {
+            // ✅ لازم يكون عندك AdminGateView موجود بالمشروع
+            AdminGateView()
+                .environmentObject(lang)
+        }
+    }
+
+    // ✅ 7 taps within 1.4 seconds
+    private func adminSecretTap() {
+        let now = Date()
+        if now.timeIntervalSince(lastAdminTapTime) > adminTapWindowSeconds {
+            adminTapCount = 0
+        }
+        lastAdminTapTime = now
+        adminTapCount += 1
+
+        if adminTapCount >= adminTapNeeded {
+            adminTapCount = 0
+            UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
+            showAdminGate = true
+        }
     }
 
     // MARK: - UI Helpers

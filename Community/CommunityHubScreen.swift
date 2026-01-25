@@ -3,12 +3,13 @@
 //  Halal Map Prime
 //
 //  Created by Zaid Nahleh on 2025-12-23.
-//  Updated by Zaid Nahleh on 2025-12-31.
-//  Copyright © 2025 Zaid Nahleh.
+//  Updated by Zaid Nahleh on 2026-01-25.
+//  Copyright © 2026 Zaid Nahleh.
 //  All rights reserved.
 //
 
 import SwiftUI
+import UIKit
 
 struct CommunityHubScreen: View {
 
@@ -17,8 +18,16 @@ struct CommunityHubScreen: View {
 
     @State private var showComposer: Bool = false
     @State private var showMyEvents: Bool = false
-
     @State private var selectedCategory: CoreEventCategory = .all
+
+    // ✅ Admin Secret Gate
+    @State private var showAdminPrompt: Bool = false
+    @State private var adminCode: String = ""
+    @State private var adminError: String? = nil
+    @State private var showAdminPanel: Bool = false
+
+    // ✅ غيّر هذا الرمز لأي شيء بدك
+    private let adminSecretCode = "ZAID-ADMIN-2026"
 
     var body: some View {
         NavigationStack {
@@ -43,6 +52,15 @@ struct CommunityHubScreen: View {
                         Text(L("الخصوصية", "Privacy"))
                             .font(.footnote.weight(.semibold))
                     }
+                    // ✅ Secret Admin trigger (Long press 2s on Privacy)
+                    .simultaneousGesture(
+                        LongPressGesture(minimumDuration: 2.0).onEnded { _ in
+                            adminCode = ""
+                            adminError = nil
+                            showAdminPrompt = true
+                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                        }
+                    )
                 }
                 .padding(.horizontal)
                 .padding(.top, 10)
@@ -82,6 +100,69 @@ struct CommunityHubScreen: View {
             }
             .sheet(isPresented: $showMyEvents) {
                 MyEventsView()
+                    .environmentObject(lang)
+            }
+
+            // ✅ Admin Code Prompt
+            .sheet(isPresented: $showAdminPrompt) {
+                NavigationStack {
+                    VStack(spacing: 16) {
+                        Text(L("دخول الإدارة", "Admin Login"))
+                            .font(.title3.weight(.semibold))
+                            .padding(.top, 10)
+
+                        Text(L("هذه الصفحة مخفية. أدخل الرمز للمتابعة.", "This page is hidden. Enter the code to continue."))
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+
+                        SecureField(L("رمز الإدارة", "Admin code"), text: $adminCode)
+                            .textFieldStyle(.roundedBorder)
+                            .padding(.horizontal)
+
+                        if let adminError {
+                            Text(adminError)
+                                .foregroundStyle(.red)
+                                .font(.footnote.weight(.semibold))
+                                .padding(.top, 2)
+                        }
+
+                        Button {
+                            if adminCode.trimmingCharacters(in: .whitespacesAndNewlines) == adminSecretCode {
+                                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                                showAdminPrompt = false
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                                    showAdminPanel = true
+                                }
+                            } else {
+                                UINotificationFeedbackGenerator().notificationOccurred(.error)
+                                adminError = L("رمز خاطئ. حاول مرة أخرى.", "Wrong code. Try again.")
+                            }
+                        } label: {
+                            Text(L("دخول", "Enter"))
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .padding(.horizontal)
+
+                        Spacer()
+                    }
+                    .padding(.top, 20)
+                    .navigationTitle("Admin")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarLeading) {
+                            Button(L("إغلاق", "Close")) { showAdminPrompt = false }
+                        }
+                    }
+                }
+            }
+
+            // ✅ Admin Panel
+            .sheet(isPresented: $showAdminPanel) {
+                AdminGateView()
                     .environmentObject(lang)
             }
         }

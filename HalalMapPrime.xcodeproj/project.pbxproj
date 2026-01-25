@@ -61,6 +61,16 @@
 		15A0D7A02EE068740063ED79 /* BannerAd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A0D79F2EE068740063ED79 /* BannerAd.swift */; };
 		15A0D7A22EE07FE90063ED79 /* samplePlaces.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A0D7A12EE07FE90063ED79 /* samplePlaces.swift */; };
 		15A0D7A42EE0BBD90063ED79 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 15A0D7A32EE0BBD90063ED79 /* GoogleService-Info.plist */; };
+		15AE07BB2F26625200158FF4 /* AdminGateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AE07BA2F26625200158FF4 /* AdminGateView.swift */; };
+		15AE07BD2F26663500158FF4 /* AdminDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AE07BC2F26663500158FF4 /* AdminDashboardView.swift */; };
+		15AE07BF2F268DAE00158FF4 /* AdminAdsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AE07BE2F268DAE00158FF4 /* AdminAdsViewModel.swift */; };
+		15AE07C12F26A43200158FF4 /* PlaceCategoryCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AE07C02F26A43200158FF4 /* PlaceCategoryCatalog.swift */; };
+		15AE07C32F26A49C00158FF4 /* PlaceCategoryBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AE07C22F26A49C00158FF4 /* PlaceCategoryBridge.swift */; };
+		15AE07C52F26A5A600158FF4 /* AddPlaceRequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AE07C42F26A5A600158FF4 /* AddPlaceRequestView.swift */; };
+		15AE07C72F26B11800158FF4 /* AdminPlacesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AE07C62F26B11800158FF4 /* AdminPlacesListView.swift */; };
+		15AE07C92F26B15000158FF4 /* AdminPlacesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AE07C82F26B15000158FF4 /* AdminPlacesViewModel.swift */; };
+		15AE07CB2F26B19A00158FF4 /* PlaceSubmission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AE07CA2F26B19A00158FF4 /* PlaceSubmission.swift */; };
+		15AE07CD2F26B4FF00158FF4 /* AdminPlaceReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AE07CC2F26B4FF00158FF4 /* AdminPlaceReviewView.swift */; };
 		15B3D4A72EFDAB6600704BB6 /* FaithToolsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B3D49F2EFDAB6600704BB6 /* FaithToolsScreen.swift */; };
 		15B3D4BB2EFDAF6C00704BB6 /* PrayerTimesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B3D4BA2EFDAF6C00704BB6 /* PrayerTimesViewModel.swift */; };
 		15B3D4BD2EFDB3DE00704BB6 /* AdhanReminderSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B3D4BC2EFDB3DE00704BB6 /* AdhanReminderSettings.swift */; };
@@ -153,6 +163,16 @@
 		15A0D79F2EE068740063ED79 /* BannerAd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerAd.swift; sourceTree = "<group>"; };
 		15A0D7A12EE07FE90063ED79 /* samplePlaces.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = samplePlaces.swift; sourceTree = "<group>"; };
 		15A0D7A32EE0BBD90063ED79 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		15AE07BA2F26625200158FF4 /* AdminGateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminGateView.swift; sourceTree = "<group>"; };
+		15AE07BC2F26663500158FF4 /* AdminDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminDashboardView.swift; sourceTree = "<group>"; };
+		15AE07BE2F268DAE00158FF4 /* AdminAdsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminAdsViewModel.swift; sourceTree = "<group>"; };
+		15AE07C02F26A43200158FF4 /* PlaceCategoryCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceCategoryCatalog.swift; sourceTree = "<group>"; };
+		15AE07C22F26A49C00158FF4 /* PlaceCategoryBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceCategoryBridge.swift; sourceTree = "<group>"; };
+		15AE07C42F26A5A600158FF4 /* AddPlaceRequestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlaceRequestView.swift; sourceTree = "<group>"; };
+		15AE07C62F26B11800158FF4 /* AdminPlacesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminPlacesListView.swift; sourceTree = "<group>"; };
+		15AE07C82F26B15000158FF4 /* AdminPlacesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminPlacesViewModel.swift; sourceTree = "<group>"; };
+		15AE07CA2F26B19A00158FF4 /* PlaceSubmission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceSubmission.swift; sourceTree = "<group>"; };
+		15AE07CC2F26B4FF00158FF4 /* AdminPlaceReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminPlaceReviewView.swift; sourceTree = "<group>"; };
 		15B3D49F2EFDAB6600704BB6 /* FaithToolsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaithToolsScreen.swift; sourceTree = "<group>"; };
 		15B3D4BA2EFDAF6C00704BB6 /* PrayerTimesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTimesViewModel.swift; sourceTree = "<group>"; };
 		15B3D4BC2EFDB3DE00704BB6 /* AdhanReminderSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdhanReminderSettings.swift; sourceTree = "<group>"; };
@@ -340,6 +360,7 @@
 		15A0D76A2EE055040063ED79 = {
 			isa = PBXGroup;
 			children = (
+				15AE07B92F26623600158FF4 /* Admin */,
 				156A32482F00BC7100819D25 /* Community */,
 				156A32472F00B97600819D25 /* jobs */,
 				15B3D4B92EFDAF0100704BB6 /* deen */,
@@ -396,8 +417,25 @@
 				15E1626E2EE121DC00A5C42C /* Place.swift */,
 				15109F992EFD82B90068DFE3 /* PlaceDetailsSheet.swift */,
 				15E162492EE0D5D600A5C42C /* MapScreenViewModel.swift */,
+				15AE07C02F26A43200158FF4 /* PlaceCategoryCatalog.swift */,
+				15AE07C22F26A49C00158FF4 /* PlaceCategoryBridge.swift */,
+				15AE07C42F26A5A600158FF4 /* AddPlaceRequestView.swift */,
+				15AE07CA2F26B19A00158FF4 /* PlaceSubmission.swift */,
 			);
 			path = models;
+			sourceTree = "<group>";
+		};
+		15AE07B92F26623600158FF4 /* Admin */ = {
+			isa = PBXGroup;
+			children = (
+				15AE07BA2F26625200158FF4 /* AdminGateView.swift */,
+				15AE07BC2F26663500158FF4 /* AdminDashboardView.swift */,
+				15AE07BE2F268DAE00158FF4 /* AdminAdsViewModel.swift */,
+				15AE07C62F26B11800158FF4 /* AdminPlacesListView.swift */,
+				15AE07CC2F26B4FF00158FF4 /* AdminPlaceReviewView.swift */,
+				15AE07C82F26B15000158FF4 /* AdminPlacesViewModel.swift */,
+			);
+			path = Admin;
 			sourceTree = "<group>";
 		};
 		15B3D4B92EFDAF0100704BB6 /* deen */ = {
@@ -522,6 +560,7 @@
 				153BA5F12F0532C5000D22FD /* MyEventsView.swift in Sources */,
 				156A32422F00940E00819D25 /* AddPlaceCategory.swift in Sources */,
 				15A0D7882EE05AF00063ED79 /* MapScreen.swift in Sources */,
+				15AE07CD2F26B4FF00158FF4 /* AdminPlaceReviewView.swift in Sources */,
 				153BA6752F06A648000D22FD /* FreeAdStateStore.swift in Sources */,
 				151BD9EA2EE528050065F10C /* AdsHomeScreen.swift in Sources */,
 				15CEB1F62EE78A810035A83D /* EventAdsService.swift in Sources */,
@@ -531,6 +570,7 @@
 				15C62E132F0D3DBC00702399 /* AddAddressPremiumView.swift in Sources */,
 				155C40012F0B0D32009EEB95 /* AdsStore.swift in Sources */,
 				155C40062F0B21B4009EEB95 /* FreeOnceGateStore.swift in Sources */,
+				15AE07C72F26B11800158FF4 /* AdminPlacesListView.swift in Sources */,
 				155C3FE62F0A8F48009EEB95 /* FreeMonthlyAdFormView.swift in Sources */,
 				151BD9E42EE5223D0065F10C /* LanguageManager.swift in Sources */,
 				15CEB1F82EE78AB00035A83D /* EventAdComposerView.swift in Sources */,
@@ -538,10 +578,13 @@
 				151BD9EF2EE597260065F10C /* SelectAdPlanView.swift in Sources */,
 				155C3FEF2F0A9749009EEB95 /* PaidAdPlanDetailView.swift in Sources */,
 				155C3FFF2F0AF9E5009EEB95 /* HMPAdPlanKind.swift in Sources */,
+				15AE07C12F26A43200158FF4 /* PlaceCategoryCatalog.swift in Sources */,
 				15109F8D2EFD62510068DFE3 /* AppRouter.swift in Sources */,
 				15A0D79A2EE0605D0063ED79 /* PlaceRowView.swift in Sources */,
 				153BA5DC2F048082000D22FD /* PlaceSubmissionsStore.swift in Sources */,
 				15B48CDC2EE1A70C00A88AB7 /* AddStoreViewModel.swift in Sources */,
+				15AE07BD2F26663500158FF4 /* AdminDashboardView.swift in Sources */,
+				15AE07BB2F26625200158FF4 /* AdminGateView.swift in Sources */,
 				15A0D7922EE05E4C0063ED79 /* PrayerTime.swift in Sources */,
 				151BD9F32EE597800065F10C /* MyAdsView.swift in Sources */,
 				15C62E172F0D4EDD00702399 /* JobAdFilter.swift in Sources */,
@@ -555,8 +598,10 @@
 				155C3FF92F0ADB02009EEB95 /* CreateAdFormView.swift in Sources */,
 				153BA5ED2F052E31000D22FD /* HomeEventsTickerView.swift in Sources */,
 				153BA5E32F0495ED000D22FD /* ActivePlacesStore.swift in Sources */,
+				15AE07C52F26A5A600158FF4 /* AddPlaceRequestView.swift in Sources */,
 				153BA5E92F04AED8000D22FD /* MonthlyFreeGate.swift in Sources */,
 				153BA67D2F06BABB000D22FD /* PaidAdsScreen.swift in Sources */,
+				15AE07C92F26B15000158FF4 /* AdminPlacesViewModel.swift in Sources */,
 				156A32362F00940E00819D25 /* CommunityHubScreen.swift in Sources */,
 				153BA6552F05677E000D22FD /* AdsPrivacyView.swift in Sources */,
 				153BA5EB2F052E07000D22FD /* MarqueeText.swift in Sources */,
@@ -568,6 +613,7 @@
 				153BA67B2F06BA7A000D22FD /* PurchaseManager.swift in Sources */,
 				15B3D4C72EFDBBF200704BB6 /* AdhanSettingsSheet.swift in Sources */,
 				155C3FED2F0A9617009EEB95 /* PrimeAdInfoView.swift in Sources */,
+				15AE07BF2F268DAE00158FF4 /* AdminAdsViewModel.swift in Sources */,
 				15B48CF32EE1E50300A88AB7 /* GooglePlacesModelsswift.swift in Sources */,
 				1560165B2F032F6F00ABC8BB /* ContactUsView.swift in Sources */,
 				15A0D7A22EE07FE90063ED79 /* samplePlaces.swift in Sources */,
@@ -581,9 +627,11 @@
 				15B3D4A72EFDAB6600704BB6 /* FaithToolsScreen.swift in Sources */,
 				155C40042F0B1424009EEB95 /* HMPAd.swift in Sources */,
 				153BA5C72F04084F000D22FD /* IAPManager.swift in Sources */,
+				15AE07C32F26A49C00158FF4 /* PlaceCategoryBridge.swift in Sources */,
 				15C0B4BD2EFC8FC200532F0F /* LocationPermissionView.swift in Sources */,
 				15D014372F02C07500D34C64 /* jobLegacyBoard.swift in Sources */,
 				15C0B4C02EFCA2FC00532F0F /* AppLocationManager.swift in Sources */,
+				15AE07CB2F26B19A00158FF4 /* PlaceSubmission.swift in Sources */,
 				15E1624A2EE0D5D600A5C42C /* MapScreenViewModel.swift in Sources */,
 				15109F9A2EFD82B90068DFE3 /* PlaceDetailsSheet.swift in Sources */,
 				151BD9F12EE597570065F10C /* AddHalalPlaceFormView.swift in Sources */,
@@ -744,7 +792,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.HMP.Zaid;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -778,7 +826,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.HMP.Zaid;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;

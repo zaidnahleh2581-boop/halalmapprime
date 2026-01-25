@@ -180,4 +180,4 @@ private extension MapScreenViewModel {
             return 0
         }
     }
-}
+} 
