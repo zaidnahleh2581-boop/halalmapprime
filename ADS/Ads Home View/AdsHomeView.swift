@@ -68,9 +68,12 @@ struct AdsHomeView: View {
                 .environmentObject(lang)
             }
         }
-        // Address
+        // Address (NEW: AddPlaceScreen)
         .sheet(isPresented: $showAddressSheet) {
-            NavigationStack { HMPAddressSheet().environmentObject(lang) }
+            NavigationStack {
+                AddPlaceScreen()
+                    .environmentObject(lang)
+            }
         }
         // Preview
         .sheet(isPresented: $showAdPreview) {
@@ -355,31 +358,5 @@ struct AdsHomeView: View {
 
     private func L(_ ar: String, _ en: String) -> String {
         lang.isArabic ? ar : en
-    }
-}
-
-// Address Sheet (same)
-
-private struct HMPAddressSheet: View {
-    @EnvironmentObject var lang: LanguageManager
-    @Environment(\.dismiss) private var dismiss
-    @State private var addressText: String = ""
-
-    var body: some View {
-        Form {
-            Section(header: Text(lang.isArabic ? "عنوانك" : "Your Address")) {
-                TextField(lang.isArabic ? "اكتب العنوان" : "Enter address", text: $addressText)
-            }
-            Section {
-                Button(lang.isArabic ? "حفظ" : "Save") { dismiss() }
-            }
-        }
-        .navigationTitle(lang.isArabic ? "أضف عنوانك" : "Add Address")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button(lang.isArabic ? "إغلاق" : "Close") { dismiss() }
-            }
-        }
     }
 }

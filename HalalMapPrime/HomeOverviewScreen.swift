@@ -93,7 +93,9 @@ struct HomeOverviewScreen: View {
         .sheet(isPresented: $showDistancePicker) { distanceSheet }
         .sheet(isPresented: $showJobAlerts) { JobAlertsSheet().environmentObject(lang) }
         .sheet(isPresented: $showMapSheet) {
-            MapScreen(startingCategory: mapStartingCategory, hideCategoryPicker: false)
+            MapScreen()
+                .environmentObject(lang)
+                .environmentObject(router)
                 .environmentObject(lang)
                 .environmentObject(router)
         }

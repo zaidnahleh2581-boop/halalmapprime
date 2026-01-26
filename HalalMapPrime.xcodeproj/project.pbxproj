@@ -53,6 +53,7 @@
 		156A32352F00940E00819D25 /* CommunityStubScreens.swif in Resources */ = {isa = PBXBuildFile; fileRef = 156A322D2F00940E00819D25 /* CommunityStubScreens.swif */; };
 		156A32362F00940E00819D25 /* CommunityHubScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156A322C2F00940E00819D25 /* CommunityHubScreen.swift */; };
 		156A32422F00940E00819D25 /* AddPlaceCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156A323D2F00940E00819D25 /* AddPlaceCategory.swift */; };
+		1588BE442F280A6300F3ADB3 /*  AddPlaceScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1588BE432F280A6300F3ADB3 /*  AddPlaceScreen.swift */; };
 		15A0D7882EE05AF00063ED79 /* MapScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A0D7872EE05AF00063ED79 /* MapScreen.swift */; };
 		15A0D7922EE05E4C0063ED79 /* PrayerTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A0D7912EE05E4C0063ED79 /* PrayerTime.swift */; };
 		15A0D79A2EE0605D0063ED79 /* PlaceRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A0D7992EE0605D0063ED79 /* PlaceRowView.swift */; };
@@ -154,6 +155,7 @@
 		156A322C2F00940E00819D25 /* CommunityHubScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityHubScreen.swift; sourceTree = "<group>"; };
 		156A322D2F00940E00819D25 /* CommunityStubScreens.swif */ = {isa = PBXFileReference; lastKnownFileType = text; path = CommunityStubScreens.swif; sourceTree = "<group>"; };
 		156A323D2F00940E00819D25 /* AddPlaceCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlaceCategory.swift; sourceTree = "<group>"; };
+		1588BE432F280A6300F3ADB3 /*  AddPlaceScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = " AddPlaceScreen.swift"; sourceTree = "<group>"; };
 		15A0D7732EE055040063ED79 /* HalalMapPrime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HalalMapPrime.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		15A0D7872EE05AF00063ED79 /* MapScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapScreen.swift; sourceTree = "<group>"; };
 		15A0D7912EE05E4C0063ED79 /* PrayerTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTime.swift; sourceTree = "<group>"; };
@@ -421,6 +423,7 @@
 				15AE07C22F26A49C00158FF4 /* PlaceCategoryBridge.swift */,
 				15AE07C42F26A5A600158FF4 /* AddPlaceRequestView.swift */,
 				15AE07CA2F26B19A00158FF4 /* PlaceSubmission.swift */,
+				1588BE432F280A6300F3ADB3 /*  AddPlaceScreen.swift */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -627,6 +630,7 @@
 				15B3D4A72EFDAB6600704BB6 /* FaithToolsScreen.swift in Sources */,
 				155C40042F0B1424009EEB95 /* HMPAd.swift in Sources */,
 				153BA5C72F04084F000D22FD /* IAPManager.swift in Sources */,
+				1588BE442F280A6300F3ADB3 /*  AddPlaceScreen.swift in Sources */,
 				15AE07C32F26A49C00158FF4 /* PlaceCategoryBridge.swift in Sources */,
 				15C0B4BD2EFC8FC200532F0F /* LocationPermissionView.swift in Sources */,
 				15D014372F02C07500D34C64 /* jobLegacyBoard.swift in Sources */,
