@@ -11,12 +11,22 @@ struct HadithHomeScreen: View {
 
     @EnvironmentObject var lang: LanguageManager
 
-    // تحميل الأحاديث من JSON المحلي
-    private let root: HadithRoot = FaithLocalStore.loadCodable(
-        HadithRoot.self,
-        filename: "hadith_local",
-        subdirectory: "deen_json"
-    )
+    // ✅ تحميل آمن بدون crash
+    private let root: HadithRoot
+
+    init() {
+        if let loaded = FaithLocalStore.loadCodableSafe(
+            HadithRoot.self,
+            filename: "hadith_local",
+            subdirectory: "deen_json"
+        ) {
+            self.root = loaded
+        } else {
+            // fallback آمن
+            self.root = HadithRoot(items: [])
+            print("❌ Hadith JSON failed to load")
+        }
+    }
 
     private var hadithOfDay: HadithItem? {
         guard !root.items.isEmpty else { return nil }
@@ -30,26 +40,24 @@ struct HadithHomeScreen: View {
                 if let h = hadithOfDay {
                     Section {
                         VStack(alignment: .leading, spacing: 12) {
-
-                            Text(h.text)
+                            Text(lang.isArabic ? h.text_ar : h.text_en)
                                 .font(.body)
 
-                            if let ref = h.reference, !ref.isEmpty {
+                            if let ref = h.reference {
                                 Text(ref)
-                                    .font(.footnote)
-                                    .foregroundStyle(.secondary)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
                             }
                         }
                         .padding(.vertical, 8)
-                    } header: {
-                        Text(lang.isArabic ? "حديث اليوم" : "Hadith of the Day")
                     }
                 } else {
-                    Text(lang.isArabic ? "لا يوجد حديث" : "No hadith available")
-                        .foregroundStyle(.secondary)
+                    Text(lang.isArabic ? "لا يوجد أحاديث." : "No hadith available.")
+                        .foregroundColor(.secondary)
                 }
             }
-            .navigationTitle(lang.isArabic ? "الأحاديث" : "Hadith")
+            .navigationTitle(lang.isArabic ? "حديث اليوم" : "Hadith of the Day")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }

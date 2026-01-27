@@ -7,15 +7,17 @@
 
 import Foundation
 
+// MARK: - Root
 struct HadithRoot: Decodable {
     let items: [HadithItem]
 }
 
+// MARK: - Item
 struct HadithItem: Decodable, Identifiable {
-    let id: String
-    let text: String
+    let id: Int
+    let text_ar: String
+    let text_en: String
     let reference: String?
 
-    // دعم Identifiable
-    var uuid: String { id }
+    var uuid: Int { id }
 }

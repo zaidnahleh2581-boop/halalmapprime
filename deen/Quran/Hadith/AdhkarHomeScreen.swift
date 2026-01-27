@@ -3,16 +3,16 @@
 //  HalalMapPrime
 //
 //  Created by Zaid Nahleh on 2026-01-26.
-//  Copyright © 2026 Zaid Nahleh.
-//  All rights reserved.
 //
 
 import SwiftUI
 import Combine
 
+// MARK: - Counter Store
+
 final class AdhkarCounterStore: ObservableObject {
 
-    @Published var counts: [String:Int]
+    @Published var counts: [String: Int]
     private let key = "adhkar_counts_v1"
 
     init() {
@@ -38,6 +38,9 @@ final class AdhkarCounterStore: ObservableObject {
         FaithLocalStore.saveCodable(counts, key: key)
     }
 }
+
+// MARK: - Main Screen
+
 struct AdhkarHomeScreen: View {
 
     @EnvironmentObject var lang: LanguageManager
@@ -46,13 +49,20 @@ struct AdhkarHomeScreen: View {
     @StateObject private var counter = AdhkarCounterStore()
     @State private var searchText: String = ""
 
-    // تحميل محلي من UserDefaults (وبعدين انت بتبدله بملف JSON جاهز)
-    private var root: AdhkarRoot {
-        FaithLocalStore.loadCodable(
+    // ✅ تحميل آمن بدون crash
+    private let root: AdhkarRoot
+
+    init() {
+        if let loaded = FaithLocalStore.loadCodableSafe(
             AdhkarRoot.self,
             filename: "deen_json_resources",
             subdirectory: "deen_json"
-        )
+        ) {
+            self.root = loaded
+        } else {
+            self.root = AdhkarRoot(categories: [])
+            print("❌ Adhkar JSON failed to load")
+        }
     }
 
     private var filteredCategories: [AdhkarCategory] {
@@ -61,9 +71,12 @@ struct AdhkarHomeScreen: View {
         if q.isEmpty { return cats }
 
         return cats.filter { c in
-            (lang.isArabic ? c.title_ar : c.title_en).localizedCaseInsensitiveContains(q)
-            || c.items.contains(where: { item in
-                (lang.isArabic ? item.text_ar : item.text_en).localizedCaseInsensitiveContains(q)
+            (lang.isArabic ? c.title_ar : c.title_en)
+                .localizedCaseInsensitiveContains(q)
+            ||
+            c.items.contains(where: { item in
+                (lang.isArabic ? item.text_ar : item.text_en)
+                    .localizedCaseInsensitiveContains(q)
             })
         }
     }
@@ -79,8 +92,11 @@ struct AdhkarHomeScreen: View {
                 }
 
                 if filteredCategories.isEmpty {
-                    Text(L("لا يوجد محتوى بعد. سنضيف الأذكار المحلية في النسخة 102.", "No content yet. We'll add offline adhkar in v102."))
-                        .foregroundStyle(.secondary)
+                    Text(L(
+                        "لا يوجد أذكار حالياً.",
+                        "No adhkar available."
+                    ))
+                    .foregroundStyle(.secondary)
                 } else {
                     ForEach(filteredCategories) { c in
                         NavigationLink {
@@ -103,7 +119,10 @@ struct AdhkarHomeScreen: View {
                     Button(role: .destructive) {
                         counter.resetAll()
                     } label: {
-                        Label(L("تصفير كل العدّادات", "Reset all counters"), systemImage: "arrow.counterclockwise")
+                        Label(
+                            L("تصفير كل العدّادات", "Reset all counters"),
+                            systemImage: "arrow.counterclockwise"
+                        )
                     }
                 }
             }
@@ -112,24 +131,27 @@ struct AdhkarHomeScreen: View {
     }
 }
 
+// MARK: - Category Screen
+
 struct AdhkarCategoryScreen: View {
+
     @EnvironmentObject var lang: LanguageManager
     @EnvironmentObject var counter: AdhkarCounterStore
 
     let category: AdhkarCategory
-
     private func L(_ ar: String, _ en: String) -> String { lang.isArabic ? ar : en }
 
     var body: some View {
         List {
             ForEach(category.items) { item in
                 VStack(alignment: .leading, spacing: 10) {
+
                     Text(lang.isArabic ? item.text_ar : item.text_en)
                         .font(.body)
 
-                    HStack(spacing: 12) {
+                    HStack {
                         let current = counter.counts[item.id, default: 0]
-                        Text(L("العدّاد:", "Count:") + " \(current)")
+                        Text("\(L("العدّاد", "Count")): \(current)")
                             .font(.caption)
                             .foregroundStyle(.secondary)
 
@@ -138,13 +160,13 @@ struct AdhkarCategoryScreen: View {
                         Button {
                             counter.inc(item.id)
                         } label: {
-                            Label(L("زيادة", "Add"), systemImage: "plus.circle.fill")
+                            Image(systemName: "plus.circle.fill")
                         }
 
                         Button(role: .destructive) {
                             counter.reset(item.id)
                         } label: {
-                            Label(L("تصفير", "Reset"), systemImage: "trash")
+                            Image(systemName: "trash")
                         }
                     }
                     .font(.caption)

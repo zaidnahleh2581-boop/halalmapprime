@@ -10,25 +10,34 @@ import SwiftUI
 struct HadithListScreen: View {
 
     let items: [HadithItem]
+
     @EnvironmentObject var lang: LanguageManager
 
+    private func L(_ ar: String, _ en: String) -> String {
+        lang.isArabic ? ar : en
+    }
+
     var body: some View {
-        List(items, id: \.id) { h in
-            VStack(alignment: .leading, spacing: 8) {
+        List {
+            ForEach(items) { h in
+                VStack(alignment: .leading, spacing: 8) {
 
-                // نص الحديث
-                Text(h.text)
-                    .font(.body)
+                    // نص الحديث
+                    Text(lang.isArabic ? h.text_ar : h.text_en)
+                        .font(.body)
+                        .multilineTextAlignment(.leading)
 
-                // المرجع (إن وجد)
-                if let ref = h.reference, !ref.isEmpty {
-                    Text(ref)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                    // المرجع (إن وجد)
+                    if let ref = h.reference, !ref.isEmpty {
+                        Text(ref)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
                 }
+                .padding(.vertical, 6)
             }
-            .padding(.vertical, 6)
         }
-        .navigationTitle(lang.isArabic ? "الأحاديث" : "Hadiths")
+        .navigationTitle(L("الأحاديث", "Hadiths"))
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
