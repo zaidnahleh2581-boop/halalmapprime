@@ -1,0 +1,25 @@
+{
+  "surahs": [
+    {
+      "id": 1,
+      "name_ar": "الفاتحة",
+      "name_en": "Al-Fatiha",
+      "ayahs": [
+        { "n": 1, "ar": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ", "en": "In the name of Allah, the Most Gracious, the Most Merciful." },
+        { "n": 2, "ar": "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ", "en": "All praise is for Allah—Lord of all worlds," },
+        { "n": 3, "ar": "الرَّحْمَٰنِ الرَّحِيمِ", "en": "the Most Gracious, the Most Merciful," }
+      ]
+    },
+    {
+      "id": 112,
+      "name_ar": "الإخلاص",
+      "name_en": "Al-Ikhlas",
+      "ayahs": [
+        { "n": 1, "ar": "قُلْ هُوَ اللَّهُ أَحَدٌ", "en": "Say, He is Allah—One." },
+        { "n": 2, "ar": "اللَّهُ الصَّمَدُ", "en": "Allah—the Sustainer needed by all." },
+        { "n": 3, "ar": "لَمْ يَلِدْ وَلَمْ يُولَدْ", "en": "He has never had offspring, nor was He born." },
+        { "n": 4, "ar": "وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ", "en": "And there is none comparable to Him." }
+      ]
+    }
+  ]
+}

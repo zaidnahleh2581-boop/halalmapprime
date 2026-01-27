@@ -1,0 +1,45 @@
+{
+  "sections": [
+    {
+      "id": "morning",
+      "title_ar": "أذكار الصباح",
+      "title_en": "Morning Adhkar",
+      "items": [
+        {
+          "id": "m1",
+          "text_ar": "أصبحنا وأصبح الملك لله، والحمد لله...",
+          "text_en": "We have entered a new morning and with it all dominion is Allah’s..."
+        },
+        {
+          "id": "m2",
+          "text_ar": "اللهم بك أصبحنا وبك أمسينا...",
+          "text_en": "O Allah, by You we enter the morning and by You we enter the evening..."
+        }
+      ]
+    },
+    {
+      "id": "evening",
+      "title_ar": "أذكار المساء",
+      "title_en": "Evening Adhkar",
+      "items": [
+        {
+          "id": "e1",
+          "text_ar": "أمسينا وأمسى الملك لله...",
+          "text_en": "We have entered the evening and with it all dominion is Allah’s..."
+        }
+      ]
+    },
+    {
+      "id": "sleep",
+      "title_ar": "أذكار النوم",
+      "title_en": "Before Sleeping",
+      "items": [
+        {
+          "id": "s1",
+          "text_ar": "باسمك ربي وضعت جنبي...",
+          "text_en": "In Your name my Lord, I lie down..."
+        }
+      ]
+    }
+  ]
+}

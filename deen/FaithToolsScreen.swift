@@ -111,7 +111,54 @@ struct FaithToolsScreen: View {
                         .padding(.vertical, 4)
                     }
                 }
+                // ✅ 7) Quran / Hadith / Adhkar (OFFLINE)
+                Section(header: Text(L("الإيمان", "Iman"))) {
 
+                    NavigationLink {
+                        QuranHomeScreen()
+                            .environmentObject(lang)
+                    } label: {
+                        HStack(spacing: 10) {
+                            Image(systemName: "book.closed.fill").foregroundColor(.purple)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(L("القرآن الكريم", "Qur'an")).font(.headline)
+                                Text(L("قراءة + ترجمة + بحث + حفظ آخر مكان.", "Read + translation + search + last read."))
+                                    .font(.caption).foregroundColor(.secondary)
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    }
+
+                    NavigationLink {
+                        HadithHomeScreen()
+                            .environmentObject(lang)
+                    } label: {
+                        HStack(spacing: 10) {
+                            Image(systemName: "scroll.fill").foregroundColor(.brown)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(L("حديث اليوم", "Hadith of the Day")).font(.headline)
+                                Text(L("حديث محلي يوميًا بدون إنترنت.", "Offline daily hadith."))
+                                    .font(.caption).foregroundColor(.secondary)
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    }
+
+                    NavigationLink {
+                        AdhkarHomeScreen()
+                            .environmentObject(lang)
+                    } label: {
+                        HStack(spacing: 10) {
+                            Image(systemName: "leaf.fill").foregroundColor(.green)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(L("الأذكار", "Adhkar")).font(.headline)
+                                Text(L("أذكار بتعداد تلقائي + تصنيفات.", "Categories + built-in counter."))
+                                    .font(.caption).foregroundColor(.secondary)
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    }
+                }
                 // 4) Qibla
                 Section(header: Text(L("اتجاه القبلة", "Qibla direction"))) {
                     Button { showQiblaInfo = true } label: {

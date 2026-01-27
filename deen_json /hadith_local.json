@@ -1,0 +1,34 @@
+import Foundation
+
+enum FaithLocalStore {
+
+    /// Load a JSON file from Bundle and decode it to a Codable type.
+    /// - Parameters:
+    ///   - type: The Codable type (e.g. AdhkarRoot.self)
+    ///   - filename: File name without extension (e.g. "deen_json_resources")
+    ///   - subdirectory: Folder inside bundle (e.g. "deen_json") - optional
+    static func loadCodable<T: Decodable>(_ type: T.Type,
+                                         filename: String,
+                                         subdirectory: String? = nil) -> T {
+        let bundle = Bundle.main
+
+        let url: URL?
+        if let sub = subdirectory {
+            url = bundle.url(forResource: filename, withExtension: "json", subdirectory: sub)
+        } else {
+            url = bundle.url(forResource: filename, withExtension: "json")
+        }
+
+        guard let fileURL = url else {
+            fatalError("❌ Missing JSON file: \(filename).json (subdir: \(subdirectory ?? "nil"))")
+        }
+
+        do {
+            let data = try Data(contentsOf: fileURL)
+            let decoded = try JSONDecoder().decode(T.self, from: data)
+            return decoded
+        } catch {
+            fatalError("❌ Failed to decode \(filename).json: \(error)")
+        }
+    }
+}
