@@ -1,34 +1,84 @@
-import Foundation
-
-enum FaithLocalStore {
-
-    /// Load a JSON file from Bundle and decode it to a Codable type.
-    /// - Parameters:
-    ///   - type: The Codable type (e.g. AdhkarRoot.self)
-    ///   - filename: File name without extension (e.g. "deen_json_resources")
-    ///   - subdirectory: Folder inside bundle (e.g. "deen_json") - optional
-    static func loadCodable<T: Decodable>(_ type: T.Type,
-                                         filename: String,
-                                         subdirectory: String? = nil) -> T {
-        let bundle = Bundle.main
-
-        let url: URL?
-        if let sub = subdirectory {
-            url = bundle.url(forResource: filename, withExtension: "json", subdirectory: sub)
-        } else {
-            url = bundle.url(forResource: filename, withExtension: "json")
-        }
-
-        guard let fileURL = url else {
-            fatalError("❌ Missing JSON file: \(filename).json (subdir: \(subdirectory ?? "nil"))")
-        }
-
-        do {
-            let data = try Data(contentsOf: fileURL)
-            let decoded = try JSONDecoder().decode(T.self, from: data)
-            return decoded
-        } catch {
-            fatalError("❌ Failed to decode \(filename).json: \(error)")
-        }
+{
+  "items": [
+    {
+      "id": "h0001",
+      "text_ar": "إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ.",
+      "text_en": "Actions are judged by intentions.",
+      "source_ar": "متفق عليه",
+      "source_en": "Bukhari & Muslim",
+      "tags": ["morning", "evening"]
+    },
+    {
+      "id": "h0002",
+      "text_ar": "الدِّينُ النَّصِيحَةُ.",
+      "text_en": "Religion is sincere advice.",
+      "source_ar": "رواه مسلم",
+      "source_en": "Muslim",
+      "tags": ["morning", "evening"]
+    },
+    {
+      "id": "h0003",
+      "text_ar": "مَنْ كَانَ يُؤْمِنُ بِاللَّهِ وَالْيَوْمِ الآخِرِ فَلْيَقُلْ خَيْرًا أَوْ لِيَصْمُتْ.",
+      "text_en": "Whoever believes in Allah and the Last Day should speak good or remain silent.",
+      "source_ar": "متفق عليه",
+      "source_en": "Bukhari & Muslim",
+      "tags": ["morning"]
+    },
+    {
+      "id": "h0004",
+      "text_ar": "لا تَغْضَبْ.",
+      "text_en": "Do not get angry.",
+      "source_ar": "رواه البخاري",
+      "source_en": "Bukhari",
+      "tags": ["evening"]
+    },
+    {
+      "id": "h0005",
+      "text_ar": "مَنْ لا يَرْحَمْ لا يُرْحَمْ.",
+      "text_en": "Whoever does not show mercy will not be shown mercy.",
+      "source_ar": "متفق عليه",
+      "source_en": "Bukhari & Muslim",
+      "tags": ["morning", "evening"]
+    },
+    {
+      "id": "h0006",
+      "text_ar": "خَيْرُكُمْ خَيْرُكُمْ لأَهْلِهِ.",
+      "text_en": "The best of you are those who are best to their families.",
+      "source_ar": "رواه الترمذي",
+      "source_en": "Tirmidhi",
+      "tags": ["morning"]
+    },
+    {
+      "id": "h0007",
+      "text_ar": "اتَّقِ اللَّهَ حَيْثُمَا كُنْتَ.",
+      "text_en": "Fear Allah wherever you are.",
+      "source_ar": "رواه الترمذي",
+      "source_en": "Tirmidhi",
+      "tags": ["evening"]
+    },
+    {
+      "id": "h0008",
+      "text_ar": "تَبَسُّمُكَ فِي وَجْهِ أَخِيكَ صَدَقَةٌ.",
+      "text_en": "Your smile to your brother is charity.",
+      "source_ar": "رواه الترمذي",
+      "source_en": "Tirmidhi",
+      "tags": ["morning", "evening"]
+    },
+    {
+      "id": "h0009",
+      "text_ar": "يَسِّرُوا وَلَا تُعَسِّرُوا.",
+      "text_en": "Make things easy and do not make them difficult.",
+      "source_ar": "متفق عليه",
+      "source_en": "Bukhari & Muslim",
+      "tags": ["morning"]
+    },
+    {
+      "id": "h0010",
+      "text_ar": "أَحَبُّ الأَعْمَالِ إِلَى اللَّهِ أَدْوَمُهَا وَإِنْ قَلَّ.",
+      "text_en": "The most beloved deeds to Allah are those done consistently, even if small.",
+      "source_ar": "متفق عليه",
+      "source_en": "Bukhari & Muslim",
+      "tags": ["evening"]
     }
+  ]
 }

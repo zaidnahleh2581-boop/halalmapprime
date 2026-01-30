@@ -10,62 +10,57 @@ import SwiftUI
 struct QuranHomeScreen: View {
 
     @EnvironmentObject var lang: LanguageManager
-    private func L(_ ar: String, _ en: String) -> String { lang.isArabic ? ar : en }
-
     @StateObject private var vm = QuranViewModel()
+    @State private var query: String = ""
+
+    private var filtered: [QuranSurah] {
+        let q = query.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        if q.isEmpty { return vm.surahs }
+        return vm.surahs.filter {
+            $0.name_ar.contains(query) ||
+            $0.name_en.lowercased().contains(q) ||
+            String($0.id) == q
+        }
+    }
 
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 12) {
+        VStack(spacing: 12) {
 
-                // ✅ Search
-                HStack {
-                    Image(systemName: "magnifyingglass")
-
-                    TextField(
-                        L("ابحث عن سورة (اسم / رقم)", "Search surah (name / number)"),
-                        text: Binding(
-                            get: { vm.query },
-                            set: { vm.query = $0 }
-                        )
-                    )
+            // Search
+            HStack {
+                Image(systemName: "magnifyingglass").foregroundStyle(.secondary)
+                TextField("Search surah (name / number)", text: $query)
                     .textInputAutocapitalization(.never)
                     .disableAutocorrection(true)
-                }
-                .padding(12)
-                .background(Color(.secondarySystemBackground))
-                .cornerRadius(12)
-                .padding(.horizontal)
+            }
+            .padding(12)
+            .background(.thinMaterial)
+            .clipShape(RoundedRectangle(cornerRadius: 16))
 
-                // ✅ Toggles
-                HStack(spacing: 12) {
-                    Toggle(L("عربي", "Arabic"), isOn: Binding(get: { vm.showArabic }, set: { vm.showArabic = $0 }))
-                    Toggle(L("English", "English"), isOn: Binding(get: { vm.showEnglish }, set: { vm.showEnglish = $0 }))
-                }
-                .padding(.horizontal)
-
-                // ✅ List
-                List(vm.filteredSurahs, id: \.id) { s in
+            if vm.surahs.isEmpty {
+                Text("Qur'an data is empty — check bundle loading.")
+                    .foregroundStyle(.secondary)
+                    .padding(.top, 20)
+                Spacer()
+            } else {
+                List(filtered) { surah in
                     NavigationLink {
-                        // إذا عندك شاشة اسمها QuranSurahScreen استخدمها:
-                        QuranSurahScreen(vm: vm, surahNumber: s.id)
-
-                        // إذا ما عندك، علّق السطر فوق وحط Placeholder مؤقت:
-                        // Text("Surah \(s.id)")
+                        QuranSurahScreen(surah: surah)
                     } label: {
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text("\(s.id). \(s.name_ar)")
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(lang.isArabic ? surah.name_ar : surah.name_en)
                                 .font(.headline)
-
-                            Text(s.name_en)
-                                .font(.subheadline)
+                            Text("Surah \(surah.id) • \(surah.ayahs.count) ayahs")
+                                .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
-                        .padding(.vertical, 4)
+                        .padding(.vertical, 6)
                     }
                 }
+                .listStyle(.plain)
             }
-            .navigationTitle(L("القرآن", "Quran"))
         }
+        .padding()
+        .navigationTitle("Qur'an")
     }
 }

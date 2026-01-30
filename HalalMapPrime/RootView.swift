@@ -1,9 +1,3 @@
-//
-//  Created by Zaid Nahleh on 2025-12-23.
-//  Updated by Zaid Nahleh on 2025-12-27.
-//  Copyright © 2025 Zaid Nahleh.
-//  All rights reserved.
-//
 import SwiftUI
 import CoreLocation
 
@@ -11,33 +5,48 @@ struct RootView: View {
 
     @EnvironmentObject var lang: LanguageManager
     @EnvironmentObject var locationManager: AppLocationManager
+    @EnvironmentObject var router: AppRouter
+
+    @State private var pendingNotificationInfo: [AnyHashable: Any]? = nil
 
     var body: some View {
         content
+            .onReceive(NotificationCenter.default.publisher(for: .openRouteFromNotification)) { notif in
+                let info = notif.userInfo ?? [:]
+
+                // إذا المستخدم لسه في شاشة اللغة/الموقع، نخزنها لحد ما يدخل التطبيق
+                if !lang.didChooseLanguage || !isLocationAuthorized {
+                    pendingNotificationInfo = info
+                } else {
+                    router.handleNotification(userInfo: info)
+                }
+            }
     }
 
     @ViewBuilder
     private var content: some View {
 
-        // 1️⃣ Language first
         if !lang.didChooseLanguage {
             LanguageSelectionView()
 
-        // 2️⃣ Location permission
         } else if !isLocationAuthorized {
             LocationPermissionView {
                 locationManager.requestWhenInUseAuthorizationIfNeeded()
             }
-            .onAppear {
+            .onAppear(perform: {
                 locationManager.requestWhenInUseAuthorizationIfNeeded()
-            }
+            })
 
-        // 3️⃣ Main app
         } else {
             MainTabView()
-                .onAppear {
+                .onAppear(perform: {
                     locationManager.requestSingleLocationIfPossible()
-                }
+
+                    if let info = pendingNotificationInfo {
+                        pendingNotificationInfo = nil
+                        router.handleNotification(userInfo: info)
+                    }
+                })
         }
     }
 

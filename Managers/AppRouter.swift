@@ -15,6 +15,9 @@ final class AppRouter: ObservableObject {
 
     @Published var selectedTab: Int = 0
 
+    // ✅ Faith tab tag عندك = 4
+    private let faithTabIndex: Int = 4
+
     // Jobs DeepLink (existing)
     struct JobsDeepLink: Equatable {
         var category: String? = nil
@@ -27,26 +30,63 @@ final class AppRouter: ObservableObject {
         selectedTab = 1
     }
 
-    // ✅ Ads DeepLink (new)
+    // ✅ Ads DeepLink (existing)
     enum AdsEntry: Equatable {
-        case home          // main ads home
-        case freeAd        // open FreeAdFormView
-        case paidPlans     // open SelectAdPlanView
-        case jobsBoard     // open JobAdsBoardView
+        case home
+        case freeAd
+        case paidPlans
+        case jobsBoard
     }
-    
-    // ✅ Map DeepLink (new)
+
+    // ✅ Map DeepLink (existing)
     @Published var pendingMapCategory: PlaceCategory? = nil
 
     func openMap(category: PlaceCategory?) {
         pendingMapCategory = category
         selectedTab = 0
     }
-    
+
     @Published var pendingAdsEntry: AdsEntry? = nil
 
     func openAds(_ entry: AdsEntry = .home) {
         pendingAdsEntry = entry
         selectedTab = 2
+    }
+
+    // MARK: - ✅ Faith DeepLink (NEW)
+
+    enum FaithEntry: Equatable {
+        case hadith(id: String?)
+        case imsakiyah
+        case prayer(prayer: String?)
+    }
+
+    @Published var pendingFaithEntry: FaithEntry? = nil
+
+    func openFaith(_ entry: FaithEntry) {
+        pendingFaithEntry = entry
+        selectedTab = faithTabIndex
+    }
+
+    // MARK: - ✅ Notification handler (NEW)
+
+    func handleNotification(userInfo: [AnyHashable: Any]) {
+        let route = (userInfo["route"] as? String)?.lowercased() ?? ""
+
+        switch route {
+        case "hadith":
+            let hid = userInfo["hid"] as? String
+            openFaith(.hadith(id: hid))
+
+        case "imsakiyah", "ramadan":
+            openFaith(.imsakiyah)
+
+        case "prayer":
+            let prayer = userInfo["prayer"] as? String
+            openFaith(.prayer(prayer: prayer))
+
+        default:
+            break
+        }
     }
 }

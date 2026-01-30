@@ -27,12 +27,6 @@ struct HadithListScreen: View {
                         .font(.body)
                         .multilineTextAlignment(.leading)
 
-                    // المرجع (إن وجد)
-                    if let ref = h.reference, !ref.isEmpty {
-                        Text(ref)
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
                 }
                 .padding(.vertical, 6)
             }
@@ -41,3 +35,4 @@ struct HadithListScreen: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 }
+

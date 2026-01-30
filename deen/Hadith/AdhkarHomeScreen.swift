@@ -3,16 +3,16 @@
 //  HalalMapPrime
 //
 //  Created by Zaid Nahleh on 2026-01-26.
+//  Copyright © 2026 Zaid Nahleh.
+//  All rights reserved.
 //
 
 import SwiftUI
 import Combine
 
-// MARK: - Counter Store
-
 final class AdhkarCounterStore: ObservableObject {
 
-    @Published var counts: [String: Int]
+    @Published var counts: [String:Int]
     private let key = "adhkar_counts_v1"
 
     init() {
@@ -39,8 +39,6 @@ final class AdhkarCounterStore: ObservableObject {
     }
 }
 
-// MARK: - Main Screen
-
 struct AdhkarHomeScreen: View {
 
     @EnvironmentObject var lang: LanguageManager
@@ -49,21 +47,19 @@ struct AdhkarHomeScreen: View {
     @StateObject private var counter = AdhkarCounterStore()
     @State private var searchText: String = ""
 
-    // ✅ تحميل آمن بدون crash
-    private let root: AdhkarRoot
+    // ✅ تحميل آمن (NEVER CRASH)
+    private let root: AdhkarRoot = {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .useDefaultKeys
 
-    init() {
-        if let loaded = FaithLocalStore.loadCodableSafe(
+        return FaithLocalStore.loadBundledCodableSafe(
             AdhkarRoot.self,
             filename: "deen_json_resources",
-            subdirectory: "deen_json"
-        ) {
-            self.root = loaded
-        } else {
-            self.root = AdhkarRoot(categories: [])
-            print("❌ Adhkar JSON failed to load")
-        }
-    }
+            subdirectory: "deen_json",
+            fallback: AdhkarRoot(categories: []),
+            decoder: decoder
+        )
+    }()
 
     private var filteredCategories: [AdhkarCategory] {
         let cats = root.categories
@@ -71,12 +67,9 @@ struct AdhkarHomeScreen: View {
         if q.isEmpty { return cats }
 
         return cats.filter { c in
-            (lang.isArabic ? c.title_ar : c.title_en)
-                .localizedCaseInsensitiveContains(q)
-            ||
-            c.items.contains(where: { item in
-                (lang.isArabic ? item.text_ar : item.text_en)
-                    .localizedCaseInsensitiveContains(q)
+            (lang.isArabic ? c.title_ar : c.title_en).localizedCaseInsensitiveContains(q)
+            || c.items.contains(where: { item in
+                (lang.isArabic ? item.text_ar : item.text_en).localizedCaseInsensitiveContains(q)
             })
         }
     }
@@ -92,11 +85,9 @@ struct AdhkarHomeScreen: View {
                 }
 
                 if filteredCategories.isEmpty {
-                    Text(L(
-                        "لا يوجد أذكار حالياً.",
-                        "No adhkar available."
-                    ))
-                    .foregroundStyle(.secondary)
+                    Text(L("لا يوجد أذكار محلية حالياً. تأكد أن ملف JSON موجود داخل deen_json.",
+                           "No adhkar available. Make sure JSON exists inside deen_json."))
+                        .foregroundStyle(.secondary)
                 } else {
                     ForEach(filteredCategories) { c in
                         NavigationLink {
@@ -107,6 +98,7 @@ struct AdhkarHomeScreen: View {
                             VStack(alignment: .leading, spacing: 6) {
                                 Text(lang.isArabic ? c.title_ar : c.title_en)
                                     .font(.headline)
+
                                 Text("\(c.items.count) \(L("ذكر", "items"))")
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
@@ -119,10 +111,8 @@ struct AdhkarHomeScreen: View {
                     Button(role: .destructive) {
                         counter.resetAll()
                     } label: {
-                        Label(
-                            L("تصفير كل العدّادات", "Reset all counters"),
-                            systemImage: "arrow.counterclockwise"
-                        )
+                        Label(L("تصفير كل العدّادات", "Reset all counters"),
+                              systemImage: "arrow.counterclockwise")
                     }
                 }
             }
@@ -130,8 +120,6 @@ struct AdhkarHomeScreen: View {
         }
     }
 }
-
-// MARK: - Category Screen
 
 struct AdhkarCategoryScreen: View {
 
@@ -149,9 +137,10 @@ struct AdhkarCategoryScreen: View {
                     Text(lang.isArabic ? item.text_ar : item.text_en)
                         .font(.body)
 
-                    HStack {
+                    HStack(spacing: 12) {
                         let current = counter.counts[item.id, default: 0]
-                        Text("\(L("العدّاد", "Count")): \(current)")
+
+                        Text(L("العدّاد:", "Count:") + " \(current)")
                             .font(.caption)
                             .foregroundStyle(.secondary)
 
@@ -160,13 +149,13 @@ struct AdhkarCategoryScreen: View {
                         Button {
                             counter.inc(item.id)
                         } label: {
-                            Image(systemName: "plus.circle.fill")
+                            Label(L("زيادة", "Add"), systemImage: "plus.circle.fill")
                         }
 
                         Button(role: .destructive) {
                             counter.reset(item.id)
                         } label: {
-                            Image(systemName: "trash")
+                            Label(L("تصفير", "Reset"), systemImage: "trash")
                         }
                     }
                     .font(.caption)

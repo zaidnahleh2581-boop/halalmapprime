@@ -15,6 +15,9 @@ import FirebaseAuth
 @main
 struct HalalMapPrimeApp: App {
 
+    // ✅ Needed for notification tap → deep link inside app
+    @UIApplicationDelegateAdaptor(NotificationAppDelegate.self) var notificationDelegate
+
     @StateObject private var languageManager = LanguageManager()
     @StateObject private var locationManager = AppLocationManager()
     @StateObject private var router = AppRouter()
