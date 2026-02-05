@@ -11,8 +11,12 @@ import Foundation
 
 struct AdhkarRoot: Codable {
     let categories: [AdhkarCategory]
-
     static let defaultValue = AdhkarRoot(categories: [])
+
+    // ✅ JSON عندك اسمه "sections" → نحوله إلى categories
+    enum CodingKeys: String, CodingKey {
+        case categories = "sections"
+    }
 }
 
 struct AdhkarCategory: Codable, Identifiable {

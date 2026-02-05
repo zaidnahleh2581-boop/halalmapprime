@@ -12,13 +12,12 @@ struct HadithOfDaySheet: View {
     @EnvironmentObject var lang: LanguageManager
     private func L(_ ar: String, _ en: String) -> String { lang.isArabic ? ar : en }
 
-    /// إذا جاية من إشعار وفيها hid
     let forcedHadithId: String?
 
     var body: some View {
         NavigationStack {
-            let root = HadithBundleLoader.loadAll()
-            let all = root?.items ?? []
+
+            let all = HadithStore.load().items
 
             let picked = HadithOfDaySelector.pickTwo(for: Date(), from: all)
             let morning = picked?.morning
@@ -29,25 +28,31 @@ struct HadithOfDaySheet: View {
 
                     if let forcedHadithId,
                        let h = all.first(where: { $0.id == forcedHadithId }) {
-                        HadithCard(title: L("الحديث", "Hadith"),
-                                   text: lang.isArabic ? h.text_ar : h.text_en,
-                                   source: lang.isArabic ? h.source_ar : h.source_en)
+                        HadithCard(
+                            title: L("الحديث", "Hadith"),
+                            text: lang.isArabic ? h.text_ar : h.text_en,
+                            source: lang.isArabic ? h.source_ar : h.source_en
+                        )
                     } else {
                         if let morning {
-                            HadithCard(title: L("حديث الصباح", "Morning Hadith"),
-                                       text: lang.isArabic ? morning.text_ar : morning.text_en,
-                                       source: lang.isArabic ? morning.source_ar : morning.source_en)
+                            HadithCard(
+                                title: L("حديث الصباح", "Morning Hadith"),
+                                text: lang.isArabic ? morning.text_ar : morning.text_en,
+                                source: lang.isArabic ? morning.source_ar : morning.source_en
+                            )
                         }
                         if let evening {
-                            HadithCard(title: L("حديث المساء", "Evening Hadith"),
-                                       text: lang.isArabic ? evening.text_ar : evening.text_en,
-                                       source: lang.isArabic ? evening.source_ar : evening.source_en)
+                            HadithCard(
+                                title: L("حديث المساء", "Evening Hadith"),
+                                text: lang.isArabic ? evening.text_ar : evening.text_en,
+                                source: lang.isArabic ? evening.source_ar : evening.source_en
+                            )
                         }
                     }
 
                     if all.count < 2 {
-                        Text(L("ملاحظة: أضف على الأقل حديثين داخل hadith_collection.json",
-                               "Note: Add at least 2 hadith in hadith_collection.json"))
+                        Text(L("ملاحظة: أضف على الأقل حديثين داخل deen_json/hadith_collection.json",
+                               "Note: Add at least 2 hadith inside deen_json/hadith_collection.json"))
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                         .padding(.top, 8)
@@ -78,4 +83,3 @@ private struct HadithCard: View {
         .clipShape(RoundedRectangle(cornerRadius: 14))
     }
 }
-

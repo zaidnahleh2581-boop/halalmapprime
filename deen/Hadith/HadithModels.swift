@@ -16,4 +16,7 @@ struct HadithItem: Codable, Identifiable {
     let text_en: String
     let source_ar: String
     let source_en: String
+
+    // ✅ optional (لو JSON فيه tags ما بصير crash)
+    let tags: [String]?
 }

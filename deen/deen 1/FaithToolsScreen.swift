@@ -143,6 +143,12 @@ struct FaithToolsScreen: View {
                 // ✅ Adhkar Section (Morning / Evening / Daily)
                 Section(header: Text(L("الأذكار", "Adhkar"))) {
                     NavigationLink {
+                        MisbahaScreen()
+                            .environmentObject(lang)
+                    } label: {
+                        Label(L("المسبحة", "Misbaha"), systemImage: "hand.tap")
+                    }
+                    NavigationLink {
                         AdhkarHomeScreen()
                     } label: {
                         HStack(spacing: 10) {

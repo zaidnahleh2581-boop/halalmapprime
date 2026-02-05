@@ -54,7 +54,7 @@ struct AdhkarHomeScreen: View {
 
         return FaithLocalStore.loadBundledCodableSafe(
             AdhkarRoot.self,
-            filename: "deen_json_resources",
+            filename: "deen_json_resources",   // ✅ هذا اسم ملفك الحالي
             subdirectory: "deen_json",
             fallback: AdhkarRoot(categories: []),
             decoder: decoder
@@ -85,8 +85,8 @@ struct AdhkarHomeScreen: View {
                 }
 
                 if filteredCategories.isEmpty {
-                    Text(L("لا يوجد أذكار محلية حالياً. تأكد أن ملف JSON موجود داخل deen_json.",
-                           "No adhkar available. Make sure JSON exists inside deen_json."))
+                    Text(L("لا يوجد أذكار محلية حالياً. تأكد أن deen_json_resources.json موجود داخل deen_json وفيه sections.",
+                           "No adhkar available. Make sure deen_json_resources.json exists inside deen_json and contains sections."))
                         .foregroundStyle(.secondary)
                 } else {
                     ForEach(filteredCategories) { c in

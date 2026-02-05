@@ -1,0 +1,13 @@
+Input zip: hadith_local.json.zip
+Extracted file: hadith_local.json
+Input root type: list
+Hadith count (input): 600
+Hadith count (output): 600
+Duplicate IDs encountered: 11
+First duplicate IDs (pre-fix): h06843, h06195, h06232, h01516, h04559, h03136, h01765, h05169, h01281, h04625
+Entries with missing both Arabic and English text: 7
+
+Notes:
+- Output format is { "items": [ ... ] }
+- All ids are strings like h00001
+- Added tags: ["general"] to every hadith (safe optional)
