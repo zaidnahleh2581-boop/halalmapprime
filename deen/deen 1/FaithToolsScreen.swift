@@ -3,7 +3,7 @@
 //  Halal Map Prime
 //
 //  Created by Zaid Nahleh on 2025-12-23.
-//  Updated by Zaid Nahleh on 2025-12-25.
+//  Updated by Zaid Nahleh on 2026-02-05.
 //  Copyright © 2025 Zaid Nahleh.
 //  All rights reserved.
 //
@@ -18,7 +18,6 @@ struct FaithToolsScreen: View {
     @EnvironmentObject var router: AppRouter
 
     @StateObject private var prayerVM = PrayerTimesViewModel()
-
     @State private var showQiblaInfo: Bool = false
     @State private var showZakatCalculator: Bool = false
     @State private var showAdhanInfo: Bool = false
@@ -34,7 +33,7 @@ struct FaithToolsScreen: View {
         NavigationStack {
             List {
 
-                // 1) Prayer Times (already working)
+                // 1) Prayer Times
                 Section(header: Text(L("أوقات الصلاة", "Prayer times"))) {
                     VStack(alignment: .leading, spacing: 10) {
 
@@ -72,7 +71,8 @@ struct FaithToolsScreen: View {
                                 HStack {
                                     Text(p.name)
                                     Spacer()
-                                    Text(p.time).foregroundColor(.secondary)
+                                    Text(formatToAmPm(p.time))
+                                        .foregroundColor(.secondary)
                                 }
                                 .font(.footnote)
                             }
@@ -81,7 +81,7 @@ struct FaithToolsScreen: View {
                     .padding(.vertical, 4)
                 }
 
-                // 2) Adhan & reminders (already working)
+                // 2) Adhan & reminders
                 Section(header: Text(L("الأذان والتنبيهات", "Adhan & reminders"))) {
                     Button {
                         showAdhanInfo = true
@@ -89,17 +89,19 @@ struct FaithToolsScreen: View {
                         HStack(spacing: 10) {
                             Image(systemName: "bell.badge.fill").foregroundColor(.orange)
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(L("إعدادات الأذان", "Adhan settings")).font(.headline)
+                                Text(L("إعدادات الأذان", "Adhan settings"))
+                                    .font(.headline)
                                 Text(L("فعّل تنبيهات الصلاة واختر الصلوات ووقت التذكير.",
                                        "Enable prayer reminders, choose prayers and reminder time."))
-                                .font(.caption).foregroundColor(.secondary)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
                             }
                         }
                         .padding(.vertical, 4)
                     }
                 }
-                
-                // ✅ Quran Section (Add this back)
+
+                // 3) Quran
                 Section(header: Text(L("القرآن", "Quran"))) {
                     NavigationLink {
                         QuranHomeScreen()
@@ -114,14 +116,15 @@ struct FaithToolsScreen: View {
 
                                 Text(L("اقرأ السور والآيات كاملة بدون إنترنت.",
                                        "Read full surahs & ayahs offline."))
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
                             }
                         }
                         .padding(.vertical, 4)
                     }
                 }
-                // ✅ NEW: Hadith of the day
+
+                // 4) Hadith
                 Section(header: Text(L("الحديث", "Hadith"))) {
                     Button {
                         pendingHadithId = nil
@@ -130,24 +133,34 @@ struct FaithToolsScreen: View {
                         HStack(spacing: 10) {
                             Image(systemName: "book.closed.fill").foregroundColor(.purple)
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(L("حديث اليوم", "Hadith of the Day")).font(.headline)
-                                Text(L("حديث الصباح والمساء يومياً.",
-                                       "Daily morning & evening hadith."))
-                                .font(.caption).foregroundColor(.secondary)
+                                Text(L("حديث اليوم", "Hadith of the Day"))
+                                    .font(.headline)
+                                Text(L("عرض الحديث اليومي داخل التطبيق.",
+                                       "Shows daily hadith inside the app."))
+                                .font(.caption)
+                                .foregroundColor(.secondary)
                             }
                         }
                         .padding(.vertical, 4)
                     }
                 }
-                
-                // ✅ Adhkar Section (Morning / Evening / Daily)
+
+                // 5) Adhkar + Misbaha
                 Section(header: Text(L("الأذكار", "Adhkar"))) {
+
                     NavigationLink {
                         MisbahaScreen()
                             .environmentObject(lang)
                     } label: {
-                        Label(L("المسبحة", "Misbaha"), systemImage: "hand.tap")
+                        HStack(spacing: 10) {
+                            Image(systemName: "hand.tap")
+                                .foregroundStyle(.orange)
+                            Text(L("المسبحة", "Misbaha"))
+                                .font(.headline)
+                        }
+                        .padding(.vertical, 4)
                     }
+
                     NavigationLink {
                         AdhkarHomeScreen()
                     } label: {
@@ -159,10 +172,8 @@ struct FaithToolsScreen: View {
                                 Text(L("أذكار المسلم", "Daily Adhkar"))
                                     .font(.headline)
 
-                                Text(
-                                    L("أذكار الصباح والمساء والنوم.",
-                                      "Morning, evening, and daily remembrance.")
-                                )
+                                Text(L("أذكار الصباح والمساء والنوم.",
+                                       "Morning, evening, and daily remembrance."))
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                             }
@@ -170,62 +181,68 @@ struct FaithToolsScreen: View {
                         .padding(.vertical, 4)
                     }
                 }
-                // ✅ 3) Ramadan & Imsakiyah (NOW REAL)
+
+                // 6) Ramadan
                 Section(header: Text(L("رمضان والإمساكية", "Ramadan & Imsakiyah"))) {
                     Button {
                         showRamadanInfo = true
                     } label: {
                         HStack(spacing: 10) {
-                            Image(systemName: "moonphase.waning.crescent").foregroundColor(.teal)
+                            Image(systemName: "moonphase.waning.crescent")
+                                .foregroundColor(.teal)
+
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(L("إمساكية رمضان", "Ramadan Imsakiyah")).font(.headline)
+                                Text(L("إمساكية رمضان", "Ramadan Imsakiyah"))
+                                    .font(.headline)
                                 Text(L("جدول كامل: إمساك / فجر / إفطار حسب موقعك.",
                                        "Full schedule: Imsak / Fajr / Iftar based on your location."))
-                                .font(.caption).foregroundColor(.secondary)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
                             }
                         }
                         .padding(.vertical, 4)
                     }
                 }
 
-                // 4) Qibla
+                // 7) Qibla (Soon)
                 Section(header: Text(L("اتجاه القبلة", "Qibla direction"))) {
                     Button { showQiblaInfo = true } label: {
                         HStack(spacing: 10) {
-                            Image(systemName: "location.north.line.fill").foregroundColor(.green)
+                            Image(systemName: "location.north.line.fill")
+                                .foregroundColor(.green)
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(L("بوصلة القبلة", "Qibla compass")).font(.headline)
+                                Text(L("بوصلة القبلة", "Qibla compass"))
+                                    .font(.headline)
                                 Text(L("قريباً بوصلة تفاعلية دقيقة.",
                                        "Soon: an accurate interactive compass."))
-                                .font(.caption).foregroundColor(.secondary)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
                             }
                         }
                         .padding(.vertical, 4)
                     }
                 }
 
-                // 5) Zakat
+                // 8) Zakat
                 Section(header: Text(L("زكاة المال", "Zakat calculator"))) {
-                    Button { showZakatCalculator = true } label: {
+                    NavigationLink {
+                        ZakatCalculatorScreen()
+                            .environmentObject(lang)
+                    } label: {
                         HStack(spacing: 10) {
-                            Image(systemName: "percent").foregroundColor(.yellow)
+                            Image(systemName: "percent")
+                                .foregroundColor(.yellow)
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(L("حاسبة الزكاة", "Zakat calculator")).font(.headline)
-                                Text(L("قريباً: حساب دقيق وسهل.",
-                                       "Soon: easy and accurate calculation."))
-                                .font(.caption).foregroundColor(.secondary)
+                                Text(L("حاسبة الزكاة", "Zakat calculator"))
+                                    .font(.headline)
+                                Text(L("احسب زكاتك بسرعة وببساطة.",
+                                       "Calculate your zakat quickly and easily."))
+                                .font(.caption)
+                                .foregroundColor(.secondary)
                             }
                         }
                         .padding(.vertical, 4)
                     }
-                }
-
-                // 6) More tools
-                Section(header: Text(L("أدوات إضافية", "More tools"))) {
-                    Label(L("التقويم الهجري والمواسم", "Hijri calendar & seasons"), systemImage: "calendar")
-                        .foregroundColor(.secondary)
-                    Label(L("تنبيهات العشر الأواخر", "Last 10 nights reminders"), systemImage: "sparkles")
-                        .foregroundColor(.secondary)
                 }
             }
             .navigationTitle(L("أدوات المسلم", "Faith tools"))
@@ -242,7 +259,7 @@ struct FaithToolsScreen: View {
                 prayerVM.refresh(from: locationManager.lastLocation, isArabic: lang.isArabic)
             }
 
-            // ✅ Listen for router deeplink
+            // ✅ deeplink router
             .onChange(of: router.pendingFaithEntry) { entry in
                 guard let entry else { return }
                 router.pendingFaithEntry = nil
@@ -256,12 +273,11 @@ struct FaithToolsScreen: View {
                     showHadithOfDay = true
 
                 case .prayer:
-                    // ما عندك شاشة Prayer منفصلة حالياً (أوقات الصلاة بتظهر فوق)
-                    // خلّينا بس نفتح Faith وخلص (ممكن نضيف شاشة خاصة لاحقاً)
                     break
                 }
             }
 
+            // Sheets
             .sheet(isPresented: $showAdhanInfo) {
                 AdhanSettingsSheet()
                     .environmentObject(lang)
@@ -272,15 +288,16 @@ struct FaithToolsScreen: View {
                     .environmentObject(lang)
                     .environmentObject(locationManager)
             }
-
-            // ✅ Hadith sheet
             .sheet(isPresented: $showHadithOfDay) {
                 HadithOfDaySheet(forcedHadithId: pendingHadithId)
                     .environmentObject(lang)
             }
+            .sheet(isPresented: $showQiblaInfo) {
+                QiblaInfoSheet().environmentObject(lang)
+            }
 
-            .sheet(isPresented: $showQiblaInfo) { QiblaInfoSheet().environmentObject(lang) }
-            .sheet(isPresented: $showZakatCalculator) { ZakatInfoSheet().environmentObject(lang) }
+            // (Zakat sheet intentionally removed for now)
+            // .sheet(isPresented: $showZakatCalculator) { ZakatInfoSheet().environmentObject(lang) }
         }
     }
 
@@ -300,5 +317,30 @@ struct FaithToolsScreen: View {
         f.locale = Locale(identifier: "en_US_POSIX")
         f.dateFormat = "h:mm a"
         return f.string(from: date)
+    }
+
+    /// Converts "HH:mm" OR "h:mm a" into "h:mm a"
+    private func formatToAmPm(_ timeString: String) -> String {
+        let trimmed = timeString.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        // if already AM/PM, return it
+        if trimmed.lowercased().contains("am") || trimmed.lowercased().contains("pm") {
+            return trimmed
+        }
+
+        // Try parse "HH:mm"
+        let inF = DateFormatter()
+        inF.locale = Locale(identifier: "en_US_POSIX")
+        inF.dateFormat = "HH:mm"
+
+        let outF = DateFormatter()
+        outF.locale = Locale(identifier: "en_US_POSIX")
+        outF.dateFormat = "h:mm a"
+
+        if let d = inF.date(from: trimmed) {
+            return outF.string(from: d)
+        }
+
+        return trimmed
     }
 }

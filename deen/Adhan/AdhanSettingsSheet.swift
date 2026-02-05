@@ -9,11 +9,7 @@
 
 import SwiftUI
 import CoreLocation
-
-// ✅ ملاحظة مهمة:
-// هذا الملف يعتمد على وجود:
-// 1) struct AdhanReminderSettings (موجود عندك مسبقًا في المشروع)
-// 2) AdhanNotificationManager.shared (موجود عندك مسبقًا)
+import AVFoundation
 
 private enum AdhanSettingsStore {
     static let key = "adhanReminderSettings_v1"
@@ -41,15 +37,22 @@ struct AdhanSettingsSheet: View {
     @State private var isWorking: Bool = false
     @State private var message: String = ""
 
-    private let manager = AdhanNotificationManager.shared
+    // 🔊 Preview player
+    @State private var player: AVAudioPlayer? = nil
+    @State private var isPlayingPreview: Bool = false
 
+    private let manager = AdhanNotificationManager.shared
     private func L(_ ar: String, _ en: String) -> String { lang.isArabic ? ar : en }
+
+    // ✅ look for adhan.mp3 in bundle
+    private var adhanURL: URL? {
+        Bundle.main.url(forResource: "adhan", withExtension: "mp3")
+    }
 
     var body: some View {
         NavigationStack {
             Form {
 
-                // MARK: - General
                 Section(header: Text(L("عام", "General"))) {
 
                     Toggle(L("تفعيل تنبيهات الأذان", "Enable Adhan reminders"), isOn: binding(\.isEnabled))
@@ -66,41 +69,48 @@ struct AdhanSettingsSheet: View {
                         }
                         .onChange(of: settings.minutesBefore) { _ in persist() }
 
-                        // ✅ إذا عندك حقل useSound في struct القديم رح يشتغل
-                        // إذا ما عندك useSound، احذف هذا Toggle فقط.
-                        if hasUseSoundField {
-                            Toggle(L("صوت تنبيه", "Notification sound"), isOn: bindingUseSound())
-                                .onChange(of: getUseSound()) { _ in persist() }
+                        Toggle(L("تشغيل صوت الأذان", "Play adhan sound"), isOn: binding(\.useSound))
+                            .onChange(of: settings.useSound) { _ in
+                                persist()
+                                if !settings.useSound { stopPreview() }
+                            }
 
-                            Text(L("ملاحظة: إذا الهاتف على Silent أو Focus قد لا تسمع صوت.", "Note: Silent/Focus may mute the sound."))
+                        Text(L("ملاحظة: إذا الهاتف على Silent أو Focus قد لا تسمع صوت.",
+                               "Note: Silent/Focus may mute the sound."))
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+
+                        // ✅ زر “اسمع الأذان”
+                        if settings.useSound {
+                            if adhanURL != nil {
+                                Button {
+                                    isPlayingPreview ? stopPreview() : playPreview()
+                                } label: {
+                                    HStack {
+                                        Image(systemName: isPlayingPreview ? "stop.fill" : "play.fill")
+                                        Text(L("اسمع الأذان الآن", "Listen now"))
+                                    }
+                                }
+                            } else {
+                                Text(L("⚠️ ملف الصوت غير موجود داخل التطبيق. تأكد adhan.mp3 داخل Target Membership.",
+                                       "⚠️ Sound file not found. Ensure adhan.mp3 is in Target Membership."))
                                 .font(.footnote)
-                                .foregroundColor(.secondary)
+                                .foregroundColor(.red)
+                            }
                         }
                     }
                 }
 
-                // MARK: - Prayers
                 if settings.isEnabled {
                     Section(header: Text(L("اختر الصلوات", "Choose prayers"))) {
-
-                        Toggle(L("الفجر", "Fajr"), isOn: binding(\.fajr))
-                            .onChange(of: settings.fajr) { _ in persist() }
-
-                        Toggle(L("الظهر", "Dhuhr"), isOn: binding(\.dhuhr))
-                            .onChange(of: settings.dhuhr) { _ in persist() }
-
-                        Toggle(L("العصر", "Asr"), isOn: binding(\.asr))
-                            .onChange(of: settings.asr) { _ in persist() }
-
-                        Toggle(L("المغرب", "Maghrib"), isOn: binding(\.maghrib))
-                            .onChange(of: settings.maghrib) { _ in persist() }
-
-                        Toggle(L("العشاء", "Isha"), isOn: binding(\.isha))
-                            .onChange(of: settings.isha) { _ in persist() }
+                        Toggle(L("الفجر", "Fajr"), isOn: binding(\.fajr)).onChange(of: settings.fajr) { _ in persist() }
+                        Toggle(L("الظهر", "Dhuhr"), isOn: binding(\.dhuhr)).onChange(of: settings.dhuhr) { _ in persist() }
+                        Toggle(L("العصر", "Asr"), isOn: binding(\.asr)).onChange(of: settings.asr) { _ in persist() }
+                        Toggle(L("المغرب", "Maghrib"), isOn: binding(\.maghrib)).onChange(of: settings.maghrib) { _ in persist() }
+                        Toggle(L("العشاء", "Isha"), isOn: binding(\.isha)).onChange(of: settings.isha) { _ in persist() }
                     }
                 }
 
-                // MARK: - Actions
                 Section {
                     Button {
                         Task { await scheduleNow() }
@@ -122,72 +132,47 @@ struct AdhanSettingsSheet: View {
             .navigationTitle(L("إعدادات الأذان", "Adhan Settings"))
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
-                if let m = manager.lastScheduleMessage {
-                    message = m
-                }
+                if let m = manager.lastScheduleMessage { message = m }
             }
+            .onDisappear { stopPreview() }
         }
     }
-
-    // MARK: - Bindings Helpers
 
     private func binding<T>(_ keyPath: WritableKeyPath<AdhanReminderSettings, T>) -> Binding<T> {
         Binding(
             get: { settings[keyPath: keyPath] },
-            set: { newValue in
-                settings[keyPath: keyPath] = newValue
-            }
+            set: { newValue in settings[keyPath: keyPath] = newValue }
         )
     }
 
-    // MARK: - useSound compatibility (optional)
+    private func persist() { AdhanSettingsStore.save(settings) }
 
-    // ✅ لأننا ما نعرف إذا struct القديم عندك فيه useSound أو لا:
-    // راح نكتشفه بطريقة آمنة.
-    private var hasUseSoundField: Bool {
-        Mirror(reflecting: settings).children.contains { $0.label == "useSound" }
-    }
+    // MARK: - Preview sound
+    private func playPreview() {
+        guard let url = adhanURL else { return }
+        do {
+            // حاول تخليها تشتغل حتى لو الجهاز Silent (قدر الإمكان)
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+            try AVAudioSession.sharedInstance().setActive(true)
 
-    private func getUseSound() -> Bool {
-        // default
-        guard hasUseSoundField else { return true }
-        // محاولة قراءة عبر Mirror
-        let m = Mirror(reflecting: settings)
-        for c in m.children {
-            if c.label == "useSound", let v = c.value as? Bool { return v }
+            let p = try AVAudioPlayer(contentsOf: url)
+            p.prepareToPlay()
+            p.play()
+            player = p
+            isPlayingPreview = true
+        } catch {
+            message = L("❌ فشل تشغيل الصوت.", "❌ Failed to play sound.")
+            isPlayingPreview = false
         }
-        return true
     }
 
-    private func setUseSound(_ value: Bool) {
-        // إذا struct القديم ما فيه useSound ما نعمل شيء
-        guard hasUseSoundField else { return }
-
-        // ⚠️ ما نقدر نكتب عبر Mirror، لذلك إذا ما عندك useSound فعلاً:
-        // احذف Toggle الخاص بالصوت بدل هذا.
-        //
-        // الأفضل: إذا عندك useSound في AdhanReminderSettings القديم،
-        // غيّر هذه الدالة يدويًا إلى:
-        // settings.useSound = value
-        //
-        // لأن Swift ما يسمح بتعديل property غير موجودة بشكل ديناميكي.
+    private func stopPreview() {
+        player?.stop()
+        player = nil
+        isPlayingPreview = false
     }
 
-    private func bindingUseSound() -> Binding<Bool> {
-        Binding(
-            get: { getUseSound() },
-            set: { newValue in
-                setUseSound(newValue)
-            }
-        )
-    }
-
-    // MARK: - Persist + Schedule
-
-    private func persist() {
-        AdhanSettingsStore.save(settings)
-    }
-
+    // MARK: - Schedule
     private func scheduleNow() async {
         isWorking = true
         defer { isWorking = false }

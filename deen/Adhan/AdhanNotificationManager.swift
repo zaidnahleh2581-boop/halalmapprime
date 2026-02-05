@@ -131,7 +131,12 @@ final class AdhanNotificationManager: ObservableObject {
                 ? (langIsArabic ? "حان وقت الصلاة" : "It's time to pray")
                 : (langIsArabic ? "تبقّى \(minutesBefore) دقيقة على الصلاة"
                                 : "\(minutesBefore) minutes before prayer")
-            content.sound = settings.useSound ? .default : nil
+
+            if settings.useSound {
+                content.sound = UNNotificationSound(named: UNNotificationSoundName("adhan.mp3"))
+            } else {
+                content.sound = nil
+            }
 
             let comps = Calendar.current.dateComponents([.year,.month,.day,.hour,.minute], from: fireDate)
             let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
