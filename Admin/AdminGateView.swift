@@ -3,36 +3,41 @@
 //  HalalMapPrime
 //
 //  Created by Zaid Nahleh on 2026-01-25.
+//  Updated by Zaid Nahleh on 2026-02-05.
 //
 
 import SwiftUI
 
 struct AdminGateView: View {
 
+    @EnvironmentObject var lang: LanguageManager
     @Environment(\.dismiss) private var dismiss
+
+    private func L(_ ar: String, _ en: String) -> String { lang.isArabic ? ar : en }
 
     var body: some View {
         NavigationStack {
             List {
 
-                Section("Admin") {
+                Section(L("الإدارة", "Admin")) {
 
-                    NavigationLink("📢 Ads Dashboard") {
+                    NavigationLink(L("📢 لوحة الإعلانات", "📢 Ads Dashboard")) {
                         AdminAdsDashboardView()
                     }
 
-                    NavigationLink("💼 Jobs") {
-                        Text("Jobs admin coming soon")
-                            .navigationTitle("Jobs")
+                    NavigationLink(L("💼 الوظائف", "💼 Jobs")) {
+                        AdminJobsDashboardPlaceholderView()
+                            .navigationTitle(L("الوظائف", "Jobs"))
                     }
 
-                    NavigationLink("📅 Events") {
-                        Text("Events admin coming soon")
-                            .navigationTitle("Events")
+                    NavigationLink(L("📅 الفعاليات", "📅 Events")) {
+                        AdminEventsDashboardPlaceholderView()
+                            .navigationTitle(L("الفعاليات", "Events"))
                     }
 
-                    NavigationLink("📍 Places") {
+                    NavigationLink(L("📍 الأماكن", "📍 Places")) {
                         AdminPlacesListView()
+                            .navigationTitle(L("الأماكن", "Places"))
                     }
                 }
 
@@ -40,11 +45,39 @@ struct AdminGateView: View {
                     Button(role: .destructive) {
                         dismiss()
                     } label: {
-                        Text("Close Admin")
+                        Text(L("إغلاق الإدارة", "Close Admin"))
                     }
                 }
             }
-            .navigationTitle("Admin Panel")
+            .navigationTitle(L("لوحة الإدارة", "Admin Panel"))
+            .navigationBarTitleDisplayMode(.inline)
+        }
+    }
+}
+
+// MARK: - Temporary placeholders (until we plug real dashboards)
+private struct AdminJobsDashboardPlaceholderView: View {
+    @EnvironmentObject var lang: LanguageManager
+    private func L(_ ar: String, _ en: String) -> String { lang.isArabic ? ar : en }
+
+    var body: some View {
+        List {
+            Text(L("جاهز. الخطوة التالية: نربطها بـ jobAds ونضيف Hide/Delete/Approve.", "Ready. Next: connect to jobAds and add Hide/Delete/Approve."))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+        }
+    }
+}
+
+private struct AdminEventsDashboardPlaceholderView: View {
+    @EnvironmentObject var lang: LanguageManager
+    private func L(_ ar: String, _ en: String) -> String { lang.isArabic ? ar : en }
+
+    var body: some View {
+        List {
+            Text(L("جاهز. الخطوة التالية: نربطها بـ eventAds/cityEventAds ونضيف Hide/Delete.", "Ready. Next: connect to eventAds/cityEventAds and add Hide/Delete."))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
         }
     }
 }

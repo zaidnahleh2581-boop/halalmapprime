@@ -3,7 +3,7 @@
 //  Halal Map Prime
 //
 //  Created by Zaid Nahleh on 2025-12-23.
-//  Updated by Zaid Nahleh on 2026-01-05.
+//  Updated by Zaid Nahleh on 2026-02-06.
 //  Copyright © 2026 Zaid Nahleh.
 //  All rights reserved.
 //
@@ -43,6 +43,10 @@ struct HomeOverviewScreen: View {
     // ✅ Ad Preview
     @State private var selectedAd: HMPAd? = nil
     @State private var showAdPreview: Bool = false
+
+    // ✅ Rotate Ads (every 25 minutes)
+    @State private var rotateIndex: Int = 0
+    private let adsRotateTimer = Timer.publish(every: 25 * 60, on: .main, in: .common).autoconnect()
 
     private let tickerTimer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
 
@@ -87,12 +91,19 @@ struct HomeOverviewScreen: View {
             guard !previewJobs.isEmpty else { return }
             tickerIndex = (tickerIndex + 1) % max(previewJobs.count, 1)
         }
+        .onReceive(adsRotateTimer) { _ in
+            // ✅ rotate ads locally
+            guard !adsStore.activeAds.isEmpty else { return }
+            rotateIndex += 1
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
             adsStore.load()
         }
-        .sheet(isPresented: $showDistancePicker) { distanceSheet }
+        .sheet(isPresented: $showDistancePicker, content: distanceSheet)
         .sheet(isPresented: $showJobAlerts) { JobAlertsSheet().environmentObject(lang) }
         .sheet(isPresented: $showMapSheet) {
+            // ✅ فتح الخريطة (تقدر لاحقاً تمرر starting category اذا بدك)
             MapScreen()
                 .environmentObject(lang)
                 .environmentObject(router)
@@ -146,11 +157,11 @@ struct HomeOverviewScreen: View {
     // MARK: - Featured Slider (Prime + FreeOnce)
 
     private var featuredSliderSection: some View {
-        let featured = adsStore.activeAds.filter { $0.plan == .prime || $0.plan == .freeOnce }
+        let raw = adsStore.activeAds.filter { $0.plan == .prime || $0.plan == .freeOnce }
+        let featured = rotateAds(raw, by: rotateIndex)
 
         return Group {
             if featured.isEmpty {
-                // silent
                 EmptyView()
             } else {
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -174,7 +185,8 @@ struct HomeOverviewScreen: View {
     // MARK: - Monthly Spotlight
 
     private var monthlySpotlightSection: some View {
-        let monthly = adsStore.activeAds.filter { $0.plan == .monthly }
+        let raw = adsStore.activeAds.filter { $0.plan == .monthly }
+        let monthly = rotateAds(raw, by: rotateIndex)
 
         return Group {
             if monthly.isEmpty {
@@ -207,11 +219,11 @@ struct HomeOverviewScreen: View {
     // MARK: - Weekly Deals
 
     private var weeklyDealsSection: some View {
-        let weekly = adsStore.activeAds.filter { $0.plan == .weekly }
+        let raw = adsStore.activeAds.filter { $0.plan == .weekly }
+        let weekly = rotateAds(raw, by: rotateIndex)
 
         return Group {
             if weekly.isEmpty {
-                // if everything empty, show one empty state
                 if adsStore.activeAds.isEmpty {
                     Text(L("لا توجد إعلانات حالياً.", "No ads right now."))
                         .font(.footnote.weight(.semibold))
@@ -402,7 +414,7 @@ struct HomeOverviewScreen: View {
 
     // MARK: - Distance sheet
 
-    private var distanceSheet: some View {
+    private func distanceSheet() -> some View {
         NavigationStack {
             VStack(spacing: 16) {
 
@@ -469,6 +481,16 @@ struct HomeOverviewScreen: View {
                 }
             }
     }
+
+    // MARK: - ✅ Ads Rotation Helper
+
+    private func rotateAds<T>(_ arr: [T], by k: Int) -> [T] {
+        guard !arr.isEmpty else { return [] }
+        let shift = ((k % arr.count) + arr.count) % arr.count
+        if shift == 0 { return arr }
+        // ✅ كل مرة "اللي تحت" يطلع لفوق تدريجياً
+        return Array(arr[shift...] + arr[..<shift])
+    }
 }
 
 // MARK: - Featured Slider Card (Prime + FreeOnce) with Images
@@ -484,7 +506,6 @@ private struct FeaturedAdSliderCard: View {
         Button(action: onTap) {
             VStack(alignment: .leading, spacing: 10) {
 
-                // Images
                 if !ad.uiImages().isEmpty {
                     TabView {
                         ForEach(Array(ad.uiImages().enumerated()), id: \.offset) { _, img in
@@ -684,7 +705,6 @@ private struct CompactAdCard: View {
     }
 }
 
-
 // MARK: - Islamic Pattern Background (subtle)
 
 private struct IslamicPatternBackground: View {
@@ -731,3 +751,4 @@ private struct IslamicPatternBackground: View {
         }
     }
 }
+

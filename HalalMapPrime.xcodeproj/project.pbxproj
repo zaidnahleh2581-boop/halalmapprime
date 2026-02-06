@@ -49,6 +49,14 @@
 		153ED9812F34F2030003B0DF /* PrayerNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153ED9802F34F2030003B0DF /* PrayerNotificationManager.swift */; };
 		153ED9832F353C070003B0DF /* ZakatCalculatorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153ED9822F353C070003B0DF /* ZakatCalculatorModel.swift */; };
 		153ED9862F353C4E0003B0DF /* ZakatCalculatorScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153ED9852F353C4E0003B0DF /* ZakatCalculatorScreen.swift */; };
+		153ED9882F354DEC0003B0DF /* AdminJobAd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153ED9872F354DEC0003B0DF /* AdminJobAd.swift */; };
+		153ED98A2F354E110003B0DF /* AdminJobsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153ED9892F354E110003B0DF /* AdminJobsViewModel.swift */; };
+		153ED98C2F354E3A0003B0DF /* AdminJobsDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153ED98B2F354E3A0003B0DF /* AdminJobsDashboardView.swift */; };
+		153ED98E2F354E5E0003B0DF /* AdminEventItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153ED98D2F354E5E0003B0DF /* AdminEventItem.swift */; };
+		153ED9902F354E7C0003B0DF /* AdminEventsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153ED98F2F354E7C0003B0DF /* AdminEventsViewModel.swift */; };
+		153ED9922F354EB20003B0DF /* AdminEventsDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153ED9912F354EB20003B0DF /* AdminEventsDashboardView.swift */; };
+		153ED9942F3552CA0003B0DF /* JobCategoryCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153ED9932F3552CA0003B0DF /* JobCategoryCatalog.swift */; };
+		153ED9962F3553990003B0DF /* PushManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153ED9952F3553990003B0DF /* PushManager.swift */; };
 		155C3FE62F0A8F48009EEB95 /* FreeMonthlyAdFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 155C3FE52F0A8F48009EEB95 /* FreeMonthlyAdFormView.swift */; };
 		155C3FE92F0A95C4009EEB95 /* WeeklyAdInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 155C3FE82F0A95C4009EEB95 /* WeeklyAdInfoView.swift */; };
 		155C3FEB2F0A95E6009EEB95 /* MonthlyAdInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 155C3FEA2F0A95E6009EEB95 /* MonthlyAdInfoView.swift */; };
@@ -186,6 +194,14 @@
 		153ED9802F34F2030003B0DF /* PrayerNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerNotificationManager.swift; sourceTree = "<group>"; };
 		153ED9822F353C070003B0DF /* ZakatCalculatorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZakatCalculatorModel.swift; sourceTree = "<group>"; };
 		153ED9852F353C4E0003B0DF /* ZakatCalculatorScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZakatCalculatorScreen.swift; sourceTree = "<group>"; };
+		153ED9872F354DEC0003B0DF /* AdminJobAd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminJobAd.swift; sourceTree = "<group>"; };
+		153ED9892F354E110003B0DF /* AdminJobsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminJobsViewModel.swift; sourceTree = "<group>"; };
+		153ED98B2F354E3A0003B0DF /* AdminJobsDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminJobsDashboardView.swift; sourceTree = "<group>"; };
+		153ED98D2F354E5E0003B0DF /* AdminEventItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminEventItem.swift; sourceTree = "<group>"; };
+		153ED98F2F354E7C0003B0DF /* AdminEventsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminEventsViewModel.swift; sourceTree = "<group>"; };
+		153ED9912F354EB20003B0DF /* AdminEventsDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminEventsDashboardView.swift; sourceTree = "<group>"; };
+		153ED9932F3552CA0003B0DF /* JobCategoryCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobCategoryCatalog.swift; sourceTree = "<group>"; };
+		153ED9952F3553990003B0DF /* PushManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushManager.swift; sourceTree = "<group>"; };
 		155C3FE52F0A8F48009EEB95 /* FreeMonthlyAdFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeMonthlyAdFormView.swift; sourceTree = "<group>"; };
 		155C3FE82F0A95C4009EEB95 /* WeeklyAdInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyAdInfoView.swift; sourceTree = "<group>"; };
 		155C3FEA2F0A95E6009EEB95 /* MonthlyAdInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyAdInfoView.swift; sourceTree = "<group>"; };
@@ -273,6 +289,16 @@
 		15F1CE5C2F035432007C72CA /* MonthlyEventPaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyEventPaywallView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		153ED9992F36159A0003B0DF /* Exceptions for "HalalMapPrime" folder in "HalalMapPrime" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 15A0D7722EE055040063ED79 /* HalalMapPrime */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		15109F932EFD807D0068DFE3 /* helpers */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
@@ -281,6 +307,9 @@
 		};
 		15A0D7752EE055040063ED79 /* HalalMapPrime */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				153ED9992F36159A0003B0DF /* Exceptions for "HalalMapPrime" folder in "HalalMapPrime" target */,
+			);
 			path = HalalMapPrime;
 			sourceTree = "<group>";
 		};
@@ -465,6 +494,7 @@
 				15D014342F02BBCB00D34C64 /* JobAlertsSheet 2.swift */,
 				15D014362F02C07500D34C64 /* jobLegacyBoard.swift */,
 				15C62E162F0D4EDD00702399 /* JobAdFilter.swift */,
+				153ED9932F3552CA0003B0DF /* JobCategoryCatalog.swift */,
 			);
 			path = jobs;
 			sourceTree = "<group>";
@@ -615,6 +645,12 @@
 				15AE07C62F26B11800158FF4 /* AdminPlacesListView.swift */,
 				15AE07CC2F26B4FF00158FF4 /* AdminPlaceReviewView.swift */,
 				15AE07C82F26B15000158FF4 /* AdminPlacesViewModel.swift */,
+				153ED9872F354DEC0003B0DF /* AdminJobAd.swift */,
+				153ED9892F354E110003B0DF /* AdminJobsViewModel.swift */,
+				153ED98B2F354E3A0003B0DF /* AdminJobsDashboardView.swift */,
+				153ED98D2F354E5E0003B0DF /* AdminEventItem.swift */,
+				153ED98F2F354E7C0003B0DF /* AdminEventsViewModel.swift */,
+				153ED9912F354EB20003B0DF /* AdminEventsDashboardView.swift */,
 			);
 			path = Admin;
 			sourceTree = "<group>";
@@ -644,6 +680,7 @@
 				153BA6762F06BA1B000D22FD /* IAPProducts.swift */,
 				153BA5D52F046828000D22FD /* StoreKit 2 */,
 				15908FAA2F2CC9D3002271F5 /* NotificationAppDelegate.swift */,
+				153ED9952F3553990003B0DF /* PushManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -772,6 +809,7 @@
 				15B3D4BD2EFDB3DE00704BB6 /* AdhanReminderSettings.swift in Sources */,
 				153E98362F29059400062999 /* FavoritesStore.swift in Sources */,
 				151BD9EF2EE597260065F10C /* SelectAdPlanView.swift in Sources */,
+				153ED98A2F354E110003B0DF /* AdminJobsViewModel.swift in Sources */,
 				155C3FEF2F0A9749009EEB95 /* PaidAdPlanDetailView.swift in Sources */,
 				155C3FFF2F0AF9E5009EEB95 /* HMPAdPlanKind.swift in Sources */,
 				15AE07C12F26A43200158FF4 /* PlaceCategoryCatalog.swift in Sources */,
@@ -780,11 +818,14 @@
 				153BA5DC2F048082000D22FD /* PlaceSubmissionsStore.swift in Sources */,
 				15B48CDC2EE1A70C00A88AB7 /* AddStoreViewModel.swift in Sources */,
 				153ED97F2F34F10D0003B0DF /* AdhanAudioManager.swift in Sources */,
+				153ED98E2F354E5E0003B0DF /* AdminEventItem.swift in Sources */,
 				15AE07BD2F26663500158FF4 /* AdminDashboardView.swift in Sources */,
 				15AE07BB2F26625200158FF4 /* AdminGateView.swift in Sources */,
+				153ED9882F354DEC0003B0DF /* AdminJobAd.swift in Sources */,
 				15A0D7922EE05E4C0063ED79 /* PrayerTime.swift in Sources */,
 				151BD9F32EE597800065F10C /* MyAdsView.swift in Sources */,
 				15C62E172F0D4EDD00702399 /* JobAdFilter.swift in Sources */,
+				153ED9942F3552CA0003B0DF /* JobCategoryCatalog.swift in Sources */,
 				1588BE462F28177900F3ADB3 /* FaithLocalStore.swift in Sources */,
 				1560165F2F03305000ABC8BB /* EventAdsBoardViewModel.swift in Sources */,
 				15A0D7A02EE068740063ED79 /* BannerAd.swift in Sources */,
@@ -803,6 +844,7 @@
 				153BA5E92F04AED8000D22FD /* MonthlyFreeGate.swift in Sources */,
 				153ED9862F353C4E0003B0DF /* ZakatCalculatorScreen.swift in Sources */,
 				1588BE4C2F2817D800F3ADB3 /* QuranHomeScreen.swift in Sources */,
+				153ED9902F354E7C0003B0DF /* AdminEventsViewModel.swift in Sources */,
 				153ED96E2F34DAD70003B0DF /* HadithStore.swift in Sources */,
 				153BA67D2F06BABB000D22FD /* PaidAdsScreen.swift in Sources */,
 				15AE07C92F26B15000158FF4 /* AdminPlacesViewModel.swift in Sources */,
@@ -822,6 +864,7 @@
 				153E983C2F2ACD8900062999 /* QuranRoot.swift in Sources */,
 				15B3D4C72EFDBBF200704BB6 /* AdhanSettingsSheet.swift in Sources */,
 				155C3FED2F0A9617009EEB95 /* PrimeAdInfoView.swift in Sources */,
+				153ED9962F3553990003B0DF /* PushManager.swift in Sources */,
 				15AE07BF2F268DAE00158FF4 /* AdminAdsViewModel.swift in Sources */,
 				15908FAD2F2CCCA2002271F5 /* HadithBundleLoader.swift in Sources */,
 				15B48CF32EE1E50300A88AB7 /* GooglePlacesModelsswift.swift in Sources */,
@@ -849,12 +892,14 @@
 				153E98382F2ACCC000062999 /* QuranAyah.swift in Sources */,
 				15109F9A2EFD82B90068DFE3 /* PlaceDetailsSheet.swift in Sources */,
 				151BD9F12EE597570065F10C /* AddHalalPlaceFormView.swift in Sources */,
+				153ED98C2F354E3A0003B0DF /* AdminJobsDashboardView.swift in Sources */,
 				151BD9E22EE521030065F10C /* AppLanguage.swift in Sources */,
 				15B3D4C52EFDB94500704BB6 /* QiblaCompassViewModel.swift in Sources */,
 				155C3FEB2F0A95E6009EEB95 /* MonthlyAdInfoView.swift in Sources */,
 				15C0B4BB2EFC8F8600532F0F /* FiLocationManagerle.swift in Sources */,
 				153BA5F32F0532E8000D22FD /* MyEventsViewModel.swift in Sources */,
 				15A0D79E2EE0626B0063ED79 /* AddStoreScreen.swift in Sources */,
+				153ED9922F354EB20003B0DF /* AdminEventsDashboardView.swift in Sources */,
 				155C3FFD2F0AEBFC009EEB95 /* AdPlanDetailsView.swift in Sources */,
 				1588BE502F28181300F3ADB3 /* QuranFavoritesScreen.swift in Sources */,
 				153BA6772F06BA1B000D22FD /* IAPProducts.swift in Sources */,
@@ -992,12 +1037,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = HalalMapPrime/HalalMapPrime.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = HalalMapPrime/Assets.xcassets;
 				DEVELOPMENT_TEAM = Q839X9CL76;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HalalMapPrime/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We use your location to show nearby halal places and jobs.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -1026,12 +1073,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = HalalMapPrime/HalalMapPrime.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = HalalMapPrime/Assets.xcassets;
 				DEVELOPMENT_TEAM = Q839X9CL76;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HalalMapPrime/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We use your location to show nearby halal places and jobs.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
